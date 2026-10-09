@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Misconception Map — AI Math Diagnosis & Repair Engine</title>
-  <meta name="description" content="AI-powered mathematics misconception detection, step-by-step error diagnosis, interactive visual mini-lessons, targeted repair questions, and class-wide misconception mapping.">
+  <title>StudyForge — AI-Powered Undergraduate Learning Assistant</title>
+  <meta name="description" content="StudyForge helps undergraduate students learn topics, solve academic problems, test themselves with practice quizzes, and revise with flashcards and notes.">
   
-  <!-- Google Fonts: Outfit, Inter, JetBrains Mono -->
+  <!-- Google Fonts: Outfit, Inter, JetBrains Mono, Noto Sans Telugu -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -22,12 +22,9 @@
         <div class="brand-section">
           <div class="brand-icon">
             <svg viewBox="0 0 32 32" width="28" height="28" fill="none">
-              <circle cx="16" cy="16" r="14" stroke="url(#brand-grad)" stroke-width="2.5" stroke-dasharray="3 3"/>
-              <circle cx="16" cy="16" r="7" fill="url(#brand-grad)" fill-opacity="0.25" stroke="url(#brand-grad)" stroke-width="2"/>
-              <circle cx="8" cy="10" r="3.5" fill="#f43f5e" />
-              <circle cx="24" cy="10" r="3.5" fill="#10b981" />
-              <circle cx="16" cy="24" r="3.5" fill="#6366f1" />
-              <path d="M10 12 L14 15 M22 12 L18 15 M16 21 L16 18" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M16 3 L28 9 L16 15 L4 9 Z" fill="url(#brand-grad)" fill-opacity="0.25" stroke="url(#brand-grad)" stroke-width="2"/>
+              <path d="M7 13.5 L7 20 C7 23.5 16 27 16 27 C16 27 25 23.5 25 20 L25 13.5" stroke="url(#brand-grad)" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="16" cy="15" r="3" fill="#10b981" />
               <defs>
                 <linearGradient id="brand-grad" x1="0" y1="0" x2="32" y2="32">
                   <stop offset="0%" stop-color="#8b5cf6"/>
@@ -39,70 +36,79 @@
           </div>
           <div class="brand-text">
             <div class="brand-title">
-              <span>Misconception</span><span class="gradient-text">Map</span>
-              <span class="badge badge-accent">AI Diagnosis</span>
+              <span>Study</span><span class="gradient-text">Forge</span>
+              <span class="badge badge-accent">UG Learning</span>
             </div>
-            <p class="brand-subtitle">Step-by-Step Cognitive Error Detection & Targeted Repair Engine</p>
+            <p class="brand-subtitle">AI Learning Assistant • Practice Quizzes • Revision Cards</p>
           </div>
         </div>
 
         <!-- Central Navigation Tabs -->
         <nav class="nav-tabs" aria-label="Main Navigation">
-          <button class="nav-tab active" id="tab-btn-student" data-target="student-view">
+          <button class="nav-tab active" id="tab-btn-learn" data-target="learn-view">
+            <span class="tab-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            </span>
+            <span>Learn & Solve</span>
+          </button>
+
+          <button class="nav-tab" id="tab-btn-quiz" data-target="quiz-view">
+            <span class="tab-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </span>
+            <span>Practice Quiz</span>
+            <span class="tab-pill">MCQs</span>
+          </button>
+
+          <button class="nav-tab" id="tab-btn-revision" data-target="revision-view">
+            <span class="tab-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="13" y2="16"/></svg>
+            </span>
+            <span>Notes & Flashcards</span>
+          </button>
+
+          <button class="nav-tab" id="tab-btn-diagnostic" data-target="diagnostic-view">
             <span class="tab-icon">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
             </span>
-            <span>Student Workspace</span>
-            <span class="tab-pill">Loop</span>
+            <span>Math Diagnostic</span>
+            <span class="tab-indicator-count" title="Misconception Detection">Step Loop</span>
           </button>
+
           <button class="nav-tab" id="tab-btn-teacher" data-target="teacher-view">
             <span class="tab-icon">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
             </span>
-            <span>Teacher Dashboard</span>
-            <span class="tab-indicator-count" id="active-misconceptions-count">4</span>
+            <span>Class Map</span>
           </button>
+
           <button class="nav-tab" id="tab-btn-prompts" data-target="prompts-view">
             <span class="tab-icon">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
             </span>
             <span>Prompt Lab</span>
-            <span class="tab-pill">10 Prompts</span>
           </button>
         </nav>
 
         <!-- Right Action Controls -->
         <div class="header-actions">
-          <!-- Language Selector (English / Telugu / Tenglish) -->
+          <!-- Language Selector -->
           <div class="language-dropdown-wrapper">
             <label for="lang-select" class="sr-only">Language</label>
             <div class="custom-select-container">
               <span class="lang-icon">🌐</span>
-              <select id="lang-select" class="form-select lang-select" title="Choose feedback language">
+              <select id="lang-select" class="form-select lang-select" title="Choose response language">
                 <option value="en">English</option>
                 <option value="te">తెలుగు (Telugu)</option>
-                <option value="tenglish">Tenglish (English + తెలుగు)</option>
+                <option value="tenglish">Tenglish (English + Telugu)</option>
               </select>
             </div>
-          </div>
-
-          <!-- Quick Scenario Selector -->
-          <div class="scenario-dropdown-wrapper">
-            <select id="scenario-quick-select" class="form-select scenario-select" title="Load sample student mistake">
-              <option value="" disabled selected>⚡ Load Test Scenario...</option>
-              <option value="partial_dist">1. Partial Distribution: 3(x + 2) = 15</option>
-              <option value="frac_denom">2. Fraction Denominators: 1/2 + 1/3</option>
-              <option value="neg_sign">3. Negative Sign Error: -2(x - 4) = 10</option>
-              <option value="like_terms">4. Like Terms Error: 3x + 5 = 20</option>
-              <option value="exp_multiply">5. Exponent Base Error: 2³ + 4</option>
-              <option value="correct_sol">6. Correct Working (Control)</option>
-            </select>
           </div>
 
           <!-- AI Settings Trigger -->
           <button class="btn btn-icon-ghost" id="btn-open-settings" title="AI Model & API Key Settings" aria-label="Settings">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            <span class="api-status-dot connected" id="api-status-dot" title="Diagnosis Engine: Active"></span>
+            <span class="api-status-dot connected" id="api-status-dot" title="AI Engine: Active"></span>
           </button>
         </div>
       </div>
@@ -112,10 +118,368 @@
     <main class="main-content">
 
       <!-- ========================================================================= -->
-      <!-- VIEW 1: STUDENT WORKSPACE (Solve, Diagnose & Repair Loop)                 -->
+      <!-- VIEW 1: LEARN & SOLVE (Custom Topic, Question & Multiple Styles)           -->
       <!-- ========================================================================= -->
-      <section id="student-view" class="view-panel active">
-        <!-- Interactive Banner Flow Indicator -->
+      <section id="learn-view" class="view-panel active">
+        
+        <!-- Hero Section -->
+        <div class="learn-hero-card card glass-card">
+          <div class="hero-content">
+            <span class="badge badge-accent hero-pill">✨ StudyForge Learning Assistant</span>
+            <h1 class="hero-title">What do you want to learn today?</h1>
+            <p class="hero-subtitle">Select any undergraduate subject, enter your topic or problem, and receive custom explanations in 5 different learning styles.</p>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat-item">
+              <span class="stat-number">6+</span>
+              <span class="stat-label">UG Disciplines</span>
+            </div>
+            <div class="hero-stat-item">
+              <span class="stat-number">5</span>
+              <span class="stat-label">Explanation Styles</span>
+            </div>
+            <div class="hero-stat-item">
+              <span class="stat-number">100%</span>
+              <span class="stat-label">Interactive Quizzes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="learn-grid">
+          
+          <!-- LEFT COLUMN: Input Form -->
+          <div class="learn-form-column">
+            <div class="card glass-card">
+              
+              <div class="card-header">
+                <div class="card-title-group">
+                  <span class="card-badge badge-primary">Step 1</span>
+                  <h2 class="card-title">Define Your Topic & Question</h2>
+                </div>
+                <button class="btn btn-xs btn-outline" id="btn-load-sample" title="Load a sample undergraduate problem">⚡ Load Sample Problem</button>
+              </div>
+
+              <!-- Form: Subject & Level -->
+              <div class="form-row-dual">
+                <div class="form-group flex-1">
+                  <label class="form-label" for="learn-subject-select">
+                    <span>Subject / Discipline</span>
+                  </label>
+                  <select id="learn-subject-select" class="form-select w-full">
+                    <option value="cs" selected>💻 Computer Science</option>
+                    <option value="math">📐 Mathematics</option>
+                    <option value="physics">⚛️ Physics</option>
+                    <option value="chem">🧪 Chemistry & Chemical Eng</option>
+                    <option value="business">📊 Business Studies & Economics</option>
+                    <option value="other">📚 Other Academic Field</option>
+                  </select>
+                </div>
+
+                <div class="form-group flex-1">
+                  <label class="form-label">
+                    <span>Academic Level</span>
+                  </label>
+                  <div class="level-radio-group">
+                    <label class="level-radio-label">
+                      <input type="radio" name="student-level" value="beginner">
+                      <span class="level-chip chip-beginner">Beginner</span>
+                    </label>
+                    <label class="level-radio-label">
+                      <input type="radio" name="student-level" value="intermediate" checked>
+                      <span class="level-chip chip-intermediate">Intermediate</span>
+                    </label>
+                    <label class="level-radio-label">
+                      <input type="radio" name="student-level" value="advanced">
+                      <span class="level-chip chip-advanced">Advanced</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Topic Input with Quick Suggest Pills -->
+              <div class="form-group">
+                <label class="form-label" for="learn-topic-input">
+                  <span>Topic / Concept</span>
+                  <span class="hint-text">(e.g., Dynamic Programming, Normalization, Fourier Series)</span>
+                </label>
+                <input type="text" id="learn-topic-input" class="form-input" placeholder="Enter topic name..." value="Dynamic Programming (Memoization vs Tabulation)">
+                
+                <div class="quick-topic-pills" id="quick-topic-pills">
+                  <span class="pills-title">Popular:</span>
+                  <button type="button" class="topic-pill" data-subj="cs" data-topic="Dynamic Programming (Memoization vs Tabulation)" data-q="What is the difference between top-down memoization and bottom-up tabulation? Explain with the Fibonacci sequence.">Dynamic Programming</button>
+                  <button type="button" class="topic-pill" data-subj="cs" data-topic="Database Normalization (1NF, 2NF, 3NF, BCNF)" data-q="Explain 1NF, 2NF, and 3NF with an example student database table and explain why transitive dependencies are eliminated in 3NF.">DB Normalization</button>
+                  <button type="button" class="topic-pill" data-subj="math" data-topic="Eigenvalues and Eigenvectors" data-q="How do you calculate the eigenvalues and eigenvectors of a 2x2 matrix A = [[4, 1], [2, 3]]? Show the characteristic equation.">Eigenvalues</button>
+                  <button type="button" class="topic-pill" data-subj="physics" data-topic="Thermodynamics: Carnot Cycle & Efficiency" data-q="Derive the efficiency of a Carnot heat engine operating between temperatures Th and Tc. Why cannot any real engine exceed Carnot efficiency?">Carnot Cycle</button>
+                  <button type="button" class="topic-pill" data-subj="business" data-topic="Net Present Value (NPV) vs IRR" data-q="Compare Net Present Value (NPV) and Internal Rate of Return (IRR) for capital budgeting decisions. When might they conflict?">NPV vs IRR</button>
+                </div>
+              </div>
+
+              <!-- Question Box -->
+              <div class="form-group">
+                <label class="form-label" for="learn-question-input">
+                  <span>Your Question or Problem</span>
+                  <span class="hint-text">(Paste a homework question or specific concept doubt)</span>
+                </label>
+                <textarea id="learn-question-input" class="form-textarea" rows="4" placeholder="Type your question or academic problem here...">What is the difference between top-down memoization and bottom-up tabulation? Explain with the Fibonacci sequence and include space/time complexity.</textarea>
+              </div>
+
+              <!-- Feature 2: Multiple Explanation Styles -->
+              <div class="form-group">
+                <label class="form-label">
+                  <span>Choose Explanation Style</span>
+                  <span class="badge badge-accent text-xs">5 Styles Available</span>
+                </label>
+                
+                <div class="style-cards-grid">
+                  <label class="style-card-option">
+                    <input type="radio" name="explanation-style" value="simple">
+                    <div class="style-card-inner">
+                      <div class="style-icon">🐣</div>
+                      <div class="style-info">
+                        <strong>Simple (Beginners)</strong>
+                        <span>Plain English, intuitive analogies, no heavy jargon</span>
+                      </div>
+                    </div>
+                  </label>
+
+                  <label class="style-card-option">
+                    <input type="radio" name="explanation-style" value="step_by_step" checked>
+                    <div class="style-card-inner">
+                      <div class="style-icon">🪜</div>
+                      <div class="style-info">
+                        <strong>Step-by-Step Solution</strong>
+                        <span>Logical numbered steps, derivations, and methodology</span>
+                      </div>
+                    </div>
+                  </label>
+
+                  <label class="style-card-option">
+                    <input type="radio" name="explanation-style" value="practical">
+                    <div class="style-card-inner">
+                      <div class="style-icon">💡</div>
+                      <div class="style-info">
+                        <strong>Practical & Code Examples</strong>
+                        <span>Real-world application, runnable code, diagrams</span>
+                      </div>
+                    </div>
+                  </label>
+
+                  <label class="style-card-option">
+                    <input type="radio" name="explanation-style" value="exam_ready">
+                    <div class="style-card-inner">
+                      <div class="style-icon">📝</div>
+                      <div class="style-info">
+                        <strong>Exam-Ready Answer</strong>
+                        <span>Structured for full marks: definitions, key bullet points</span>
+                      </div>
+                    </div>
+                  </label>
+
+                  <label class="style-card-option">
+                    <input type="radio" name="explanation-style" value="hints_first">
+                    <div class="style-card-inner">
+                      <div class="style-icon">🔍</div>
+                      <div class="style-info">
+                        <strong>Hints First (Socratic)</strong>
+                        <span>Guided prompts to discover the answer before revealing solution</span>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="form-actions-bar">
+                <button class="btn btn-primary btn-glow btn-lg w-full" id="btn-generate-explanation">
+                  <span class="btn-spinner hidden" id="learn-spinner"></span>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  <span>Generate Explanation</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN: Generated Output & Learning Hub -->
+          <div class="learn-output-column">
+            
+            <!-- Output Header & Actions -->
+            <div class="card glass-card output-card" id="explanation-display-card">
+              <div class="card-header border-bottom">
+                <div class="card-title-group">
+                  <span class="badge badge-success" id="active-style-badge">🪜 Step-by-Step Solution</span>
+                  <h2 class="card-title text-base" id="explanation-topic-heading">Dynamic Programming: Memoization vs Tabulation</h2>
+                </div>
+                
+                <div class="output-actions">
+                  <button class="btn btn-xs btn-outline" id="btn-copy-explanation" title="Copy to clipboard">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    <span>Copy</span>
+                  </button>
+                  <button class="btn btn-xs btn-primary" id="btn-goto-quiz" title="Practice this topic with a quiz">
+                    <span>🎯 Practice Quiz</span>
+                  </button>
+                  <button class="btn btn-xs btn-outline" id="btn-goto-revision" title="Generate revision notes and flashcards">
+                    <span>📑 Revision Notes</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Socratic Hint Drawer (Visible only in hints-first mode) -->
+              <div class="hints-socratic-container hidden" id="hints-socratic-box">
+                <div class="hints-box-header">
+                  <span class="hints-icon">💡</span>
+                  <strong>Socratic Hint — Try answering this first:</strong>
+                </div>
+                <p class="hints-text" id="hints-socratic-text">Think about computing Fibonacci(5). Notice how Fibonacci(3) is recomputed multiple times. How can you store previous calculations so you never calculate the same subproblem twice?</p>
+                <button class="btn btn-xs btn-warning" id="btn-reveal-solution">Reveal Full Solution Step</button>
+              </div>
+
+              <!-- Main Explanation Content Container -->
+              <div class="explanation-body-content" id="explanation-body-content">
+                <!-- Dynamically rendered markdown & code blocks -->
+              </div>
+
+              <!-- Follow-Up Question / Doubt Bar -->
+              <div class="followup-container">
+                <label class="followup-label" for="followup-input">
+                  <span>💬 Have a follow-up doubt or question?</span>
+                </label>
+                <div class="followup-input-row">
+                  <input type="text" id="followup-input" class="form-input" placeholder="Ask a clarification (e.g. 'Can you explain the space complexity again?')...">
+                  <button class="btn btn-primary" id="btn-submit-followup">Ask</button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- VIEW 2: PRACTICE QUIZ (Feature 3: 3-5 MCQs, Scoring & Explanations)        -->
+      <!-- ========================================================================= -->
+      <section id="quiz-view" class="view-panel">
+        
+        <div class="quiz-header-bar card glass-card">
+          <div class="quiz-header-info">
+            <span class="badge badge-primary">Practice Assessment</span>
+            <h2 class="card-title" id="quiz-title-heading">Topic Quiz: Dynamic Programming</h2>
+            <p class="text-muted text-sm" id="quiz-subheading">Test your comprehension with 4 multiple-choice questions tailored to your topic.</p>
+          </div>
+          
+          <div class="quiz-header-actions">
+            <div class="quiz-score-badge hidden" id="quiz-score-badge">
+              <span class="score-label">Your Score:</span>
+              <strong class="score-val" id="quiz-score-val">4 / 4 (100%)</strong>
+            </div>
+            <button class="btn btn-sm btn-outline" id="btn-generate-new-quiz">🔄 Generate New Quiz</button>
+          </div>
+        </div>
+
+        <div class="quiz-layout-grid">
+          
+          <!-- Questions List -->
+          <div class="quiz-questions-column">
+            <div id="quiz-questions-container" class="quiz-questions-container">
+              <!-- Dynamically populated MCQ items -->
+            </div>
+
+            <div class="quiz-footer-actions">
+              <button class="btn btn-primary btn-lg btn-glow" id="btn-submit-quiz">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Submit Quiz & View Explanations</span>
+              </button>
+              <button class="btn btn-outline btn-lg hidden" id="btn-retry-quiz">Retry Quiz</button>
+            </div>
+          </div>
+
+          <!-- Quiz Summary & Concept Mastery Sidebar -->
+          <div class="quiz-sidebar-column">
+            <div class="card glass-card">
+              <h3 class="card-title text-sm mb-3">Quiz Progress & Instructions</h3>
+              <ul class="quiz-instructions-list">
+                <li>Select one option for each question.</li>
+                <li>Instant grading displays whether your choice was correct or incorrect.</li>
+                <li>Detailed conceptual explanations explain <em>why</em> each answer is valid.</li>
+                <li>Score updates automatically on submission.</li>
+              </ul>
+
+              <div class="quiz-summary-stats hidden" id="quiz-summary-stats">
+                <div class="stat-big-item text-center">
+                  <span class="stat-huge text-emerald" id="summary-score-pct">100%</span>
+                  <span class="stat-huge-sub" id="summary-score-ratio">4 of 4 correct</span>
+                </div>
+                <div class="feedback-message-box mt-3" id="summary-feedback-msg">
+                  Excellent work! You have mastered the core concepts of this topic.
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- VIEW 3: NOTES & REVISION CARDS (Feature 4: Summaries, Formulas & Flashcards)-->
+      <!-- ========================================================================= -->
+      <section id="revision-view" class="view-panel">
+        
+        <div class="revision-header-bar card glass-card">
+          <div>
+            <span class="badge badge-accent">Quick Revision Hub</span>
+            <h2 class="card-title" id="revision-title-heading">Revision Notes: Dynamic Programming</h2>
+            <p class="text-muted text-sm">Key definitions, core formulas, and interactive self-test flashcards.</p>
+          </div>
+          <div class="revision-actions">
+            <button class="btn btn-primary" id="btn-copy-all-notes">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span>Copy Revision Notes</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="revision-grid">
+          
+          <!-- Key Concepts & Definitions Card -->
+          <div class="card glass-card revision-notes-card">
+            <div class="card-header">
+              <h3 class="card-title text-base">📌 Key Definitions & Formulas</h3>
+              <span class="badge badge-outline">High-Yield</span>
+            </div>
+            
+            <div class="revision-definitions-container" id="revision-definitions-content">
+              <!-- Dynamically populated summary & definitions -->
+            </div>
+          </div>
+
+          <!-- Interactive Q&A Flashcards Card -->
+          <div class="card glass-card revision-flashcards-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-badge badge-warning">Recall Test</span>
+                <h3 class="card-title text-base">Interactive Flashcards</h3>
+              </div>
+              <span class="text-xs text-muted">Click any card to flip/reveal answer</span>
+            </div>
+
+            <div class="flashcards-grid" id="flashcards-container">
+              <!-- Dynamically populated flip cards -->
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- VIEW 4: MATHEMATICAL MISCONCEPTION DIAGNOSTIC (Step-by-Step Reasoner)      -->
+      <!-- ========================================================================= -->
+      <section id="diagnostic-view" class="view-panel">
         <div class="flow-stepper">
           <div class="step-item completed" id="step-node-1">
             <span class="step-circle">1</span>
@@ -151,7 +515,7 @@
             <div class="card glass-card">
               <div class="card-header">
                 <div class="card-title-group">
-                  <span class="card-badge badge-primary">Current Problem</span>
+                  <span class="card-badge badge-primary">Math Problem</span>
                   <h2 class="card-title" id="problem-title">Algebra: Distributive Property</h2>
                 </div>
                 <div class="card-actions">
@@ -193,11 +557,7 @@ x = 3</pre>
                     <div>3</div>
                     <div>4</div>
                   </div>
-                  <textarea id="working-steps-editor" class="step-textarea" rows="6" spellcheck="false" placeholder="Enter student working step-by-step...
-Step 1: 3(x + 2) = 3x + 2
-Step 2: 3x + 2 = 15
-Step 3: 3x = 13
-Step 4: x = 13/3">3(x + 2) = 3x + 2
+                  <textarea id="working-steps-editor" class="step-textarea" rows="6" spellcheck="false" placeholder="Enter student working step-by-step...">3(x + 2) = 3x + 2
 3x + 2 = 15
 3x = 13
 x = 13/3</textarea>
@@ -205,7 +565,7 @@ x = 13/3</textarea>
 
                 <div class="input-actions-bar">
                   <div class="left-actions">
-                    <span class="text-muted text-sm">Targeting: <strong id="student-name-badge">Aarav Patel (Grade 8)</strong></span>
+                    <span class="text-muted text-sm">Student: <strong id="student-name-badge">Aarav Patel (Grade 8)</strong></span>
                   </div>
                   <div class="right-actions">
                     <button class="btn btn-primary btn-glow" id="btn-submit-diagnosis">
@@ -245,15 +605,6 @@ x = 13/3</textarea>
                     <div class="progress-bar-fill fill-emerald" style="width: 90%;"></div>
                   </div>
                 </div>
-                <div class="mastery-item" id="mastery-neg">
-                  <div class="mastery-item-header">
-                    <span>Negative Multipliers</span>
-                    <span class="status-chip chip-info">In Progress</span>
-                  </div>
-                  <div class="progress-bar-bg">
-                    <div class="progress-bar-fill fill-indigo" style="width: 65%;"></div>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -262,22 +613,11 @@ x = 13/3</textarea>
           <!-- RIGHT COLUMN: AI Diagnosis Result, Visual Mini-Lesson & Repair Loop -->
           <div class="workspace-column diagnosis-result-column">
             
-            <!-- Diagnosis Empty Placeholder (before diagnosis) -->
-            <div class="card glass-card empty-state-card" id="diagnosis-empty-state" style="display: none;">
-              <div class="empty-state-icon">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="10" r="8"/><path d="M12 18v4M8 22h8"/></svg>
-              </div>
-              <h3>Ready for AI Diagnosis</h3>
-              <p>Click <strong>"Diagnose Solution (/submit)"</strong> to trigger Prompt #10. The AI engine will pinpoint the exact step where error occurred, categorize the misconception, and provide an interactive mini-lesson.</p>
-            </div>
-
-            <!-- Active Diagnosis Container -->
             <div id="diagnosis-active-container">
               
               <!-- Diagnosis Result Card -->
               <div class="card glass-card diagnosis-card" id="diagnosis-main-card">
                 
-                <!-- Diagnosis Status Header -->
                 <div class="diagnosis-header" id="diagnosis-status-banner">
                   <div class="status-left">
                     <div class="status-pulse-badge pulse-rose" id="status-pulse"></div>
@@ -300,9 +640,7 @@ x = 13/3</textarea>
                 <!-- Step-by-Step Visual Highlighting -->
                 <div class="diagnostic-steps-inspection">
                   <div class="inspection-title">Step-by-Step Reasoner Breakdown:</div>
-                  <div class="step-inspection-list" id="step-inspection-list">
-                    <!-- Dynamic step rows inserted here -->
-                  </div>
+                  <div class="step-inspection-list" id="step-inspection-list"></div>
                 </div>
 
                 <!-- Misconception Meta Details -->
@@ -315,7 +653,7 @@ x = 13/3</textarea>
                     </div>
                   </div>
                   <div class="meta-box">
-                    <span class="meta-label">EXPLANATION (< 40 words)</span>
+                    <span class="meta-label">EXPLANATION (&lt; 40 words)</span>
                     <p class="meta-text" id="diag-explanation">You multiplied 3 by x to get 3x, but forgot to also multiply 3 by 2. The coefficient outside the bracket must distribute to every term inside.</p>
                   </div>
                 </div>
@@ -349,45 +687,10 @@ x = 13/3</textarea>
                     <span class="card-badge badge-accent">Visual Mini-Lesson</span>
                     <h3 class="card-title" id="mini-lesson-title">Visualizing the Area Model for Distribution</h3>
                   </div>
-                  <div class="lesson-mode-switch">
-                    <button class="btn btn-xs btn-ghost active" id="btn-lesson-visual">Visual Model</button>
-                    <button class="btn btn-xs btn-ghost" id="btn-lesson-rule">Rule Summary</button>
-                  </div>
                 </div>
 
-                <!-- Interactive Visual Canvas / SVG Container -->
-                <div class="visual-model-viewport" id="visual-model-viewport">
-                  <!-- Dynamic visual models rendered via JavaScript -->
-                  <div class="area-model-demo" id="algebra-area-model">
-                    <div class="area-labels-top">
-                      <span class="area-col-label label-x">x</span>
-                      <span class="area-plus">+</span>
-                      <span class="area-col-label label-num">2</span>
-                    </div>
-                    <div class="area-layout-row">
-                      <div class="area-height-label">3 ×</div>
-                      <div class="area-box-container">
-                        <div class="area-box box-var">
-                          <span class="box-formula">3 · x = <strong>3x</strong></span>
-                          <span class="box-status">✓ Computed correctly</span>
-                        </div>
-                        <div class="area-box box-const error-highlight">
-                          <span class="box-formula">3 · 2 = <strong>6</strong></span>
-                          <span class="box-alert">⚠️ You wrote 2 instead of 6!</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="area-equation-summary">
-                      <span>Total Area = </span>
-                      <span class="correct-term">3x</span>
-                      <span> + </span>
-                      <span class="correct-term highlight-glow">6</span>
-                      <span class="note-pill">Not 3x + 2</span>
-                    </div>
-                  </div>
-                </div>
+                <div class="visual-model-viewport" id="visual-model-viewport"></div>
 
-                <!-- Telugu/English Bilingual Explanation -->
                 <div class="lesson-bilingual-explanation" id="lesson-bilingual-explanation">
                   <p class="bilingual-en" id="lesson-text-en">Remember: <code>a(b + c) = a·b + a·c</code>. Both terms inside parentheses must be multiplied by the factor outside.</p>
                   <p class="bilingual-te hidden" id="lesson-text-te">గుర్తుంచుకోండి: <code>a(b + c) = a·b + a·c</code>. బ్రాకెట్ లోపల ఉన్న ప్రతి పదాన్ని బయట ఉన్న గుణకం తో గుణించాలి.</p>
@@ -418,13 +721,7 @@ x = 13/3</textarea>
                       <button class="btn btn-warning btn-glow" id="btn-submit-repair">
                         <span class="btn-spinner hidden" id="repair-spinner"></span>
                         <span>Check Repair</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                       </button>
-                    </div>
-                    <div class="quick-chips">
-                      <span class="quick-chip-label">Quick test answers:</span>
-                      <button class="chip-btn" data-ans="correct">Correct: 4y + 12</button>
-                      <button class="chip-btn" data-ans="repeat_error">Repeat Error: 4y + 3</button>
                     </div>
                   </div>
 
@@ -433,11 +730,7 @@ x = 13/3</textarea>
                     <div class="repair-result-icon" id="repair-result-icon">🎉</div>
                     <div class="repair-result-content">
                       <h4 class="repair-result-heading" id="repair-result-heading">Misconception Fixed!</h4>
-                      <p class="repair-result-desc" id="repair-result-desc">Excellent work! You distributed 4 to both y and 3 to get 4y + 12. Your mastery map has been updated.</p>
-                      <div class="repair-next-action-row">
-                        <span class="badge badge-success" id="repair-next-badge">Next: Continue to Next Concept</span>
-                        <button class="btn btn-xs btn-outline" id="btn-next-problem">Load Next Problem →</button>
-                      </div>
+                      <p class="repair-result-desc" id="repair-result-desc">Excellent work! You distributed 4 to both terms.</p>
                     </div>
                   </div>
 
@@ -445,19 +738,17 @@ x = 13/3</textarea>
 
               </div>
 
-            </div> <!-- /diagnosis-active-container -->
+            </div>
 
-          </div> <!-- /diagnosis-result-column -->
+          </div>
 
-        </div> <!-- /student-workspace-grid -->
+        </div>
       </section>
 
       <!-- ========================================================================= -->
-      <!-- VIEW 2: TEACHER DASHBOARD (Misconception Map, Interventions, Analytics)    -->
+      <!-- VIEW 5: TEACHER DASHBOARD (Classroom Misconception Map & Analytics)        -->
       <!-- ========================================================================= -->
       <section id="teacher-view" class="view-panel">
-        
-        <!-- Teacher Dashboard Header Metrics -->
         <div class="teacher-metrics-row">
           <div class="metric-card glass-card">
             <div class="metric-icon-wrap icon-purple">
@@ -489,7 +780,7 @@ x = 13/3</textarea>
               <span class="metric-num text-amber" id="metric-review-needed">5</span>
               <span class="metric-label">Needs 1-on-1 Review</span>
             </div>
-            <div class="metric-sub text-muted">Confidence < 70% or unmapped</div>
+            <div class="metric-sub text-muted">Confidence &lt; 70% or unmapped</div>
           </div>
 
           <div class="metric-card glass-card">
@@ -504,294 +795,110 @@ x = 13/3</textarea>
           </div>
         </div>
 
-        <!-- Teacher Dashboard Tabs -->
         <div class="teacher-subtabs-bar">
           <div class="teacher-subtabs">
-            <button class="subtab-btn active" data-subtab="map-canvas-tab">
-              <span>🗺️ Class Misconception Map</span>
-            </button>
-            <button class="subtab-btn" data-subtab="intervention-tab">
-              <span>🎯 5-Min Interventions (Prompt #7)</span>
-            </button>
-            <button class="subtab-btn" data-subtab="clusters-tab">
-              <span>👥 Student Clusters (Prompt #8)</span>
-            </button>
-            <button class="subtab-btn" data-subtab="analytics-tab">
-              <span>📊 Before / After Analytics (Prompt #9)</span>
-            </button>
+            <button class="subtab-btn active" data-subtab="map-canvas-tab">🗺️ Class Misconception Map</button>
+            <button class="subtab-btn" data-subtab="intervention-tab">🎯 5-Min Interventions (Prompt #7)</button>
+            <button class="subtab-btn" data-subtab="clusters-tab">👥 Student Clusters (Prompt #8)</button>
+            <button class="subtab-btn" data-subtab="analytics-tab">📊 Before / After Analytics (Prompt #9)</button>
           </div>
           <div class="subtabs-actions">
-            <button class="btn btn-sm btn-outline" id="btn-simulate-class">
-              <span>⚡ Simulate 24 Students</span>
-            </button>
-            <button class="btn btn-sm btn-primary" id="btn-generate-intervention-now">
-              <span>🪄 Run AI Interventions</span>
-            </button>
+            <button class="btn btn-sm btn-outline" id="btn-simulate-class">⚡ Simulate 24 Students</button>
           </div>
         </div>
 
-        <!-- SUBTAB 1: Class Misconception Interactive Network Map -->
         <div class="teacher-subtab-content active" id="subtab-map-canvas-tab">
           <div class="map-layout-grid">
-            
-            <!-- Main Network Graph Canvas -->
             <div class="card glass-card map-canvas-card">
-              <div class="map-canvas-header">
-                <div class="map-legend">
-                  <span class="legend-item"><span class="legend-dot dot-critical"></span> Critical (>30% of class)</span>
-                  <span class="legend-item"><span class="legend-dot dot-moderate"></span> Moderate (15-30%)</span>
-                  <span class="legend-item"><span class="legend-dot dot-mastered"></span> Repaired / Low (<15%)</span>
-                  <span class="legend-item"><span class="legend-dot dot-concept"></span> Mathematical Domain</span>
-                </div>
-                <div class="canvas-controls">
-                  <button class="btn btn-xs btn-ghost" id="btn-reset-zoom" title="Reset view">Reset Layout</button>
-                </div>
-              </div>
-
-              <!-- Interactive SVG Network Container -->
               <div class="interactive-graph-container" id="graph-container">
-                <svg id="misconception-network-svg" width="100%" height="520" viewBox="0 0 840 520">
-                  <!-- Connections and Nodes rendered dynamically via JS -->
-                </svg>
+                <svg id="misconception-network-svg" width="100%" height="500" viewBox="0 0 840 500"></svg>
                 <div class="graph-tooltip hidden" id="graph-tooltip"></div>
               </div>
-
-              <div class="canvas-footer-tip">
-                <span>💡 Click any misconception node to inspect affected students, sample workings, and generate customized interventions.</span>
-              </div>
             </div>
 
-            <!-- Side Drawer: Selected Misconception Details & Affected Students -->
             <div class="card glass-card map-side-drawer" id="node-inspector-drawer">
               <div class="drawer-header">
-                <div class="drawer-header-title">
-                  <span class="badge badge-rose" id="inspect-node-badge">ALG_PARTIAL_DISTRIBUTION</span>
-                  <h3 class="card-title text-base" id="inspect-node-title">Partial Distributive Property</h3>
-                </div>
+                <span class="badge badge-rose" id="inspect-node-badge">ALG_PARTIAL_DISTRIBUTION</span>
+                <h3 class="card-title text-base" id="inspect-node-title">Partial Distributive Property</h3>
                 <span class="status-chip chip-danger" id="inspect-node-freq">12 Students (42%)</span>
               </div>
-
-              <div class="inspect-desc-box">
-                <p id="inspect-node-desc">Students distribute the multiplier only to the variable term, leaving the constant term unmultiplied: <code>a(x + b) → ax + b</code>.</p>
-              </div>
-
-              <div class="affected-students-list-wrapper">
-                <div class="list-title">Affected Students (Click to load student view):</div>
-                <div class="affected-students-tags" id="affected-students-container">
-                  <!-- Student badges dynamically loaded -->
-                </div>
-              </div>
-
-              <div class="sample-mistake-box">
-                <div class="mistake-label">Sample Student Working:</div>
-                <pre class="mistake-code" id="inspect-sample-work">3(x + 2) = 15
-3x + 2 = 15  ← First wrong step (#1)
-3x = 13</pre>
-              </div>
-
-              <div class="inspect-actions">
-                <button class="btn btn-sm btn-primary w-full" id="btn-quick-intervene">
-                  <span>Generate 5-Min Warmup Plan</span>
-                </button>
-              </div>
+              <p id="inspect-node-desc" class="text-sm text-muted mt-2">Students distribute the multiplier only to the variable term.</p>
+              <div class="affected-students-tags mt-3" id="affected-students-container"></div>
             </div>
-
           </div>
         </div>
 
-        <!-- SUBTAB 2: Teacher 5-Minute Interventions (Prompt #7) -->
         <div class="teacher-subtab-content" id="subtab-intervention-tab">
-          <div class="interventions-header-row">
-            <div>
-              <h2 class="subtab-heading">Classroom Intervention Engine</h2>
-              <p class="text-muted">AI-crafted 5-minute warm-up activities, visual models, and follow-up checks generated from real class misconception clusters.</p>
-            </div>
-            <button class="btn btn-sm btn-outline" id="btn-print-interventions">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-              <span>Export Lesson Slip</span>
-            </button>
-          </div>
-
-          <div class="interventions-grid" id="interventions-grid">
-            <!-- Intervention cards loaded dynamically -->
-          </div>
+          <div class="interventions-grid" id="interventions-grid"></div>
         </div>
 
-        <!-- SUBTAB 3: Misconception Clustering View (Prompt #8) -->
         <div class="teacher-subtab-content" id="subtab-clusters-tab">
-          <div class="clusters-header-row">
-            <div>
-              <h2 class="subtab-heading">AI Misconception Clustering</h2>
-              <p class="text-muted">Automated categorization of 24 student answers into distinct cognitive error patterns (Prompt #8).</p>
-            </div>
-            <div class="filter-controls">
-              <span class="text-sm text-muted">Question: <code>3(x + 2) = 15</code></span>
-            </div>
-          </div>
-
-          <div class="clusters-container" id="clusters-container">
-            <!-- Dynamic clusters -->
-          </div>
+          <div class="clusters-container" id="clusters-container"></div>
         </div>
 
-        <!-- SUBTAB 4: Before / After Learning Analysis (Prompt #9) -->
         <div class="teacher-subtab-content" id="subtab-analytics-tab">
-          <div class="analytics-header-row">
-            <div>
-              <h2 class="subtab-heading">Pre vs Post Intervention Learning Analysis</h2>
-              <p class="text-muted">Measuring intervention efficacy and persistent misconception shifts (Prompt #9).</p>
-            </div>
-            <div class="metric-pill pill-emerald">
-              <span>Effectiveness: <strong>High (81.8% Recovery)</strong></span>
-            </div>
-          </div>
-
-          <div class="analytics-grid">
-            
-            <div class="card glass-card analytics-stat-card">
-              <h3 class="card-title text-sm">Key Outcome Metrics</h3>
-              <div class="stat-big-row">
-                <div class="stat-big-item">
-                  <span class="stat-huge text-emerald" id="stat-students-improved">18 / 22</span>
-                  <span class="stat-huge-sub">Students Repaired</span>
-                </div>
-                <div class="stat-big-item">
-                  <span class="stat-huge text-indigo" id="stat-improvement-pct">81.8%</span>
-                  <span class="stat-huge-sub">Improvement Rate</span>
-                </div>
-              </div>
-              <div class="effectiveness-summary-box">
-                <span class="summary-label">AI Synthesis (Prompt #9):</span>
-                <p id="stat-effectiveness-summary">The 5-minute visual area model intervention successfully cleared partial distribution misconceptions for 82% of affected students. The remaining 4 students showed secondary arithmetic subtraction errors rather than structural distribution errors.</p>
-              </div>
-            </div>
-
-            <div class="card glass-card analytics-chart-card">
-              <h3 class="card-title text-sm">Misconception Frequency Shift</h3>
-              <div class="shift-chart-container" id="shift-chart-container">
-                <!-- Bar shifts rendered via HTML/CSS -->
-              </div>
-            </div>
-
-          </div>
+          <div class="shift-chart-container" id="shift-chart-container"></div>
         </div>
-
       </section>
 
       <!-- ========================================================================= -->
-      <!-- VIEW 3: PROMPT LABORATORY (All 10 Prompts Interactive Showcase)          -->
+      <!-- VIEW 6: PROMPT LABORATORY                                                 -->
       <!-- ========================================================================= -->
       <section id="prompts-view" class="view-panel">
         <div class="prompt-lab-header">
           <div>
-            <h2 class="subtab-heading">Interactive Prompt Engineering Laboratory</h2>
-            <p class="text-muted">Explore, test, and validate all 10 specialized prompts designed for the Misconception Map project.</p>
-          </div>
-          <div class="prompt-lab-meta">
-            <span class="badge badge-accent">10 System Prompts</span>
-            <span class="badge badge-outline">JSON Mode</span>
+            <h2 class="subtab-heading">Prompt Engineering Laboratory</h2>
+            <p class="text-muted">Inspect and test the system prompts driving StudyForge.</p>
           </div>
         </div>
 
         <div class="prompts-lab-layout">
-          <!-- Left: Prompt Selector List -->
-          <div class="prompts-selector-list" id="prompts-nav-list">
-            <!-- 10 prompts populated dynamically -->
-          </div>
-
-          <!-- Right: Prompt Inspection & Live Playground -->
+          <div class="prompts-selector-list" id="prompts-nav-list"></div>
           <div class="prompt-detail-panel card glass-card" id="prompt-detail-panel">
             <div class="prompt-detail-header">
               <div>
                 <span class="badge badge-primary" id="prompt-active-badge">Prompt #10</span>
                 <h3 class="prompt-active-title" id="prompt-active-title">Complete /submit Diagnosis Prompt</h3>
-                <p class="prompt-active-desc" id="prompt-active-desc">Main engine prompt connecting student answer to the entire misconception-map flow.</p>
+                <p class="prompt-active-desc" id="prompt-active-desc">Main engine prompt.</p>
               </div>
               <div class="prompt-actions">
-                <button class="btn btn-sm btn-outline" id="btn-copy-prompt">📋 Copy Prompt</button>
                 <button class="btn btn-sm btn-primary" id="btn-run-prompt-test">▶ Run Prompt Test</button>
               </div>
             </div>
 
-            <!-- Two-column: Template & Test Input / Output -->
             <div class="prompt-code-grid">
-              
-              <!-- Template Column -->
               <div class="prompt-column">
-                <div class="column-header">
-                  <span class="column-title">Prompt Template</span>
-                  <span class="badge badge-ghost text-xs">Jinja / Interpolation</span>
-                </div>
                 <pre class="prompt-code-view" id="prompt-code-view"><code>Loading prompt...</code></pre>
               </div>
-
-              <!-- Live Execution Column -->
               <div class="prompt-column">
-                <div class="column-header">
-                  <span class="column-title">Live Sample Variables & JSON Output</span>
-                  <span class="badge badge-success text-xs" id="prompt-status-pill">Validated Output</span>
-                </div>
-                
-                <div class="prompt-variables-form" id="prompt-vars-container">
-                  <!-- Variable inputs generated dynamically -->
-                </div>
-
+                <div class="prompt-variables-form" id="prompt-vars-container"></div>
                 <div class="prompt-output-box">
-                  <div class="output-header">
-                    <span>LLM JSON Output:</span>
-                    <button class="btn btn-xs btn-ghost" id="btn-copy-output">Copy JSON</button>
-                  </div>
                   <pre class="output-code-view" id="prompt-output-view"><code>Click "Run Prompt Test" to execute.</code></pre>
                 </div>
               </div>
-
             </div>
-
           </div>
         </div>
       </section>
 
     </main>
 
-    <!-- ========================================================================= -->
-    <!-- SETTINGS MODAL: Gemini API Configuration                                  -->
-    <!-- ========================================================================= -->
-    <div class="modal-backdrop hidden" id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <!-- Settings Modal -->
+    <div class="modal-backdrop hidden" id="settings-modal" role="dialog" aria-modal="true">
       <div class="modal-card glass-card">
         <div class="modal-header">
           <div class="modal-title-group">
             <span class="modal-icon">⚙️</span>
-            <h3 class="modal-title" id="settings-title">AI Engine & Model Configuration</h3>
+            <h3 class="modal-title">AI Engine Settings</h3>
           </div>
           <button class="btn btn-icon-ghost" id="btn-close-settings" aria-label="Close modal">✕</button>
         </div>
         
         <div class="modal-body">
           <div class="form-group">
-            <label class="form-label" for="setting-gemini-key">
-              <span>Google Gemini API Key</span>
-              <span class="badge badge-accent text-xs">Optional / Recommended</span>
-            </label>
-            <input type="password" id="setting-gemini-key" class="form-input" placeholder="AIzaSy... (leave blank to use built-in offline engine)">
-            <p class="form-help">Enter your Gemini API key to query Gemini 2.0 Flash in real-time. If left blank, our intelligent local heuristic engine evaluates the exact prompt logic with 100% fidelity.</p>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="setting-model-select">Diagnostic Model Engine</label>
-            <select id="setting-model-select" class="form-select">
-              <option value="gemini-2.0-flash">Gemini 2.0 Flash (Fastest, High Reasoning)</option>
-              <option value="gemini-1.5-pro">Gemini 1.5 Pro (Deep Diagnostic Analysis)</option>
-              <option value="offline-heuristic" selected>Built-in Heuristic Reasoner (Instant, Offline)</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="setting-teacher-threshold">Teacher Review Confidence Threshold</label>
-            <div class="range-with-val">
-              <input type="range" id="setting-teacher-threshold" class="form-range" min="50" max="95" value="70">
-              <span class="range-val" id="threshold-val">0.70</span>
-            </div>
-            <p class="form-help">Diagnoses with confidence below this threshold will automatically be flagged as <code>needs_teacher_review: true</code>.</p>
+            <label class="form-label" for="setting-gemini-key">Google Gemini API Key (Optional)</label>
+            <input type="password" id="setting-gemini-key" class="form-input" placeholder="AIzaSy... (leave empty for built-in offline engine)">
+            <p class="form-help">If provided, queries Gemini 2.0 Flash in real-time. Otherwise, uses built-in high-fidelity offline reasoning.</p>
           </div>
         </div>
 
@@ -802,10 +909,10 @@ x = 13/3</textarea>
       </div>
     </div>
 
-    <!-- Celebration Confetti Container -->
+    <!-- Celebration Confetti Canvas -->
     <canvas id="confetti-canvas" class="confetti-canvas" aria-hidden="true"></canvas>
 
-    <!-- Global Toast Notifications -->
+    <!-- Global Toast Container -->
     <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
   </div>

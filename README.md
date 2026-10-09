@@ -1,109 +1,75 @@
-# 🗺️ Misconception Map — AI Math Diagnosis & Targeted Repair Engine
+# 🎓 StudyForge — AI-Powered Undergraduate Learning Assistant
 
-> **A Complete Learning Loop for Mathematics Education:**
-> *Student makes mistake → AI identifies misconception → Visual mini-lesson → Repair question → Student retries → Teacher sees class-wide misconception map.*
+> **A flexible, interactive learning platform designed for undergraduate students to learn complex concepts, solve academic problems, test their understanding with quizzes, and prepare for exams with flashcards.**
 
 ---
 
 ## 🌟 Overview & Key Innovations
 
-**Misconception Map** is an intelligent diagnostic and remediation platform designed for middle and secondary mathematics education. Rather than merely grading an answer as "wrong," Misconception Map:
-1. **Analyzes line-by-line student working** to pinpoint the exact *first step* where conceptual reasoning departed from sound mathematics.
-2. **Classifies the error into a structured misconception taxonomy** (e.g., Partial Distributive Law, Direct Denominator Addition, Negative Sign Omission).
-3. **Generates targeted Socratic hints and interactive visual mini-lessons** (such as visual area models and fraction bars) that demystify *why* the reasoning broke down.
-4. **Delivers an isomorphic Repair Question** to close the learning loop, giving students immediate redemption and updating their concept mastery map.
-5. **Aggregates class-wide cognitive error data into an Interactive Network Misconception Map** for teachers, automatically generating actionable 5-minute warm-up interventions, student error clusters, and before/after efficacy analytics.
-6. **Supports authentic Telugu (తెలుగు) & Tenglish multilingual feedback** for localized learning.
+Instead of being a static textbook or a collection of fixed questions, **StudyForge** provides a personalized, multi-modal learning experience:
+
+1. **Custom Topic & Problem Input**: Students can choose any undergraduate discipline (Computer Science, Mathematics, Physics, Chemistry & Engineering, Business Studies & Economics, or Other), specify their academic level (Beginner, Intermediate, Advanced), and enter their own homework problems or conceptual doubts.
+2. **5 Distinct Explanation Styles**:
+   - 🐣 **Simple (Beginners)**: Conversational tone, intuitive real-world metaphors, no heavy jargon.
+   - 🪜 **Step-by-Step Solution**: Numbered logical steps, mathematical derivations, and systematic methodology.
+   - 💡 **Practical Examples & Code**: Hands-on runnable code snippets, architecture diagrams, and industrial applications.
+   - 📝 **Exam-Ready Answer**: Structured for maximum marks with formal definitions, key bullet points, formulas, and common pitfalls.
+   - 🔍 **Hints First (Socratic Mode)**: Progressive hints that guide the student to think through the answer before revealing the complete solution.
+3. **Interactive Practice Quizzes**:
+   - Generates 3–5 tailored multiple-choice questions per topic.
+   - Instant scoring with percentage badge and celebratory feedback.
+   - Comprehensive explanations for every question explaining *why* the correct answer is right and why common misconceptions are wrong.
+4. **Revision Notes & Interactive Flashcards**:
+   - High-yield concept summaries and formula cheat-sheets.
+   - Interactive Q&A flashcards that flip to reveal answers on click.
+   - One-click **"Copy Revision Notes"** button to easily save notes into Notion, OneNote, or Google Docs.
+5. **Integrated Mathematical Diagnostic Engine**:
+   - Retains step-by-step cognitive misconception detection for multi-step algebraic derivations with interactive Area Models and Fraction visualizers.
+6. **Dual AI Engine**:
+   - Zero-dependency built-in offline academic knowledge reasoner (runs instantly without any API keys).
+   - Optional live Google Gemini 2.0 Flash / 1.5 Pro integration via the Settings modal.
 
 ---
 
-## 🚀 Quick Start (Zero Dependencies Required!)
+## 🚀 Quick Start (Zero Dependencies)
 
-The application runs entirely client-side with zero npm/node prerequisites.
+StudyForge is built with pure HTML5, modern CSS3, and vanilla ES6+ JavaScript. It requires no Node.js or npm packages.
 
-### Option A: Launch with Built-in HTTP Server (Recommended)
-Open PowerShell and run:
-```powershell
-cd "C:\Users\Windows 11\.gemini\antigravity-ide\scratch\misconception-map"
-powershell -ExecutionPolicy Bypass -File .\server.ps1
-```
-This starts a lightweight .NET HTTP server at `http://localhost:8080` and opens your default browser automatically.
-
-### Option B: Direct File Launch
-Simply double-click or open `index.html` in Chrome, Edge, Firefox, or Safari:
+### Option 1: Direct File Launch
+Double-click or open `index.html` in any web browser:
 ```
 file:///C:/Users/Windows 11/.gemini/antigravity-ide/scratch/misconception-map/index.html
 ```
 
----
-
-## 🧩 The 10 System Prompts Implemented
-
-All 10 prompts specified in the project architecture are integrated into the app and can be tested live inside the **Prompt Lab**:
-
-| Prompt # | Name | Role in Application |
-| :--- | :--- | :--- |
-| **#10** | **Complete `/submit` Diagnosis Prompt** | **Core Student Engine**: Ingests student step-by-step working, identifies first wrong step, assigns taxonomy ID, calculates confidence score, generates student explanation, Socratic hint, repair question, and triggers `needs_teacher_review` if confidence < 0.70. |
-| **#5** | **Repair Answer Checker Prompt** | **Interactive Learning Loop**: Evaluates retry attempts on the repair question, assesses conceptual understanding, triggers celebration animations, and updates mastery. |
-| **#7** | **Teacher Intervention Prompt** | **Teacher Dashboard Engine**: Converts class-wide error counts into actionable 5-minute warmups, physical manipulatives/visual models, and follow-up checks. |
-| **#6** | **Telugu + English Feedback Prompt** | **Multilingual Engine**: Translates diagnostic explanations, Socratic hints, and mini-lessons into authentic Telugu and bilingual Tenglish. |
-| **#8** | **Misconception Clustering Prompt** | **Classroom Segmentation**: Clusters raw student working into cognitive misconception groups. |
-| **#9** | **Before/After Learning Analysis Prompt** | **Efficacy Analytics**: Computes pre-intervention vs. post-intervention shifts, calculating student recovery rates and persistent error rates. |
-| **#1** | **Student Answer Diagnosis Prompt** | Base foundational diagnosis prompt with strict JSON schema. |
-| **#2** | **Partial Distribution Prompt** | Focused algebraic auditor checking coefficient distribution across brackets. |
-| **#3** | **Fraction Denominator Misconception Prompt** | Checks for direct numerator/denominator addition without common denominators. |
-| **#4** | **Repair Question Generator Prompt** | Generates isomorphic, slightly simpler questions targeting the same root cognitive error. |
-
----
-
-## 🧭 Application Architecture & Features
-
-### 1. Student Workspace (`student-view`)
-- **Step-by-Step Reasoner Breakdown**:
-  - Highlights the **FIRST WRONG STEP** with glowing amber/rose borders and scan animation.
-  - Line numbers and step indexing make debugging intuitive for students.
-- **Visual Mini-Lesson Engine**:
-  - **Algebra Area Model**: Renders an interactive 2D geometry model demonstrating that $3(x + 2)$ represents a rectangle of height $3$ and width $(x + 2)$, split into two sub-rooms: area $3x$ and area $6$ (total $3x + 6$). Visually exposes the missing $+6$.
-  - **Fraction Bar Comparison**: Displays $1/2$ and $1/3$ overlay bars, proving that the erroneous direct denominator addition $2/5$ ($0.40$) is smaller than $1/2$ alone.
-- **Repair Retry & Celebration**:
-  - Live retry input field with instant validation (Prompt #5).
-  - Pure canvas confetti explosion upon successful repair!
-  - Real-time personal concept mastery progress bar.
-- **Multilingual Switcher**:
-  - Instant toggle between **English**, **తెలుగు (Telugu)**, and **Tenglish**.
-
-### 2. Teacher Dashboard (`teacher-view`)
-- **Interactive Misconception Network Map (SVG Canvas)**:
-  - Visual force graph connecting mathematical domains (*Algebraic Expressions*, *Fractions & Rationals*, *Signed Arithmetic*) to specific misconception nodes.
-  - Node radius reflects class error frequency.
-  - Color-coded severity: Critical Red (>30% class affected), Moderate Amber (15-30%), Repaired Green (<15%).
-  - Clicking any node opens the **Inspector Drawer** with affected student names, sample working, and one-click warmup generation.
-- **Teacher Interventions (Prompt #7)**:
-  - 5-minute ready-to-teach warmups, manipulative suggestions, and follow-up checks.
-- **Misconception Clustering (Prompt #8)**:
-  - Categorizes 24+ student submissions into clear clusters.
-- **Before/After Analytics (Prompt #9)**:
-  - Comparative bar graphs demonstrating pre vs post intervention shifts (e.g., 81.8% repair rate).
-- **1-Click Classroom Simulator**:
-  - Generates realistic class data (Aarav, Sneha, Rohan, Ananya, etc.) to immediately populate the teacher dashboard.
-
-### 3. Interactive Prompt Laboratory (`prompts-view`)
-- Inspect all **10 Prompts** side-by-side.
-- Live variable substitution playground.
-- Real-time JSON schema validation and syntax copy buttons.
-
-### 4. Dual AI Engine (Online Gemini API + Zero-Config Offline Heuristic)
-- **Built-in Offline Engine**: Works immediately out-of-the-box with 100% mathematical fidelity.
-- **Google Gemini API Support**: Click the **Settings (⚙️)** icon in the top right to paste a Gemini API Key. The app seamlessly routes Prompt #10 to `gemini-2.0-flash` or `gemini-1.5-pro` via the Google Generative Language API.
-
----
-
-## 📁 File Structure
+### Option 2: Built-in PowerShell HTTP Server
+Run in PowerShell:
+```powershell
+powershell -ExecutionPolicy Bypass -File .\server.ps1
 ```
-misconception-map/
-├── index.html        # Single-page application markup with semantic views
-├── styles.css        # Cosmic slate glassmorphism design system & animations
-├── app.js            # Core diagnosis engine, prompt runner, network visualizer
-├── server.ps1        # Standalone PowerShell .NET HTTP server launcher
-└── README.md         # Comprehensive documentation
+This opens `http://localhost:8080` in your default browser.
+
+---
+
+## 📋 Recommended User Workflow
+
+$$\text{Select Subject \& Level} \longrightarrow \text{Enter Topic/Question} \longrightarrow \text{Pick Explanation Style} \longrightarrow \text{Study Answer} \longrightarrow \text{Take Practice Quiz} \longrightarrow \text{Revise Flashcards}$$
+
+1. **Choose Subject & Level**: Select from Computer Science, Mathematics, Physics, Business, etc., and pick your target depth (Beginner, Intermediate, Advanced).
+2. **Enter Question**: Type any academic problem or choose from pre-populated topic pills (e.g. *Dynamic Programming*, *Database Normalization*, *Eigenvalues*, *Carnot Cycle*).
+3. **Choose Style**: Switch between *Simple*, *Step-by-Step*, *Practical Code*, *Exam-Ready*, or *Hints-First*.
+4. **Ask Follow-Up Doubts**: Use the interactive follow-up bar to ask clarifying questions.
+5. **Practice Quiz**: Click **"🎯 Practice Quiz"** to take an interactive 3–5 question assessment with automated scoring and answer explanations.
+6. **Revision & Copy**: Click **"📑 Revision Notes"** to review definitions, test recall with flip flashcards, and copy everything with one click.
+
+---
+
+## 📁 Project Structure
+
+```
+studyforge/
+├── index.html        # Clean, responsive single-page application with semantic tabs
+├── styles.css        # Cosmic dark glassmorphism design system & micro-interactions
+├── app.js            # StudyForge core engine, explanation formatters, quiz engine, flashcards
+├── server.ps1        # Zero-dependency PowerShell HTTP server script
+└── README.md         # Documentation and user guide
 ```

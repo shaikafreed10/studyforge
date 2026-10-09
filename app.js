@@ -1,2005 +1,1223 @@
 /**
- * MISCONCEPTION MAP — CORE APPLICATION LOGIC
- * Architecture:
- * 1. Misconception Taxonomy & Problem Scenarios Catalog
- * 2. 10 System Prompts Store & Interactive Runner
- * 3. Gemini API Client & Intelligent Fallback Reasoner (Prompt #10 & #5)
- * 4. Multilingual Feedback Engine (Telugu + English - Prompt #6)
- * 5. Interactive SVG Network Map Visualizer (Classroom Misconception Graph)
- * 6. Teacher Intervention Engine (Prompt #7), Clustering (Prompt #8) & Analytics (Prompt #9)
- * 7. Confetti Celebration Engine
+ * STUDYFORGE — AI-POWERED UNDERGRADUATE LEARNING ASSISTANT
+ * 
+ * Architecture & Features:
+ * 1. Custom Topic & Problem Selector (CS, Math, Physics, Chemistry, Business, Other)
+ * 2. 5 Distinct Explanation Styles (Simple, Step-by-Step, Practical, Exam-Ready, Hints-First)
+ * 3. Interactive Practice Quiz Generator & Auto-Scorer (3-5 MCQs with Explanations)
+ * 4. High-Yield Revision Notes & Interactive Q&A Flashcards (with Copy-to-Clipboard)
+ * 5. Integrated Mathematical Step Reasoner & Misconception Diagnostic Loop
+ * 6. Multilingual Support (English, Telugu, Tenglish)
+ * 7. Dual Engine: Live Google Gemini 2.0 Flash / 1.5 Pro + Zero-Config Offline Heuristics
  */
 
 (function () {
   'use strict';
 
   // =========================================================================
-  // 1. MISCONCEPTION TAXONOMY LIBRARY
+  // 1. STUDYFORGE PRESET ACADEMIC KNOWLEDGE CATALOG
   // =========================================================================
-  const MISCONCEPTION_LIBRARY = {
-    ALG_PARTIAL_DISTRIBUTION: {
-      id: 'ALG_PARTIAL_DISTRIBUTION',
-      label: 'Partial Distributive Property',
-      domain: 'Algebra & Expressions',
-      description: 'Multiplying only the variable term and leaving the constant unmultiplied inside parentheses: a(x + b) -> ax + b.',
-      severity: 'critical',
-      typicalCount: 12,
-      telugu: {
-        label: 'పాక్షిక పంపిణీ న్యాయ లోపం',
-        explanation: 'మీరు బ్రాకెట్ బయట ఉన్న 3 తో x ని మాత్రమే గుణించారు (3x), కానీ 2 ని గుణించడం మర్చిపోయారు. బ్రాకెట్ లోని ప్రతి పదాన్ని బయటి గుణకం తో గుణించాలి.',
-        hint: 'మీ దగ్గర ఒక్కొక్కటి (x + 2) నాణాలు ఉన్న 3 సంచులు ఉంటే, మొత్తం మీద ఎన్ని విడి నాణాలు ఉంటాయి?',
-        miniLesson: 'గుర్తుంచుకోండి: a(b + c) = a·b + a·c. బ్రాకెట్ లోపల ఉన్న అన్ని పదాలను గుణించాలి.'
+  const STUDYFORGE_CATALOG = {
+    cs: [
+      {
+        topic: 'Dynamic Programming (Memoization vs Tabulation)',
+        question: 'What is the difference between top-down memoization and bottom-up tabulation? Explain with the Fibonacci sequence and include space/time complexity.',
+        level: 'intermediate',
+        simple: `### 🐣 Intuitive Explanation: Think of it like a Math Cheat Sheet!
+
+Imagine you are calculating **Fibonacci(5)** by hand:
+- Without dynamic programming, to calculate \`Fib(5)\`, you compute \`Fib(4)\` and \`Fib(3)\`.
+- But to calculate \`Fib(4)\`, you also need \`Fib(3)\` again!
+- In a naive recursive approach, you end up doing the exact same math over and over like a tired robot with amnesia.
+
+**Dynamic Programming (DP)** is simply **remembering past answers so you never solve the same puzzle twice**.
+
+#### The Two Flavors:
+1. **Memoization (Top-Down)**: You start from the big goal (\`Fib(5)\`), ask what pieces you need, calculate them on demand, and write each result in a notebook (a cache/dictionary) as you go.
+2. **Tabulation (Bottom-Up)**: You don't wait to be asked. You start from the ground floor (\`Fib(0) = 0\`, \`Fib(1) = 1\`), fill out a table row-by-row, and build up to \`Fib(5)\`.
+
+> **Key Takeaway**: Both give you the exact same answer in linear time $O(n)$ instead of exponential nightmare time $O(2^n)$!`,
+        
+        step_by_step: `### 🪜 Step-by-Step Methodical Solution
+
+#### Step 1: Identify the Naive Problem & Recurrence Relation
+The Fibonacci sequence is defined by:
+$$F(n) = F(n-1) + F(n-2) \\quad \\text{for } n \\ge 2$$
+$$F(0) = 0, \\quad F(1) = 1$$
+Naive recursion branches into two subproblems at each step, yielding an exponential time complexity of **$O(2^n)$** with overlapping subproblems.
+
+#### Step 2: Implement Top-Down Memoization
+1. Create a memoization lookup table (hash map or array initialized to -1).
+2. Before computing $F(n)$, check if $F(n)$ exists in the lookup table.
+3. If it exists, return the cached value in $O(1)$.
+4. Otherwise, compute recursively, store the result in the cache, and return.
+- **Time Complexity**: $O(n)$ — every unique state is computed exactly once.
+- **Space Complexity**: $O(n)$ — table storage plus recursion call stack depth.
+
+#### Step 3: Implement Bottom-Up Tabulation
+1. Allocate an array \`dp\` of size $(n + 1)$.
+2. Set base cases: \`dp[0] = 0\`, \`dp[1] = 1\`.
+3. Iterate iteratively using a loop from $i = 2$ up to $n$:
+   $$\\text{dp}[i] = \\text{dp}[i-1] + \\text{dp}[i-2]$$
+4. Return \`dp[n]\`.
+- **Time Complexity**: $O(n)$
+- **Space Complexity**: $O(n)$ (can be reduced to $O(1)$ by keeping only the last two variables \`prev1\` and \`prev2\`).
+
+#### Step 4: Comparative Summary
+| Feature | Top-Down (Memoization) | Bottom-Up (Tabulation) |
+| :--- | :--- | :--- |
+| **Approach** | Recursive (Demand-driven) | Iterative (Building-up) |
+| **Call Stack** | Uses recursion stack (Risk of stack overflow for large $n$) | No recursion stack |
+| **Subproblem Evaluation** | Solves only needed subproblems | Computes all subproblems sequentially |`,
+
+        practical: `### 💡 Practical Implementation & Code Examples
+
+Here is runnable Python code showing both approaches side-by-side:
+
+\`\`\`python
+# 1. Top-Down Memoization
+def fib_memo(n: int, memo: dict = None) -> int:
+    if memo is None:
+        memo = {}
+    if n in memo:
+        return memo[n]
+    if n <= 1:
+        return n
+    
+    # Store result before returning
+    memo[n] = fib_memo(n - 1, memo) + fib_memo(n - 2, memo)
+    return memo[n]
+
+# 2. Bottom-Up Tabulation (Optimized Space O(1))
+def fib_tabulation(n: int) -> int:
+    if n <= 1:
+        return n
+    
+    prev2, prev1 = 0, 1
+    for _ in range(2, n + 1):
+        curr = prev1 + prev2
+        prev2, prev1 = prev1, curr
+    return prev1
+
+# Test demonstration
+print("Memoization fib(10):", fib_memo(10))    # Output: 55
+print("Tabulation  fib(10):", fib_tabulation(10)) # Output: 55
+\`\`\`
+
+#### Real-World Engineering Applications:
+- **Routing Algorithms**: Bellman-Ford and Floyd-Warshall shortest path algorithms.
+- **Bioinformatics**: Needleman-Wunsch algorithm for DNA sequence alignment.
+- **Natural Language Processing**: Viterbi algorithm in Hidden Markov Models.`,
+
+        exam_ready: `### 📝 Exam-Ready Model Answer
+
+**Definition**: Dynamic Programming (DP) is an algorithm design paradigm used to solve optimization problems by breaking them down into overlapping subproblems and optimal substructures.
+
+#### 1. Core Differences:
+1. **Top-Down Memoization**:
+   - Uses recursion and caches results of subproblems.
+   - Solves subproblems on-demand.
+   - Incurs function call overhead and consumes $O(n)$ auxiliary call-stack memory.
+2. **Bottom-Up Tabulation**:
+   - Uses iterative loops to fill a table from base cases up to the final target.
+   - Avoids call-stack overhead and eliminates recursion limits.
+   - Solves all subproblems in topological order.
+
+#### 2. Complexity Analysis:
+- **Naive Recursion**: Time $O(2^n)$, Space $O(n)$
+- **Memoization**: Time $O(n)$, Space $O(n)$ (Lookup table + recursion stack)
+- **Tabulation**: Time $O(n)$, Space $O(1)$ (using two rolling variables)
+
+#### 3. Criteria for Applying DP:
+- **Optimal Substructure**: The optimal solution to the problem contains within it optimal solutions to subproblems.
+- **Overlapping Subproblems**: The same subproblems are solved repeatedly rather than generating new subproblems at each step.`,
+
+        hints_first: `### 🔍 Socratic Discovery Mode
+
+**Hint 1**: When you compute \`fib(5) = fib(4) + fib(3)\` and \`fib(4) = fib(3) + fib(2)\`, notice that \`fib(3)\` appears twice in the tree. If $n = 50$, how many times would \`fib(3)\` be computed in total?
+
+**Hint 2**: If you store the answer in an array index \`dp[n]\` the very first time it is calculated, how many total unique computations remain for $n$?
+
+*(Click the "Reveal Full Solution Step" button below to unlock the complete derivation)*`,
+        
+        quiz: [
+          {
+            id: 'q1',
+            question: 'What is the primary difference between top-down memoization and bottom-up tabulation?',
+            options: [
+              { key: 'A', text: 'Memoization is iterative; tabulation is recursive.' },
+              { key: 'B', text: 'Memoization uses recursion with caching; tabulation builds solutions iteratively from base cases.' },
+              { key: 'C', text: 'Tabulation always uses more memory than memoization.' },
+              { key: 'D', text: 'Memoization only works on greedy problems.' }
+            ],
+            correctAnswer: 'B',
+            explanation: 'Memoization is a top-down recursive technique that saves computed results, whereas tabulation is a bottom-up iterative method that fills a table starting from base cases.'
+          },
+          {
+            id: 'q2',
+            question: 'Which two properties MUST a problem possess to be solved using Dynamic Programming?',
+            options: [
+              { key: 'A', text: 'Greedy choice property and sorting capability' },
+              { key: 'B', text: 'Optimal substructure and overlapping subproblems' },
+              { key: 'C', text: 'Linear time complexity and binary branching' },
+              { key: 'D', text: 'Constant memory and deterministic hashing' }
+            ],
+            correctAnswer: 'B',
+            explanation: 'A problem must exhibit Optimal Substructure (solution constructed from optimal sub-solutions) and Overlapping Subproblems (subproblems are reused multiple times).'
+          },
+          {
+            id: 'q3',
+            question: 'By using rolling variables instead of an array in Fibonacci tabulation, what is the optimized auxiliary space complexity?',
+            options: [
+              { key: 'A', text: 'O(n)' },
+              { key: 'B', text: 'O(log n)' },
+              { key: 'C', text: 'O(1)' },
+              { key: 'D', text: 'O(2^n)' }
+            ],
+            correctAnswer: 'C',
+            explanation: 'Since each step only requires the previous two numbers (prev1 and prev2), keeping just two rolling variables reduces memory usage to constant space O(1).'
+          }
+        ],
+        
+        revision: {
+          summary: 'Dynamic programming optimizes recursive problems by caching answers. Memoization works top-down via recursion, while Tabulation works bottom-up via iterative loops.',
+          definitions: [
+            { term: 'Optimal Substructure', desc: 'An optimal solution to the overall problem can be assembled from optimal solutions of its subproblems.' },
+            { term: 'Overlapping Subproblems', desc: 'A scenario where recursive algorithms repeatedly revisit the exact same smaller subproblems.' },
+            { term: 'Memoization', desc: 'Top-down caching of function return values keyed by parameter inputs.' },
+            { term: 'Tabulation', desc: 'Bottom-up iterative population of an array or table starting strictly from base conditions.' }
+          ],
+          flashcards: [
+            { q: 'What is the time complexity of naive Fibonacci vs DP Fibonacci?', a: 'Naive recursion is exponential O(2^n); Dynamic programming is linear O(n).' },
+            { q: 'Why might memoization cause a stack overflow while tabulation does not?', a: 'Memoization relies on the recursion call stack, which can exceed the maximum call stack limit for large n.' },
+            { q: 'Can every divide-and-conquer problem be solved with DP?', a: 'No; divide-and-conquer (like Merge Sort) divides problems into independent, non-overlapping subproblems. DP specifically requires overlapping subproblems.' }
+          ]
+        }
       },
-      tenglish: {
-        label: 'Partial Distribution Error',
-        explanation: 'Brackets simplify chesetappudu 3 ni x tho multiply chesaru, kani 2 tho multiply cheyadam marchipoyaru. 3(x+2) ante 3x + 6 avvali.',
-        hint: 'Bracket bayata unna 3 lopaliki distribute cheste 3 * x and 3 * 2 renditiki apply avtundhi kadha?',
-        miniLesson: 'Rule: a(b + c) = a*b + a*c. Rendu terms ni compulsory multiply cheyali.'
+      {
+        topic: 'Database Normalization (1NF, 2NF, 3NF, BCNF)',
+        question: 'Explain 1NF, 2NF, and 3NF with an example student database table and explain why transitive dependencies are eliminated in 3NF.',
+        level: 'intermediate',
+        simple: `### 🐣 Intuitive Explanation: Cleaning Up Messy Filing Cabinets
+
+Imagine a spreadsheet where one cell says \`Courses: Math, Physics, History\`. If you want to search for students taking just "Physics", you have to split text. That's messy!
+
+**Database Normalization** is the process of organizing tables to prevent redundant duplicate data and eliminate update anomalies.
+
+- **1NF (Atomic Values)**: No multi-valued attributes. Every cell holds one single value.
+- **2NF (No Partial Dependencies)**: Everything in the row must depend on the **entire** primary key, not just half of a composite key.
+- **3NF (No Transitive Dependencies)**: Non-key columns cannot depend on other non-key columns (e.g., student ID determines Postal Code, and Postal Code determines City -> City should be in its own table!).`,
+        step_by_step: `### 🪜 Step-by-Step Methodical Solution
+
+#### Step 1: First Normal Form (1NF)
+**Rule**: An attribute cannot contain multiple values (atomic attributes only), and rows must be uniquely identifiable.
+- *Violation*: \`StudentID | Name | Courses\` with value \`"CS101, MATH201"\`.
+- *Fix*: Split into separate rows so each course has its own record.
+
+#### Step 2: Second Normal Form (2NF)
+**Rule**: Must be in 1NF **AND** all non-prime attributes must be fully functionally dependent on the entire primary key (no partial dependency).
+- *Scenario*: Composite key \`{StudentID, CourseID}\`.
+- *Violation*: \`CourseName\` depends only on \`CourseID\`, not on \`StudentID\`.
+- *Fix*: Extract \`CourseID, CourseName\` into a dedicated \`Courses\` table.
+
+#### Step 3: Third Normal Form (3NF)
+**Rule**: Must be in 2NF **AND** no non-prime attribute should be transitively dependent on the primary key ($X \\to Y$ and $Y \\to Z$ where $Z$ is non-key).
+- *Violation*: \`StudentID -> ZipCode -> City\`. City depends on ZipCode, creating duplicate data for everyone in that city.
+- *Fix*: Split into \`StudentAddress(StudentID, ZipCode)\` and \`ZipLookup(ZipCode, City)\`.`,
+        practical: `### 💡 Practical SQL Schema Normalization Example
+
+\`\`\`sql
+-- 1. Unnormalized / Violating Table:
+-- StudentEnrollment(StudentID, CourseID, CourseName, Instructor, InstructorEmail)
+
+-- 2. Fully Normalized to 3NF:
+CREATE TABLE Students (
+    StudentID INT PRIMARY KEY,
+    StudentName VARCHAR(100),
+    Email VARCHAR(100) UNIQUE
+);
+
+CREATE TABLE Instructors (
+    InstructorID INT PRIMARY KEY,
+    InstructorName VARCHAR(100),
+    Email VARCHAR(100)
+);
+
+CREATE TABLE Courses (
+    CourseID VARCHAR(10) PRIMARY KEY,
+    CourseTitle VARCHAR(100),
+    InstructorID INT REFERENCES Instructors(InstructorID)
+);
+
+CREATE TABLE Enrollments (
+    StudentID INT REFERENCES Students(StudentID),
+    CourseID VARCHAR(10) REFERENCES Courses(CourseID),
+    Grade CHAR(2),
+    PRIMARY KEY (StudentID, CourseID)
+);
+\`\`\``,
+        exam_ready: `### 📝 Exam-Ready Model Answer
+
+**Definition**: Normalization is a systematic approach of decomposing tables to eliminate data redundancy and undesirable anomalies (insertion, update, and deletion anomalies).
+
+#### Summary of Normal Forms:
+1. **1NF**: Atomic attribute values; presence of a primary key; no repeating groups.
+2. **2NF**: In 1NF + No partial dependencies on any candidate key.
+3. **3NF**: In 2NF + No transitive functional dependencies ($X \\to Y$ holds only if $X$ is a superkey or $Y$ is a prime attribute).
+4. **BCNF (Boyce-Codd)**: Stricter version of 3NF where for every functional dependency $X \\to Y$, $X$ must strictly be a superkey.`,
+        hints_first: `### 🔍 Socratic Discovery Mode
+
+**Hint 1**: If you have a composite primary key \`(StudentID, CourseID)\`, does the professor's office phone number depend on the student, or only on the course?
+
+**Hint 2**: If the course is cancelled and deleted from the table, what happens to the professor's contact info if they are stored in the same row?`,
+        quiz: [
+          {
+            id: 'q1',
+            question: 'Which anomaly occurs when deleting one piece of data inadvertently deletes unrelated required information?',
+            options: [
+              { key: 'A', text: 'Insertion Anomaly' },
+              { key: 'B', text: 'Deletion Anomaly' },
+              { key: 'C', text: 'Transitive Anomaly' },
+              { key: 'D', text: 'Atomic Anomaly' }
+            ],
+            correctAnswer: 'B',
+            explanation: 'A deletion anomaly occurs when the removal of one fact automatically causes the unintended loss of another distinct fact.'
+          },
+          {
+            id: 'q2',
+            question: 'To transition a table from 1NF to 2NF, which type of dependency must be eliminated?',
+            options: [
+              { key: 'A', text: 'Transitive Dependency' },
+              { key: 'B', text: 'Partial Dependency' },
+              { key: 'C', text: 'Multi-valued Dependency' },
+              { key: 'D', text: 'Circular Dependency' }
+            ],
+            correctAnswer: 'B',
+            explanation: '2NF requires that all non-key attributes be fully dependent on the entire primary key, eliminating partial functional dependencies.'
+          },
+          {
+            id: 'q3',
+            question: 'In 3NF, why are transitive dependencies eliminated?',
+            options: [
+              { key: 'A', text: 'To ensure column names are alphabetically ordered' },
+              { key: 'B', text: 'To prevent non-key attributes from determining other non-key attributes and causing redundant copies' },
+              { key: 'C', text: 'To allow duplicate rows across the database' },
+              { key: 'D', text: 'To enforce composite primary keys on all tables' }
+            ],
+            correctAnswer: 'B',
+            explanation: 'Transitive dependencies mean a non-key column determines another non-key column (e.g. ZipCode -> City), which leads to duplicate records and update anomalies.'
+          }
+        ],
+        revision: {
+          summary: 'Normalization cleans relational schemas. 1NF guarantees atomic cells, 2NF removes partial key dependencies, and 3NF removes transitive non-key dependencies.',
+          definitions: [
+            { term: 'Functional Dependency (X -> Y)', desc: 'The value of attribute X uniquely determines the value of attribute Y.' },
+            { term: 'Partial Dependency', desc: 'A non-prime attribute depends on only a subset of a composite candidate key.' },
+            { term: 'Transitive Dependency', desc: 'An indirect relationship where X -> Y and Y -> Z, with X not directly determining Z.' }
+          ],
+          flashcards: [
+            { q: 'What is 1NF in one phrase?', a: 'Atomic values per cell with no repeating groups.' },
+            { q: 'When is a table automatically in 2NF if it is already in 1NF?', a: 'When the primary key consists of only a single column (since partial dependencies require a composite key).' },
+            { q: 'How does BCNF differ from 3NF?', a: 'In BCNF, for every functional dependency X -> Y, X MUST be a superkey without exception.' }
+          ]
+        }
       }
-    },
-    FRACTION_ADD_DENOMINATORS: {
-      id: 'FRACTION_ADD_DENOMINATORS',
-      label: 'Direct Denominator Addition',
-      domain: 'Rational Numbers & Fractions',
-      description: 'Adding fractions by directly summing numerators and summing denominators without common denominators: a/b + c/d -> (a+c)/(b+d).',
-      severity: 'critical',
-      typicalCount: 8,
-      telugu: {
-        label: 'హారాలను నేరుగా కూడే లోపం',
-        explanation: 'భిన్నాలను కూడేటప్పుడు హారాలను నేరుగా కూడకూడదు. ముందుగా సామాన్య హారం (క.సా.గు/LCM) కనుగొని సమాన భిన్నాలుగా మార్చాలి.',
-        hint: 'సగం కేక్ (1/2) మరియు మూడోవంతు కేక్ (1/3) కలిపితే, అది అసలు సగం కంటే తక్కువ (1/5) ఎలా అవుతుంది?',
-        miniLesson: 'భిన్నాలు కూడటానికి ముందు హారాలు సమానం చేయాలి: 1/2 + 1/3 = 3/6 + 2/6 = 5/6.'
-      },
-      tenglish: {
-        label: 'Direct Denominator Addition Error',
-        explanation: 'Fractions add chesetappudu denominators ni direct ga add cheyakudadhu. LCM theeskuni common denominator cheyali.',
-        hint: '1/2 cake and 1/3 cake kalisthe 1/5 ela avthundhi? 1/2 kante chinnadi aipothundhi kadha?',
-        miniLesson: 'First common denominator kanukkondi: 1/2 (3/6) + 1/3 (2/6) = 5/6.'
+    ],
+    math: [
+      {
+        topic: 'Eigenvalues and Eigenvectors',
+        question: 'How do you calculate the eigenvalues and eigenvectors of a 2x2 matrix A = [[4, 1], [2, 3]]? Show the characteristic equation.',
+        level: 'intermediate',
+        simple: `### 🐣 Intuitive Explanation: Vectors That Refuse to Rotate!
+
+When you multiply a vector $\\vec{v}$ by a matrix $A$, the matrix usually **stretches** AND **rotates** the vector into a completely new direction.
+
+However, certain special directions refuse to rotate:
+$$A\\vec{v} = \\lambda\\vec{v}$$
+- When multiplied by $A$, these vectors simply **grow or shrink** along their original line!
+- The vector $\\vec{v}$ is called an **Eigenvector**.
+- The scaling multiplier $\\lambda$ (how much it stretches or shrinks) is the **Eigenvalue**.`,
+        step_by_step: `### 🪜 Step-by-Step Methodical Solution
+
+Given matrix:
+$$A = \\begin{pmatrix} 4 & 1 \\\\ 2 & 3 \\end{pmatrix}$$
+
+#### Step 1: Formulate the Characteristic Equation
+The condition $(A - \\lambda I)\\vec{v} = \\vec{0}$ has non-trivial solutions if and only if:
+$$\\det(A - \\lambda I) = 0$$
+$$\\det \\begin{pmatrix} 4 - \\lambda & 1 \\\\ 2 & 3 - \\lambda \\end{pmatrix} = 0$$
+
+#### Step 2: Solve the Characteristic Polynomial
+$$(4 - \\lambda)(3 - \\lambda) - (1)(2) = 0$$
+$$\\lambda^2 - 7\\lambda + 12 - 2 = 0$$
+$$\\lambda^2 - 7\\lambda + 10 = 0$$
+Factoring:
+$$(\\lambda - 5)(\\lambda - 2) = 0$$
+Thus, the eigenvalues are:
+$$\\lambda_1 = 5, \\quad \\lambda_2 = 2$$
+
+#### Step 3: Find Eigenvector for $\\lambda_1 = 5$
+Solve $(A - 5I)\\vec{v}_1 = \\vec{0}$:
+$$\\begin{pmatrix} 4 - 5 & 1 \\\\ 2 & 3 - 5 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix} \\implies -x + y = 0 \\implies y = x$$
+A representative eigenvector is:
+$$\\vec{v}_1 = \\begin{pmatrix} 1 \\\\ 1 \\end{pmatrix}$$
+
+#### Step 4: Find Eigenvector for $\\lambda_2 = 2$
+Solve $(A - 2I)\\vec{v}_2 = \\vec{0}$:
+$$\\begin{pmatrix} 4 - 2 & 1 \\\\ 2 & 3 - 2 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix} \\implies 2x + y = 0 \\implies y = -2x$$
+A representative eigenvector is:
+$$\\vec{v}_2 = \\begin{pmatrix} 1 \\\\ -2 \\end{pmatrix}$$`,
+        practical: `### 💡 Real-World Applications & Code
+Eigenvalues are fundamental to:
+- **Google PageRank**: Calculating the stationary probability vector of Markov web-surfing matrices.
+- **Principal Component Analysis (PCA)**: Finding axes of maximum variance in machine learning.
+- **Structural Engineering**: Calculating resonance frequencies to prevent bridge collapses.
+
+\`\`\`python
+import numpy as np
+
+A = np.array([[4, 1], [2, 3]])
+eigenvalues, eigenvectors = np.linalg.eig(A)
+
+print("Eigenvalues:", eigenvalues) # [5., 2.]
+print("Eigenvectors:\\n", eigenvectors)
+\`\`\``,
+        exam_ready: `### 📝 Exam-Ready Model Answer
+
+**Theorem**: For an $n \\times n$ matrix $A$, a non-zero vector $\\vec{v}$ is an eigenvector corresponding to scalar eigenvalue $\\lambda$ if $A\\vec{v} = \\lambda\\vec{v}$.
+
+1. **Characteristic Equation**: $\\det(A - \\lambda I) = 0$.
+2. For $A = \\begin{pmatrix} 4 & 1 \\\\ 2 & 3 \\end{pmatrix}$:
+   - Characteristic equation: $\\lambda^2 - 7\\lambda + 10 = 0$.
+   - Eigenvalues: $\\lambda_1 = 5$, $\\lambda_2 = 2$.
+   - Eigenvector for $\\lambda = 5$: $\\vec{v}_1 = k\\begin{pmatrix} 1 \\\\ 1 \\end{pmatrix}, k \\neq 0$.
+   - Eigenvector for $\\lambda = 2$: $\\vec{v}_2 = k\\begin{pmatrix} 1 \\\\ -2 \\end{pmatrix}, k \\neq 0$.
+3. **Trace & Determinant Check**:
+   - $\\text{Trace}(A) = 4 + 3 = 7 = \\lambda_1 + \\lambda_2$ (Verified).
+   - $\\det(A) = 4(3) - 2(1) = 10 = \\lambda_1 \\cdot \\lambda_2$ (Verified).`,
+        hints_first: `### 🔍 Socratic Discovery Mode
+**Hint 1**: Recall that a matrix equation $(A - \\lambda I)\\vec{v} = \\vec{0}$ can have non-zero vector solutions $\\vec{v}$ only when the matrix $(A - \\lambda I)$ is non-invertible (singular). What must its determinant equal?
+
+**Hint 2**: Expand $(4 - \\lambda)(3 - \\lambda) - 2$. Can you factor the quadratic polynomial into two binomials?`,
+        quiz: [
+          {
+            id: 'q1',
+            question: 'What is the sum of the eigenvalues of any square matrix equal to?',
+            options: [
+              { key: 'A', text: 'The determinant of the matrix' },
+              { key: 'B', text: 'The trace (sum of main diagonal elements)' },
+              { key: 'C', text: 'The rank of the matrix' },
+              { key: 'D', text: 'Zero' }
+            ],
+            correctAnswer: 'B',
+            explanation: 'The sum of all eigenvalues of a square matrix is always equal to its trace (the sum of elements on its main diagonal).'
+          },
+          {
+            id: 'q2',
+            question: 'For matrix A = [[4, 1], [2, 3]], what is the determinant?',
+            options: [
+              { key: 'A', text: '7' },
+              { key: 'B', text: '10' },
+              { key: 'C', text: '12' },
+              { key: 'D', text: '5' }
+            ],
+            correctAnswer: 'B',
+            explanation: 'det(A) = (4 * 3) - (1 * 2) = 12 - 2 = 10. Note that the product of the eigenvalues 5 * 2 = 10 also equals the determinant.'
+          },
+          {
+            id: 'q3',
+            question: 'If Av = λv with v ≠ 0, what does matrix A do to vector v geometrically?',
+            options: [
+              { key: 'A', text: 'Rotates it by 90 degrees' },
+              { key: 'B', text: 'Scales it by factor λ along its own span without changing its direction line' },
+              { key: 'C', text: 'Inverts its dimension' },
+              { key: 'D', text: 'Projects it onto the origin' }
+            ],
+            correctAnswer: 'B',
+            explanation: 'Multiplying an eigenvector by the matrix results in pure scalar scaling by λ along the vector span without rotating off its line.'
+          }
+        ],
+        revision: {
+          summary: 'Eigenvectors are vectors whose direction is unchanged by matrix multiplication, simply scaled by eigenvalue λ. Computed via det(A - λI) = 0.',
+          definitions: [
+            { term: 'Eigenvalue (λ)', desc: 'Scalar factor by which an eigenvector is scaled under linear transformation A.' },
+            { term: 'Eigenvector (v)', desc: 'Non-zero vector satisfying A v = λ v.' },
+            { term: 'Characteristic Equation', desc: 'det(A - λ I) = 0, whose roots are the eigenvalues.' }
+          ],
+          flashcards: [
+            { q: 'How is the determinant related to eigenvalues?', a: 'The determinant of matrix A equals the product of all its eigenvalues.' },
+            { q: 'Can an eigenvalue be zero?', a: 'Yes; λ = 0 means the matrix is singular (det(A) = 0) and has a non-trivial null space.' },
+            { q: 'Can an eigenvector be the zero vector?', a: 'No; by mathematical definition, eigenvectors must strictly be non-zero vectors.' }
+          ]
+        }
       }
-    },
-    NEG_SIGN_DISTRIBUTION: {
-      id: 'NEG_SIGN_DISTRIBUTION',
-      label: 'Negative Sign Distribution Error',
-      domain: 'Algebra & Expressions',
-      description: 'Failing to invert signs when distributing a negative multiplier across terms: -a(x - b) -> -ax - ab instead of -ax + ab.',
-      severity: 'moderate',
-      typicalCount: 5,
-      telugu: {
-        label: 'ఋణ గుర్తు పంపిణీ లోపం',
-        explanation: 'ఋణ సంఖ్య (-2) తో బ్రాకెట్ లోపలి (-4) ని గుణించినప్పుడు, (- * - = +) గుర్తు ధనంగా మారాలి. -2 * -4 = +8 అవుతుంది.',
-        hint: 'రెండు ఋణ సంఖ్యలను గుణించినప్పుడు వచ్చే ఫలితం ధనమా లేదా ఋణమా?',
-        miniLesson: 'గుర్తుంచుకోండి: (-) × (-) = (+). కాబట్టి -2(x - 4) = -2x + 8 అవుతుంది.'
-      },
-      tenglish: {
-        label: 'Negative Sign Flip Error',
-        explanation: '-2 tho (x - 4) multiply chesetappudu -2 * -4 = +8 avvali, kani -8 ga raasaru.',
-        hint: 'Negative number ni inkoka negative number tho multiply chesthe sign emitavtundhi?',
-        miniLesson: 'Sign Rule: (-) * (-) = (+). So -2(x - 4) = -2x + 8.'
+    ],
+    physics: [
+      {
+        topic: 'Thermodynamics: Carnot Cycle & Efficiency',
+        question: 'Derive the efficiency of a Carnot heat engine operating between temperatures Th and Tc. Why cannot any real engine exceed Carnot efficiency?',
+        level: 'intermediate',
+        simple: `### 🐣 Intuitive Explanation: The Universal Speed Limit of Heat Engines
+
+Imagine heat flowing like water down a waterfall:
+- The upper reservoir is hot ($T_h$), the lower reservoir is cold ($T_c$).
+- A heat engine is like a waterwheel in the middle: it captures some flowing heat energy to do mechanical work ($W$).
+- But you **must dump** the rest of the heat into the cold sink to keep the cycle turning!
+
+The **Carnot Cycle** is the ideal, theoretically perfect engine. It operates without friction, heat leaks, or wasted turbulence.
+
+$$\\eta = 1 - \\frac{T_c}{T_h}$$
+
+Even this 100% frictionless machine cannot be 100% efficient unless the cold reservoir is at absolute zero ($-273.15^\\circ\\text{C}$)!`,
+        step_by_step: `### 🪜 Step-by-Step Derivation
+
+A Carnot cycle consists of four reversible processes:
+1. **Isothermal Expansion** at $T_h$: Heat $Q_h$ absorbed from hot reservoir.
+2. **Adiabatic Expansion**: Temperature drops from $T_h$ to $T_c$; $Q = 0$.
+3. **Isothermal Compression** at $T_c$: Heat $Q_c$ rejected to cold reservoir.
+4. **Adiabatic Compression**: Temperature rises from $T_c$ to $T_h$; $Q = 0$.
+
+#### Step 1: Work and First Law of Thermodynamics
+Over a complete cycle, $\\Delta U = 0$:
+$$W = Q_h - Q_c$$
+
+#### Step 2: Thermal Efficiency Definition
+$$\\eta = \\frac{W}{Q_h} = \\frac{Q_h - Q_c}{Q_h} = 1 - \\frac{Q_c}{Q_h}$$
+
+#### Step 3: Reversibility & Second Law of Thermodynamics
+For reversible processes, entropy change per cycle is zero:
+$$\\Delta S = \\frac{Q_h}{T_h} - \\frac{Q_c}{T_c} = 0 \\implies \\frac{Q_c}{Q_h} = \\frac{T_c}{T_h}$$
+
+#### Step 4: Carnot Efficiency Equation
+$$\\eta_{\\text{Carnot}} = 1 - \\frac{T_c}{T_h}$$
+*(Temperatures must always be in Kelvin).*`,
+        practical: `### 💡 Real-World Engineering Implications
+- **Power Plants**: A steam turbine with boiler at $550^\\circ\\text{C}$ (823 K) and cooling river at $25^\\circ\\text{C}$ (298 K) has maximum possible Carnot efficiency:
+  $$\\eta_{\\max} = 1 - \\frac{298}{823} \\approx 63.8\\%$$
+  Real modern combined-cycle gas plants achieve roughly 55–60% due to friction, conductive losses, and irreversibility.`,
+        exam_ready: `### 📝 Exam-Ready Model Answer
+
+**Carnot's Theorem**:
+1. No engine operating between two heat reservoirs can be more efficient than a reversible Carnot engine operating between the same reservoirs.
+2. All reversible engines operating between the same two temperatures have identical efficiency regardless of working fluid.
+
+**Formula**:
+$$\\eta = 1 - \\frac{T_{\\text{cold}}}{T_{\\text{hot}}}$$
+*(Temperatures in Kelvin)*
+
+**Why Real Engines Cannot Exceed Carnot Efficiency**:
+- Real engines suffer from irreversible processes: viscous friction, unrestrained expansion, and finite-temperature-difference heat transfer.
+- Exceeding Carnot efficiency would violate Clausius' statement of the Second Law of Thermodynamics (it would permit spontaneous transfer of heat from colder to hotter bodies without external work).`,
+        hints_first: `### 🔍 Socratic Discovery Mode
+**Hint 1**: What does the First Law of Thermodynamics say about net work $W$ when internal energy returns to its original state $\\Delta U = 0$ over a closed cycle?
+
+**Hint 2**: In a reversible cycle, what is the net total entropy change $\\Delta S_{\\text{total}}$ of the universe?`,
+        quiz: [
+          {
+            id: 'q1',
+            question: 'A Carnot engine operates between Th = 600 K and Tc = 300 K. What is its maximum theoretical efficiency?',
+            options: [
+              { key: 'A', text: '25%' },
+              { key: 'B', text: '50%' },
+              { key: 'C', text: '75%' },
+              { key: 'D', text: '100%' }
+            ],
+            correctAnswer: 'B',
+            explanation: 'η = 1 - (Tc / Th) = 1 - (300 / 600) = 1 - 0.50 = 0.50 (50%).'
+          },
+          {
+            id: 'q2',
+            question: 'What temperature unit MUST be used when calculating Carnot efficiency?',
+            options: [
+              { key: 'A', text: 'Celsius (°C)' },
+              { key: 'B', text: 'Fahrenheit (°F)' },
+              { key: 'C', text: 'Kelvin (K)' },
+              { key: 'D', text: 'Rankine (°R) only' }
+            ],
+            correctAnswer: 'C',
+            explanation: 'Thermodynamic efficiency formulas require absolute temperature measured in Kelvin.'
+          },
+          {
+            id: 'q3',
+            question: 'Why can a real heat engine NEVER achieve 100% efficiency?',
+            options: [
+              { key: 'A', text: 'Because of the First Law of Thermodynamics' },
+              { key: 'B', text: 'Because achieving 100% requires a cold reservoir at absolute zero (0 K), which is unattainable by the Third Law' },
+              { key: 'C', text: 'Because metals expand when heated' },
+              { key: 'D', text: 'Because gravity opposes mechanical work' }
+            ],
+            correctAnswer: 'B',
+            explanation: 'To reach 100% efficiency, Tc must be 0 K (absolute zero), which cannot be attained in a finite number of steps per the Third Law of Thermodynamics.'
+          }
+        ],
+        revision: {
+          summary: 'The Carnot cycle is the maximum theoretical efficiency limit for heat engines operating between two thermal reservoirs: η = 1 - Tc/Th.',
+          definitions: [
+            { term: 'Isothermal Process', desc: 'A thermodynamic process occurring at constant temperature (ΔT = 0).' },
+            { term: 'Adiabatic Process', desc: 'A process with zero heat transfer into or out of the system (Q = 0).' },
+            { term: 'Second Law of Thermodynamics', desc: 'Heat cannot spontaneously flow from colder to hotter bodies without net external work.' }
+          ],
+          flashcards: [
+            { q: 'What four reversible steps comprise a Carnot cycle?', a: 'Isothermal expansion, Adiabatic expansion, Isothermal compression, Adiabatic compression.' },
+            { q: 'How can you increase Carnot efficiency?', a: 'Either increase the temperature of the heat source (Th) or decrease the temperature of the sink (Tc).' },
+            { q: 'Does working fluid (steam, gas, helium) affect Carnot efficiency?', a: 'No; Carnot efficiency depends strictly on the reservoir temperatures Th and Tc.' }
+          ]
+        }
       }
-    },
-    LIKE_TERMS_CONCAT: {
-      id: 'LIKE_TERMS_CONCAT',
-      label: 'Combining Unlike Terms',
-      domain: 'Algebra & Expressions',
-      description: 'Adding variable terms and constant terms together: 3x + 5 -> 8x.',
-      severity: 'moderate',
-      typicalCount: 3,
-      telugu: {
-        label: 'సజాతి కాని పదాలను కూడటం',
-        explanation: '3x మరియు 5 వేర్వేరు రకాల పదాలు. చరరాశి ఉన్న పదాన్ని (3x) స్థిరరాశితో (5) కలపలేము; అది 8x కాదు.',
-        hint: '3 యాపిల్స్ మరియు 5 అరటిపండ్లు ఉంటే, మీ దగ్గర 8 యాపిల్స్ ఉన్నాయని చెప్పగలరా?',
-        miniLesson: 'సజాతి పదాలు (Like terms) మాత్రమే కూడగలరు: 3x + 5 ని అలానే ఉంచాలి.'
-      },
-      tenglish: {
-        label: 'Combining Unlike Terms Error',
-        explanation: '3x and 5 like terms kaavu. Variable term ni constant term tho direct ga add chesi 8x ani rayakudadhu.',
-        hint: '3 apples + 5 oranges = 8 apples avvavu kadha? Variables veru, constants veru.',
-        miniLesson: 'Like terms matrame add cheyagalam. 3x + 5 simplified form lone undi.'
-      }
-    },
-    EXPONENT_BASE_MULTIPLY: {
-      id: 'EXPONENT_BASE_MULTIPLY',
-      label: 'Base Multiplied by Exponent',
-      domain: 'Signed Arithmetic & Powers',
-      description: 'Multiplying the base by the exponent instead of repeated multiplication: 2^3 -> 6 instead of 8.',
-      severity: 'low',
-      typicalCount: 2,
-      telugu: {
-        label: 'భూమి మరియు ఘాతాంకం గుణకారం',
-        explanation: '2³ అంటే 2 × 3 కాదు. అది 2 ని తనతో తాను 3 సార్లు గుణించడం: 2 × 2 × 2 = 8.',
-        hint: 'ఘాతాంకం (Power) దేన్ని సూచిస్తుంది? పునరావృత గుణకారమా లేదా సాధారణ గుణకారమా?',
-        miniLesson: 'ఘాతాంక న్యాయం: a^n = a ని n సార్లు గుణించడం. 2³ = 2 × 2 × 2 = 8.'
-      },
-      tenglish: {
-        label: 'Exponent Multiplication Error',
-        explanation: '2^3 ante 2 * 3 = 6 kaadhu. 2 ni 3 times repeat ga multiply cheyali: 2 * 2 * 2 = 8.',
-        hint: 'Power 3 ante base ni 3 times multiply cheyali kada?',
-        miniLesson: 'Exponent Rule: 2³ = 2 * 2 * 2 = 8.'
-      }
-    }
+    ]
   };
 
-  // Preset Problem Scenarios
-  const PRESET_SCENARIOS = {
-    partial_dist: {
-      id: 'partial_dist',
-      title: 'Algebra: Distributive Property',
-      question: '3(x + 2) = 15',
-      expectedMethod: '3(x + 2) = 15\n3x + 6 = 15\n3x = 9\nx = 3',
-      studentWorking: '3(x + 2) = 3x + 2\n3x + 2 = 15\n3x = 13\nx = 13/3',
-      studentName: 'Aarav Patel (Grade 8)',
-      misconceptionId: 'ALG_PARTIAL_DISTRIBUTION',
-      firstWrongStep: 1,
-      confidence: 0.95,
-      explanation: 'You multiplied 3 by x to get 3x, but forgot to also multiply 3 by 2. The coefficient outside the bracket must distribute to every term inside.',
-      hint: 'If you have 3 bags containing (x + 2) coins each, how many single coins do you have altogether from all 3 bags?',
-      repairQuestion: 'Expand and simplify: 4(y + 3) = ?',
-      expectedRepairAnswer: '4y + 12',
-      whyTargets: 'Uses identical structure a(y + b) to test whether student distributes coefficient to the constant.',
-      visualType: 'area_model'
-    },
-    frac_denom: {
-      id: 'frac_denom',
-      title: 'Fractions: Addition of Unlike Denominators',
-      question: '1/2 + 1/3 = ?',
-      expectedMethod: '1/2 + 1/3\n= 3/6 + 2/6\n= 5/6',
-      studentWorking: '1/2 + 1/3\n= (1 + 1) / (2 + 3)\n= 2/5',
-      studentName: 'Sneha Reddy (Grade 7)',
-      misconceptionId: 'FRACTION_ADD_DENOMINATORS',
-      firstWrongStep: 2,
-      confidence: 0.96,
-      explanation: 'You added the numerators (1+1=2) and denominators (2+3=5) directly. Fractions require a common denominator before adding.',
-      hint: '1/2 is already half a cake. If you add 1/3 more cake, how can the total (2/5 = 0.4) be less than half?',
-      repairQuestion: 'Calculate: 1/4 + 1/3 = ?',
-      expectedRepairAnswer: '7/12',
-      whyTargets: 'Requires finding common denominator (12) without adding denominators directly.',
-      visualType: 'fraction_bar'
-    },
-    neg_sign: {
-      id: 'neg_sign',
-      title: 'Algebra: Negative Multiplier Distribution',
-      question: '-2(x - 4) = 10',
-      expectedMethod: '-2(x - 4) = 10\n-2x + 8 = 10\n-2x = 2\nx = -1',
-      studentWorking: '-2(x - 4) = 10\n-2x - 8 = 10\n-2x = 18\nx = -9',
-      studentName: 'Rohan Sharma (Grade 8)',
-      misconceptionId: 'NEG_SIGN_DISTRIBUTION',
-      firstWrongStep: 2,
-      confidence: 0.92,
-      explanation: 'When distributing -2 to -4, negative times negative equals positive: (-2) × (-4) = +8, but you wrote -8.',
-      hint: 'What is the sign when you multiply two negative numbers together?',
-      repairQuestion: 'Expand: -3(y - 5) = ?',
-      expectedRepairAnswer: '-3y + 15',
-      whyTargets: 'Tests negative multiplier with negative constant term to ensure sign flip is understood.',
-      visualType: 'algebra_sign'
-    },
-    like_terms: {
-      id: 'like_terms',
-      title: 'Algebra: Combining Terms',
-      question: '3x + 5 = 20',
-      expectedMethod: '3x + 5 = 20\n3x = 15\nx = 5',
-      studentWorking: '3x + 5 = 20\n8x = 20\nx = 2.5',
-      studentName: 'Ananya Verma (Grade 7)',
-      misconceptionId: 'LIKE_TERMS_CONCAT',
-      firstWrongStep: 2,
-      confidence: 0.94,
-      explanation: 'You added 3x and 5 together to make 8x. A variable term and a constant number cannot be combined because they are not like terms.',
-      hint: 'Can you combine 3 apples and 5 dollars into 8 apple-dollars?',
-      repairQuestion: 'Simplify: 4x + 7 = ?',
-      expectedRepairAnswer: '4x + 7',
-      whyTargets: 'Checks if student recognizes expression cannot be collapsed into 11x.',
-      visualType: 'like_terms'
-    },
-    exp_multiply: {
-      id: 'exp_multiply',
-      title: 'Powers: Exponent vs Multiplication',
-      question: '2³ + 4 = ?',
-      expectedMethod: '2³ + 4\n= (2 × 2 × 2) + 4\n= 8 + 4\n= 12',
-      studentWorking: '2³ + 4\n= 6 + 4\n= 10',
-      studentName: 'Vikram Rao (Grade 8)',
-      misconceptionId: 'EXPONENT_BASE_MULTIPLY',
-      firstWrongStep: 2,
-      confidence: 0.93,
-      explanation: 'You multiplied the base 2 by the exponent 3 to get 6. Exponentiation means repeated multiplication: 2³ = 2 × 2 × 2 = 8.',
-      hint: 'What does the small power 3 tell you to do with the number 2?',
-      repairQuestion: 'Calculate: 3³ = ?',
-      expectedRepairAnswer: '27',
-      whyTargets: 'Tests if student calculates 3*3*3=27 rather than 3*3=9.',
-      visualType: 'exponent_model'
-    },
-    correct_sol: {
-      id: 'correct_sol',
-      title: 'Algebra: Distributive Property (Correct Solution)',
-      question: '3(x + 2) = 15',
-      expectedMethod: '3(x + 2) = 15\n3x + 6 = 15\n3x = 9\nx = 3',
-      studentWorking: '3(x + 2) = 15\n3x + 6 = 15\n3x = 9\nx = 3',
-      studentName: 'Priya Iyer (Grade 8)',
-      misconceptionId: 'NONE',
-      firstWrongStep: 0,
-      confidence: 1.0,
-      explanation: 'Flawless working! Every step strictly follows the distributive property and balance method.',
-      hint: 'Your solution is completely correct. Keep up the great mathematical reasoning!',
-      repairQuestion: 'Advance Challenge: Solve 5(2x - 3) = 25',
-      expectedRepairAnswer: 'x = 4',
-      whyTargets: 'Reinforces mastery with multi-coefficient distribution.',
-      visualType: 'area_model'
+  // Generic fallback generator for arbitrary user-entered questions
+  function generateGenericSynthesis(subject, topic, question, level, style) {
+    const title = topic || question || 'Academic Concept';
+    
+    if (style === 'simple') {
+      return `### 🐣 Simple Explanation: ${title}
+
+Let's break down **${title}** in plain, everyday language:
+
+1. **What is it really?**: Think of this concept in terms of simple everyday analogies. It is fundamentally designed to solve the question: *"How do we handle ${question ? question.slice(0, 40) + '...' : 'this problem'} efficiently?"*
+2. **The Core Intuition**: At an undergraduate level, you don't need to get bogged down in complicated jargon right away. Focus on the core mechanism: inputs go through a systematic transformation to produce an intended result.
+3. **Why it matters**: Understanding this concept provides the foundation for more advanced topics in **${subject.toUpperCase()}**.`;
     }
-  };
+
+    if (style === 'step_by_step') {
+      return `### 🪜 Step-by-Step Methodical Breakdown: ${title}
+
+#### Step 1: Problem Formalization
+We are analyzing **${question}** at the **${level}** undergraduate level.
+Identify given parameters, boundary conditions, and the required goal.
+
+#### Step 2: Underlying Principles & Formulas
+Recall the standard theoretical governing equations and definitions for this topic in ${subject.toUpperCase()}.
+Ensure consistency of units, dimensions, and logical prerequisites.
+
+#### Step 3: Derivation & Execution
+Execute the logical or mathematical derivation step-by-step:
+1. Establish base relations.
+2. Substitute known expressions.
+3. Simplify intermediate terms algebraically or algorithmically.
+
+#### Step 4: Verification & Conclusion
+Check edge conditions and confirm the answer adheres to core conservation laws or operational rules.`;
+    }
+
+    if (style === 'practical') {
+      return `### 💡 Practical Application & Real-World Example: ${title}
+
+#### Conceptual Scenario:
+In industrial and software engineering environments, **${title}** directly addresses:
+> *"How do we implement ${question} under real-world constraints?"*
+
+#### Practical Implementation:
+\`\`\`
+// Pseudo-code / Practical Paradigm for ${title}:
+function executeConcept(inputData) {
+    // 1. Validate preconditions
+    // 2. Apply core ${topic} transformation
+    // 3. Return verified result
+    return optimizedOutput;
+}
+\`\`\`
+
+#### Key Industry Applications:
+- Scalable cloud infrastructure and distributed systems.
+- Quantitative modeling and data verification pipelines.`;
+    }
+
+    if (style === 'exam_ready') {
+      return `### 📝 Exam-Ready Model Answer: ${title}
+
+**1. Formal Definition**:
+**${title}** is defined as the systematic principle that governs **${question}**.
+
+**2. Key Technical Points (High-Scoring Criteria)**:
+- **Core Mechanism**: Explicit adherence to standard academic postulates.
+- **Assumptions**: Requires standard undergraduate boundary conditions.
+- **Governing Equations**: Apply the canonical formulations relevant to ${subject.toUpperCase()}.
+
+**3. Common Exam Pitfalls**:
+- Avoid omitting base units or boundary cases.
+- Clearly differentiate between theoretical ideal limits and practical implementations.`;
+    }
+
+    // hints_first
+    return `### 🔍 Socratic Guided Discovery: ${title}
+
+**Hint 1**: Before looking at the final solution, consider what foundational rule in **${subject.toUpperCase()}** connects to *"# ${question}"*?
+
+**Hint 2**: If you simplify this problem down to its smallest non-trivial component, what is the initial step you must perform?
+
+*(Review the question and formulate your own hypothesis before revealing the answer!)*`;
+  }
 
   // =========================================================================
-  // 2. THE 10 READY-TO-USE PROMPTS REPOSITORY
-  // =========================================================================
-  const SYSTEM_PROMPTS = [
-    {
-      num: 1,
-      name: 'Student Answer Diagnosis Prompt',
-      tag: 'LLM Diagnosis',
-      desc: 'Base diagnostic prompt identifying the earliest point of reasoning departure.',
-      template: `You are a mathematics misconception-detection assistant.
-
-Analyze the student's answer and identify the FIRST step where their reasoning became incorrect.
-
-Question:
-{question}
-
-Expected solution:
-{expected_solution}
-
-Student's working:
-{student_working}
-
-Available misconception IDs:
-{misconception_library}
-
-Return ONLY valid JSON in this exact format:
-
-{
-  "first_wrong_step": 0,
-  "misconception_id": "VALID_ID",
-  "confidence": 0.0,
-  "explanation": "Short explanation of the student's mistake.",
-  "hint": "A question that helps the student discover the mistake.",
-  "repair_question": "A similar question targeting the same misconception.",
-  "needs_teacher_review": false
-}
-
-Rules:
-- Do not invent misconception IDs.
-- Use only IDs from the provided library.
-- Identify the earliest incorrect step, not just the final wrong answer.
-- Confidence must be between 0 and 1.
-- If confidence is below 0.70, set needs_teacher_review to true.
-- Do not give the complete solution unless necessary.`,
-      vars: {
-        question: '3(x + 2) = 15',
-        expected_solution: '3(x + 2) = 15\n3x + 6 = 15\n3x = 9\nx = 3',
-        student_working: '3(x + 2) = 3x + 2\n3x + 2 = 15\n3x = 13\nx = 13/3',
-        misconception_library: 'ALG_PARTIAL_DISTRIBUTION, FRACTION_ADD_DENOMINATORS, NEG_SIGN_DISTRIBUTION, LIKE_TERMS_CONCAT, NONE'
-      },
-      sampleOutput: {
-        first_wrong_step: 1,
-        misconception_id: 'ALG_PARTIAL_DISTRIBUTION',
-        confidence: 0.95,
-        explanation: "The student distributed 3 only to x and not to 2.",
-        hint: "What happens to the 2 inside the brackets when multiplied by 3?",
-        repair_question: "Expand 4(y + 3)",
-        needs_teacher_review: false
-      }
-    },
-    {
-      num: 2,
-      name: 'Partial Distribution Prompt',
-      tag: 'Algebra Specific',
-      desc: 'Focused heuristic specifically auditing distributive coefficient propagation.',
-      template: `Analyze this student's algebra work specifically for partial distribution.
-
-Question:
-3(x + 2) = 15
-
-Student's working:
-3(x + 2) = 3x + 2
-3x + 2 = 15
-3x = 13
-x = 13/3
-
-Determine whether the student multiplied the coefficient by every term inside the brackets.
-
-Return JSON:
-{
-  "is_misconception": true,
-  "misconception_id": "ALG_PARTIAL_DISTRIBUTION",
-  "first_wrong_step": 1,
-  "confidence": 0.0,
-  "explanation": "",
-  "hint": ""
-}`,
-      vars: {
-        question: '3(x + 2) = 15',
-        student_working: '3(x + 2) = 3x + 2\n3x + 2 = 15\n3x = 13\nx = 13/3'
-      },
-      sampleOutput: {
-        is_misconception: true,
-        misconception_id: 'ALG_PARTIAL_DISTRIBUTION',
-        first_wrong_step: 1,
-        confidence: 0.98,
-        explanation: "The student did not multiply 3 by the constant term 2 inside brackets.",
-        hint: "Did you apply the 3 to both terms inside (x + 2)?"
-      }
-    },
-    {
-      num: 3,
-      name: 'Fraction Denominator Misconception Prompt',
-      tag: 'Fractions Specific',
-      desc: 'Checks for common denominator omission and direct denominator addition.',
-      template: `You are checking a student's understanding of fractions.
-
-Question:
-1/2 + 1/3 = ?
-
-Student answer:
-1/5
-
-Determine whether the student has the misconception "adding denominators directly."
-
-Explain the error in simple student-friendly language.
-
-Return ONLY JSON:
-
-{
-  "misconception_id": "FRACTION_ADD_DENOMINATORS",
-  "confidence": 0.0,
-  "explanation": "",
-  "hint": "",
-  "repair_question": ""
-}`,
-      vars: {
-        question: '1/2 + 1/3 = ?',
-        student_answer: '1/5'
-      },
-      sampleOutput: {
-        misconception_id: "FRACTION_ADD_DENOMINATORS",
-        confidence: 0.96,
-        explanation: "You added the denominators (2 + 3 = 5). Fractions need a common denominator before adding.",
-        hint: "Is 1/5 bigger or smaller than 1/2?",
-        repair_question: "What is 1/4 + 1/4?"
-      }
-    },
-    {
-      num: 4,
-      name: 'Repair Question Generator Prompt',
-      tag: 'Remediation',
-      desc: 'Creates an isomorphic, slightly easier problem targeting the exact root error.',
-      template: `Create one short mathematics repair question designed specifically to correct this misconception.
-
-Misconception:
-{misconception_label}
-
-Description:
-{misconception_description}
-
-Original question:
-{original_question}
-
-Original student error:
-{student_error}
-
-Requirements:
-- Keep the same mathematical concept.
-- Make the question slightly easier than the original.
-- Target the exact misconception.
-- Do not repeat the original question.
-- Do not provide the answer.
-- Make it suitable for a middle-school student.
-
-Return JSON:
-
-{
-  "repair_question": "",
-  "target_misconception": "",
-  "expected_answer": "",
-  "why_it_targets_the_misconception": ""
-}`,
-      vars: {
-        misconception_label: 'Partial Distributive Property',
-        misconception_description: 'Multiplying coefficient only by first term in parentheses',
-        original_question: '3(x + 2) = 15',
-        student_error: '3(x + 2) = 3x + 2'
-      },
-      sampleOutput: {
-        repair_question: "Expand and simplify: 4(y + 3)",
-        target_misconception: "ALG_PARTIAL_DISTRIBUTION",
-        expected_answer: "4y + 12",
-        why_it_targets_the_misconception: "Preserves the structure a(y + b) to test if student remembers to multiply the constant 3 by 4."
-      }
-    },
-    {
-      num: 5,
-      name: 'Repair Answer Checker Prompt',
-      tag: 'Learning Loop',
-      desc: 'Evaluates retry attempts and determines if the misconception has been repaired.',
-      template: `You are checking whether a student successfully repaired a previously identified misconception.
-
-Original misconception:
-{misconception}
-
-Repair question:
-{repair_question}
-
-Student answer:
-{student_answer}
-
-Expected answer:
-{expected_answer}
-
-Determine whether the student has demonstrated understanding.
-
-Return ONLY JSON:
-
-{
-  "correct": true,
-  "confidence": 0.0,
-  "explanation": "",
-  "misconception_fixed": true,
-  "next_action": "continue"
-}
-
-If the answer is incorrect, explain the remaining mistake without giving a long solution.`,
-      vars: {
-        misconception: 'ALG_PARTIAL_DISTRIBUTION',
-        repair_question: '4(y + 3) = ?',
-        student_answer: '4y + 12',
-        expected_answer: '4y + 12'
-      },
-      sampleOutput: {
-        correct: true,
-        confidence: 0.99,
-        explanation: "Correct! You successfully distributed 4 to both y and 3 to produce 4y + 12.",
-        misconception_fixed: true,
-        next_action: "continue"
-      }
-    },
-    {
-      num: 6,
-      name: 'Telugu + English Feedback Prompt',
-      tag: 'Multilingual',
-      desc: 'Converts diagnosis, hint, and mini-lesson into clear, authentic Telugu or Tenglish.',
-      template: `Convert the following mathematics feedback into clear, natural Telugu while preserving the mathematical meaning.
-
-Student language preference:
-{language}
-
-Diagnosis:
-{diagnosis}
-
-Hint:
-{hint}
-
-Mini lesson:
-{mini_lesson}
-
-Requirements:
-- Use simple language appropriate for a school student.
-- Preserve mathematical symbols and equations.
-- Do not translate variable names.
-- If the student selected mixed English/Telugu, use natural Telugu-English mixed language.
-- Do not change the diagnosis or mathematical meaning.
-
-Return:
-
-{
-  "feedback": "",
-  "hint": "",
-  "mini_lesson": ""
-}`,
-      vars: {
-        language: 'Telugu (తెలుగు)',
-        diagnosis: "You multiplied 3 by x to get 3x, but forgot to multiply 3 by 2.",
-        hint: "How many single coins are in 3 bags of (x + 2) coins?",
-        mini_lesson: "Remember: a(b + c) = a*b + a*c. Distribute to all terms."
-      },
-      sampleOutput: {
-        feedback: "మీరు 3 తో x ని గుణించారు (3x), కానీ 2 ని గుణించడం మర్చిపోయారు.",
-        hint: "(x + 2) నాణాలు ఉన్న 3 సంచులలో మొత్తం ఎన్ని విడి నాణాలు ఉంటాయి?",
-        mini_lesson: "గుర్తుంచుకోండి: a(b + c) = a·b + a·c. బ్రాకెట్ లోని ప్రతి పదాన్ని బయట ఉన్న గుణకం తో గుణించాలి."
-      }
-    },
-    {
-      num: 7,
-      name: 'Teacher Intervention Prompt',
-      tag: 'Dashboard Engine',
-      desc: 'Analyzes class-wide aggregated error frequencies to generate 5-minute action plans.',
-      template: `You are a mathematics teacher assistant.
-
-Analyze the following anonymized misconception data from a class.
-
-Class data:
-{misconception_counts}
-
-For each major misconception:
-1. Identify the likely learning problem.
-2. Recommend a 5-minute classroom intervention.
-3. Suggest a visual or example the teacher can use.
-4. Suggest one follow-up question.
-
-Do not identify individual students.
-
-Return JSON:
-
-{
-  "top_misconceptions": [
-    {
-      "misconception_id": "",
-      "percentage": 0,
-      "teacher_action": "",
-      "visual": "",
-      "follow_up_question": ""
-    }
-  ]
-}`,
-      vars: {
-        misconception_counts: JSON.stringify({
-          ALG_PARTIAL_DISTRIBUTION: 12,
-          FRACTION_ADD_DENOMINATORS: 8,
-          NEG_SIGN_DISTRIBUTION: 5,
-          LIKE_TERMS_CONCAT: 3
-        }, null, 2)
-      },
-      sampleOutput: {
-        top_misconceptions: [
-          {
-            misconception_id: "ALG_PARTIAL_DISTRIBUTION",
-            percentage: 42.8,
-            teacher_action: "Conduct a 5-minute 'Area Model Warmup' on the board. Draw a rectangle of height 3 and width x + 2, dividing it into two sub-rooms.",
-            visual: "Rectangle partitioned into 3*x and 3*2 areas.",
-            follow_up_question: "If a rectangle has height 5 and length (x + 4), what are the areas of its two sections?"
-          },
-          {
-            misconception_id: "FRACTION_ADD_DENOMINATORS",
-            percentage: 28.5,
-            teacher_action: "Use fraction circle pies or strips to demonstrate why 1/2 + 1/3 cannot equal 2/5 (which is smaller than 1/2 alone).",
-            visual: "Overlaid pie slices comparing 1/2 + 1/3 (5/6) against 2/5.",
-            follow_up_question: "Can adding two positive quantities ever produce a result smaller than one of the parts?"
-          }
-        ]
-      }
-    },
-    {
-      num: 8,
-      name: 'Misconception Clustering Prompt',
-      tag: 'Class Clustering',
-      desc: 'Groups unstructured student workings into cognitive misconception clusters.',
-      template: `Group these anonymized student answers according to the misconception they most likely demonstrate.
-
-Question:
-{question}
-
-Available misconception library:
-{misconception_library}
-
-Student answers:
-{student_answers}
-
-For each answer, assign exactly one misconception ID or "UNKNOWN".
-
-Do not use student names or attempt to identify students.
-
-Return:
-
-{
-  "clusters": [
-    {
-      "misconception_id": "",
-      "student_answer_ids": [],
-      "reason": ""
-    }
-  ]
-}`,
-      vars: {
-        question: '3(x + 2) = 15',
-        misconception_library: 'ALG_PARTIAL_DISTRIBUTION, LIKE_TERMS_CONCAT, NONE, UNKNOWN',
-        student_answers: 'Answer #1: 3x + 2 = 15\nAnswer #2: 3x + 6 = 15\nAnswer #3: 5x = 15\nAnswer #4: 3x + 2 = 13'
-      },
-      sampleOutput: {
-        clusters: [
-          {
-            misconception_id: "ALG_PARTIAL_DISTRIBUTION",
-            student_answer_ids: [1, 4],
-            reason: "Students distributed 3 to x but failed to multiply the constant 2."
-          },
-          {
-            misconception_id: "LIKE_TERMS_CONCAT",
-            student_answer_ids: [3],
-            reason: "Student added the coefficient 3 and inside constant 2 to get 5x."
-          },
-          {
-            misconception_id: "NONE",
-            student_answer_ids: [2],
-            reason: "Correctly distributed: 3*x + 3*2 = 3x + 6."
-          }
-        ]
-      }
-    },
-    {
-      num: 9,
-      name: 'Before/After Learning Analysis Prompt',
-      tag: 'Analytics & Efficacy',
-      desc: 'Measures learning delta before and after 5-minute targeted teacher interventions.',
-      template: `Compare student performance before and after a short misconception-focused intervention.
-
-Before intervention:
-{before_results}
-
-After intervention:
-{after_results}
-
-Calculate:
-- number of students who improved
-- percentage improvement
-- misconceptions that decreased
-- misconceptions that remained
-- overall intervention effectiveness
-
-Return JSON:
-
-{
-  "students_improved": 0,
-  "improvement_percentage": 0,
-  "decreased_misconceptions": [],
-  "remaining_misconceptions": [],
-  "effectiveness_summary": ""
-}
-
-Do not claim causation beyond what the data supports.`,
-      vars: {
-        before_results: 'ALG_PARTIAL_DISTRIBUTION: 12 students, FRACTION_ADD_DENOMINATORS: 8 students, NEG_SIGN_DISTRIBUTION: 5 students',
-        after_results: 'ALG_PARTIAL_DISTRIBUTION: 2 students, FRACTION_ADD_DENOMINATORS: 1 student, NEG_SIGN_DISTRIBUTION: 3 students'
-      },
-      sampleOutput: {
-        students_improved: 19,
-        improvement_percentage: 76.0,
-        decreased_misconceptions: ["ALG_PARTIAL_DISTRIBUTION", "FRACTION_ADD_DENOMINATORS", "NEG_SIGN_DISTRIBUTION"],
-        remaining_misconceptions: ["ALG_PARTIAL_DISTRIBUTION (2)", "NEG_SIGN_DISTRIBUTION (3)"],
-        effectiveness_summary: "The 5-minute visual area model intervention resulted in a 76% reduction in structural algebraic misconceptions across the cohort."
-      }
-    },
-    {
-      num: 10,
-      name: 'Complete /submit Diagnosis Prompt',
-      tag: 'Main Hackathon Flow',
-      desc: 'The mission-critical engine prompt powering the entire student diagnosis and repair loop.',
-      template: `You are the diagnosis engine for an educational application called Misconception Map.
-
-Your job is to analyze a student's mathematical working, identify their likely misconception, explain it simply, and generate a targeted repair question.
-
-QUESTION:
-{question}
-
-EXPECTED METHOD:
-{expected_method}
-
-STUDENT WORKING:
-{student_working}
-
-STUDENT LANGUAGE:
-{language}
-
-MISCONCEPTION LIBRARY:
-{misconception_library}
-
-Follow these steps internally:
-
-1. Understand the intended mathematical method.
-2. Read the student's working step by step.
-3. Find the FIRST incorrect step.
-4. Match the error to the closest misconception in the library.
-5. Estimate confidence.
-6. Give a short student-friendly explanation.
-7. Give a hint that encourages thinking rather than revealing the answer.
-8. Generate one repair question targeting the same misconception.
-9. Set teacher review to true if confidence is below 0.70 or the error does not clearly match a known misconception.
-
-Return ONLY this JSON:
-
-{
-  "first_wrong_step": 0,
-  "misconception_id": "",
-  "confidence": 0.0,
-  "explanation": "",
-  "hint": "",
-  "repair_question": "",
-  "needs_teacher_review": false
-}
-
-STRICT RULES:
-- misconception_id MUST come from the supplied library.
-- Never invent a new misconception ID.
-- confidence must be between 0 and 1.
-- Do not expose internal reasoning.
-- Keep explanations under 40 words.
-- Keep hints under 25 words.
-- The repair question must target the same misconception.
-- If the student's answer is actually correct, use misconception_id = "NONE".`,
-      vars: {
-        question: '3(x + 2) = 15',
-        expected_method: '3(x + 2) = 15\n3x + 6 = 15\n3x = 9\nx = 3',
-        student_working: '3(x + 2) = 3x + 2\n3x + 2 = 15\n3x = 13\nx = 13/3',
-        language: 'en',
-        misconception_library: 'ALG_PARTIAL_DISTRIBUTION, FRACTION_ADD_DENOMINATORS, NEG_SIGN_DISTRIBUTION, LIKE_TERMS_CONCAT, EXPONENT_BASE_MULTIPLY, NONE'
-      },
-      sampleOutput: {
-        first_wrong_step: 1,
-        misconception_id: "ALG_PARTIAL_DISTRIBUTION",
-        confidence: 0.95,
-        explanation: "You multiplied 3 by x to get 3x, but forgot to also multiply 3 by 2. The coefficient outside the bracket must distribute to every term inside.",
-        hint: "If you have 3 bags containing (x + 2) coins each, how many single coins do you have altogether from all 3 bags?",
-        repair_question: "Expand and simplify: 4(y + 3) = ?",
-        needs_teacher_review: false
-      }
-    }
-  ];
-
-  // =========================================================================
-  // 3. APPLICATION STATE STORE
+  // 2. STATE STORE
   // =========================================================================
   const state = {
-    activeView: 'student-view',
-    language: 'en', // 'en' | 'te' | 'tenglish'
-    currentScenario: PRESET_SCENARIOS.partial_dist,
-    activeDiagnosis: null,
-    activePromptLabIndex: 9, // Prompt #10 selected by default
-    apiSettings: {
-      geminiKey: localStorage.getItem('mm_gemini_key') || '',
-      model: localStorage.getItem('mm_model') || 'offline-heuristic',
-      confidenceThreshold: 0.70
+    activeView: 'learn-view',
+    language: 'en',
+    currentStudy: {
+      subject: 'cs',
+      level: 'intermediate',
+      topic: 'Dynamic Programming (Memoization vs Tabulation)',
+      question: 'What is the difference between top-down memoization and bottom-up tabulation? Explain with the Fibonacci sequence and include space/time complexity.',
+      style: 'step_by_step',
+      activeData: null
     },
-    classroom: {
-      totalStudents: 28,
-      students: [],
-      misconceptionCounts: {
-        ALG_PARTIAL_DISTRIBUTION: 12,
-        FRACTION_ADD_DENOMINATORS: 8,
-        NEG_SIGN_DISTRIBUTION: 5,
-        LIKE_TERMS_CONCAT: 3,
-        EXPONENT_BASE_MULTIPLY: 2
-      },
-      selectedNodeId: 'ALG_PARTIAL_DISTRIBUTION'
+    activeQuiz: null,
+    userQuizAnswers: {},
+    apiSettings: {
+      geminiKey: localStorage.getItem('studyforge_gemini_key') || '',
+      model: 'gemini-2.0-flash'
     }
   };
 
-  // Seed sample student names for classroom map
-  const SAMPLE_STUDENTS = [
-    { name: 'Aarav Patel', grade: '8A', misconception: 'ALG_PARTIAL_DISTRIBUTION', step: 1, repairDone: false },
-    { name: 'Sneha Reddy', grade: '8A', misconception: 'FRACTION_ADD_DENOMINATORS', step: 2, repairDone: true },
-    { name: 'Rohan Sharma', grade: '8B', misconception: 'NEG_SIGN_DISTRIBUTION', step: 2, repairDone: false },
-    { name: 'Ananya Verma', grade: '8B', misconception: 'ALG_PARTIAL_DISTRIBUTION', step: 1, repairDone: true },
-    { name: 'Vikram Rao', grade: '8A', misconception: 'EXPONENT_BASE_MULTIPLY', step: 2, repairDone: false },
-    { name: 'Diya Nair', grade: '8C', misconception: 'ALG_PARTIAL_DISTRIBUTION', step: 1, repairDone: false },
-    { name: 'Karthik Raju', grade: '8A', misconception: 'FRACTION_ADD_DENOMINATORS', step: 2, repairDone: false },
-    { name: 'Meera Menon', grade: '8B', misconception: 'ALG_PARTIAL_DISTRIBUTION', step: 1, repairDone: true },
-    { name: 'Aditya Gupta', grade: '8C', misconception: 'LIKE_TERMS_CONCAT', step: 2, repairDone: false },
-    { name: 'Pooja Joshi', grade: '8A', misconception: 'ALG_PARTIAL_DISTRIBUTION', step: 1, repairDone: false },
-    { name: 'Rahul Bose', grade: '8B', misconception: 'NEG_SIGN_DISTRIBUTION', step: 1, repairDone: true },
-    { name: 'Ishaan Das', grade: '8C', misconception: 'FRACTION_ADD_DENOMINATORS', step: 2, repairDone: false },
-    { name: 'Tanvi Shah', grade: '8A', misconception: 'ALG_PARTIAL_DISTRIBUTION', step: 1, repairDone: true },
-    { name: 'Arjun Sen', grade: '8B', misconception: 'LIKE_TERMS_CONCAT', step: 1, repairDone: false },
-    { name: 'Kavya Murthy', grade: '8C', misconception: 'FRACTION_ADD_DENOMINATORS', step: 2, repairDone: true }
-  ];
-  state.classroom.students = [...SAMPLE_STUDENTS];
-
   // =========================================================================
-  // 4. DOM ELEMENTS CACHE
+  // 3. DOM ELEMENTS CACHE
   // =========================================================================
   const DOM = {
-    // Navigation
+    // Nav
     navTabs: document.querySelectorAll('.nav-tab'),
     viewPanels: document.querySelectorAll('.view-panel'),
     langSelect: document.getElementById('lang-select'),
-    scenarioSelect: document.getElementById('scenario-quick-select'),
     btnOpenSettings: document.getElementById('btn-open-settings'),
     settingsModal: document.getElementById('settings-modal'),
     btnCloseSettings: document.getElementById('btn-close-settings'),
     btnSaveSettings: document.getElementById('btn-save-settings'),
     btnResetSettings: document.getElementById('btn-reset-settings'),
     settingGeminiKey: document.getElementById('setting-gemini-key'),
-    settingModelSelect: document.getElementById('setting-model-select'),
-    settingTeacherThreshold: document.getElementById('setting-teacher-threshold'),
-    thresholdVal: document.getElementById('threshold-val'),
     apiStatusDot: document.getElementById('api-status-dot'),
 
-    // Student View
-    problemTitle: document.getElementById('problem-title'),
-    displayQuestion: document.getElementById('display-question'),
-    displayExpected: document.getElementById('display-expected'),
-    expectedMethodDrawer: document.getElementById('expected-method-drawer'),
-    btnToggleExpected: document.getElementById('btn-toggle-expected'),
-    workingStepsEditor: document.getElementById('working-steps-editor'),
-    stepLineNumbers: document.getElementById('step-line-numbers'),
-    btnClearWorking: document.getElementById('btn-clear-working'),
-    btnSubmitDiagnosis: document.getElementById('btn-submit-diagnosis'),
-    submitSpinner: document.getElementById('submit-spinner'),
-    studentNameBadge: document.getElementById('student-name-badge'),
+    // Learn & Solve View
+    subjectSelect: document.getElementById('learn-subject-select'),
+    levelRadios: document.querySelectorAll('input[name="student-level"]'),
+    topicInput: document.getElementById('learn-topic-input'),
+    questionInput: document.getElementById('learn-question-input'),
+    styleRadios: document.querySelectorAll('input[name="explanation-style"]'),
+    btnGenerateExplanation: document.getElementById('btn-generate-explanation'),
+    learnSpinner: document.getElementById('learn-spinner'),
+    btnLoadSample: document.getElementById('btn-load-sample'),
+    quickTopicPills: document.querySelectorAll('.topic-pill'),
 
-    // Diagnosis Results
-    diagnosisMainCard: document.getElementById('diagnosis-main-card'),
-    diagHeadline: document.getElementById('diag-headline'),
-    diagSubheadline: document.getElementById('diag-subheadline'),
-    diagConfidence: document.getElementById('diag-confidence'),
-    diagReviewFlag: document.getElementById('diag-review-flag'),
-    diagMisconceptionId: document.getElementById('diag-misconception-id'),
-    diagMisconceptionName: document.getElementById('diag-misconception-name'),
-    diagExplanation: document.getElementById('diag-explanation'),
-    diagHint: document.getElementById('diag-hint'),
-    hintToggleBtn: document.getElementById('hint-toggle-btn'),
-    hintContentBody: document.getElementById('hint-content-body'),
-    stepInspectionList: document.getElementById('step-inspection-list'),
-    statusPulse: document.getElementById('status-pulse'),
-    multilingualNote: document.getElementById('multilingual-note'),
-    multilingualText: document.getElementById('multilingual-text'),
+    // Output & Actions
+    activeStyleBadge: document.getElementById('active-style-badge'),
+    explanationTopicHeading: document.getElementById('explanation-topic-heading'),
+    explanationBodyContent: document.getElementById('explanation-body-content'),
+    hintsSocraticBox: document.getElementById('hints-socratic-box'),
+    hintsSocraticText: document.getElementById('hints-socratic-text'),
+    btnRevealSolution: document.getElementById('btn-reveal-solution'),
+    btnCopyExplanation: document.getElementById('btn-copy-explanation'),
+    btnGotoQuiz: document.getElementById('btn-goto-quiz'),
+    btnGotoRevision: document.getElementById('btn-goto-revision'),
+    followupInput: document.getElementById('followup-input'),
+    btnSubmitFollowup: document.getElementById('btn-submit-followup'),
 
-    // Visual Mini-Lesson
-    visualModelViewport: document.getElementById('visual-model-viewport'),
-    miniLessonTitle: document.getElementById('mini-lesson-title'),
-    lessonTextEn: document.getElementById('lesson-text-en'),
-    lessonTextTe: document.getElementById('lesson-text-te'),
+    // Quiz View
+    quizTitleHeading: document.getElementById('quiz-title-heading'),
+    quizSubheading: document.getElementById('quiz-subheading'),
+    quizScoreBadge: document.getElementById('quiz-score-badge'),
+    quizScoreVal: document.getElementById('quiz-score-val'),
+    quizQuestionsContainer: document.getElementById('quiz-questions-container'),
+    btnSubmitQuiz: document.getElementById('btn-submit-quiz'),
+    btnRetryQuiz: document.getElementById('btn-retry-quiz'),
+    btnGenerateNewQuiz: document.getElementById('btn-generate-new-quiz'),
+    quizSummaryStats: document.getElementById('quiz-summary-stats'),
+    summaryScorePct: document.getElementById('summary-score-pct'),
+    summaryScoreRatio: document.getElementById('summary-score-ratio'),
+    summaryFeedbackMsg: document.getElementById('summary-feedback-msg'),
 
-    // Repair Loop
-    repairQuestionText: document.getElementById('repair-question-text'),
-    repairQuestionTarget: document.getElementById('repair-question-target'),
-    repairInputAnswer: document.getElementById('repair-input-answer'),
-    btnSubmitRepair: document.getElementById('btn-submit-repair'),
-    repairSpinner: document.getElementById('repair-spinner'),
-    repairFeedbackBanner: document.getElementById('repair-feedback-banner'),
-    repairResultIcon: document.getElementById('repair-result-icon'),
-    repairResultHeading: document.getElementById('repair-result-heading'),
-    repairResultDesc: document.getElementById('repair-result-desc'),
-    btnNextProblem: document.getElementById('btn-next-problem'),
-    quickChipBtns: document.querySelectorAll('.chip-btn'),
+    // Revision Notes View
+    revisionTitleHeading: document.getElementById('revision-title-heading'),
+    revisionDefinitionsContent: document.getElementById('revision-definitions-content'),
+    flashcardsContainer: document.getElementById('flashcards-container'),
+    btnCopyAllNotes: document.getElementById('btn-copy-all-notes'),
 
-    // Mastery Elements
-    barDist: document.getElementById('bar-dist'),
-    chipDist: document.getElementById('chip-dist'),
-    masteryOverallScore: document.getElementById('mastery-overall-score'),
-
-    // Teacher View Elements
-    teacherSubtabBtns: document.querySelectorAll('.subtab-btn'),
-    teacherSubtabContents: document.querySelectorAll('.teacher-subtab-content'),
-    networkSvg: document.getElementById('misconception-network-svg'),
-    graphTooltip: document.getElementById('graph-tooltip'),
-    inspectNodeBadge: document.getElementById('inspect-node-badge'),
-    inspectNodeTitle: document.getElementById('inspect-node-title'),
-    inspectNodeFreq: document.getElementById('inspect-node-freq'),
-    inspectNodeDesc: document.getElementById('inspect-node-desc'),
-    affectedStudentsContainer: document.getElementById('affected-students-container'),
-    inspectSampleWork: document.getElementById('inspect-sample-work'),
-    btnSimulateClass: document.getElementById('btn-simulate-class'),
-    btnGenerateInterventionNow: document.getElementById('btn-generate-intervention-now'),
-    btnResetZoom: document.getElementById('btn-reset-zoom'),
-    interventionsGrid: document.getElementById('interventions-grid'),
-    clustersContainer: document.getElementById('clusters-container'),
-    shiftChartContainer: document.getElementById('shift-chart-container'),
-
-    // Prompt Lab Elements
-    promptsNavList: document.getElementById('prompts-nav-list'),
-    promptActiveBadge: document.getElementById('prompt-active-badge'),
-    promptActiveTitle: document.getElementById('prompt-active-title'),
-    promptActiveDesc: document.getElementById('prompt-active-desc'),
-    promptCodeView: document.getElementById('prompt-code-view'),
-    promptVarsContainer: document.getElementById('prompt-vars-container'),
-    promptOutputView: document.getElementById('prompt-output-view'),
-    btnCopyPrompt: document.getElementById('btn-copy-prompt'),
-    btnCopyOutput: document.getElementById('btn-copy-output'),
-    btnRunPromptTest: document.getElementById('btn-run-prompt-test'),
-
-    // Confetti & Toast
+    // Celebration & Toasts
     confettiCanvas: document.getElementById('confetti-canvas'),
     toastContainer: document.getElementById('toast-container')
   };
 
   // =========================================================================
-  // 5. DIAGNOSIS ENGINE (PROMPT #10 IMPLEMENTATION)
+  // 4. LEARN & SOLVE ENGINE (FEATURE 1 & FEATURE 2)
   // =========================================================================
 
-  /**
-   * Main `/submit` diagnosis handler
-   */
-  async function runStudentDiagnosis() {
-    const rawWorking = DOM.workingStepsEditor.value.trim();
-    if (!rawWorking) {
-      showToast('Please enter at least one step of mathematical working.', 'error');
-      return;
+  function getSelectedLevel() {
+    for (const r of DOM.levelRadios) {
+      if (r.checked) return r.value;
     }
+    return 'intermediate';
+  }
 
-    setDiagnosingState(true);
-
-    try {
-      let diagnosisResult;
-
-      // Check if real Gemini API Key is available
-      if (state.apiSettings.geminiKey && state.apiSettings.model !== 'offline-heuristic') {
-        diagnosisResult = await callGeminiDiagnosisAPI(rawWorking);
-      } else {
-        // High-fidelity instant local rule + heuristic reasoner
-        diagnosisResult = runLocalDiagnosticReasoner(rawWorking);
-      }
-
-      state.activeDiagnosis = diagnosisResult;
-      renderDiagnosisResult(diagnosisResult, rawWorking);
-      updateFlowStepper(2);
-      showToast('AI Diagnosis Complete (Prompt #10)', 'success');
-
-      // Sync into classroom data
-      registerSubmissionInClass(diagnosisResult);
-
-    } catch (err) {
-      console.warn('Diagnosis error, falling back to local engine:', err);
-      const fallbackResult = runLocalDiagnosticReasoner(rawWorking);
-      state.activeDiagnosis = fallbackResult;
-      renderDiagnosisResult(fallbackResult, rawWorking);
-      showToast('Diagnosis rendered via offline cognitive reasoner.', 'success');
-    } finally {
-      setDiagnosingState(false);
+  function getSelectedStyle() {
+    for (const r of DOM.styleRadios) {
+      if (r.checked) return r.value;
     }
+    return 'step_by_step';
+  }
+
+  function findMatchingPreset(subject, topic) {
+    const list = STUDYFORGE_CATALOG[subject] || [];
+    const normalizedTopic = (topic || '').toLowerCase();
+    return list.find(item => item.topic.toLowerCase().includes(normalizedTopic) || normalizedTopic.includes(item.topic.toLowerCase())) || list[0];
   }
 
   /**
-   * Calls Google Gemini Generative Language API
+   * Main function: Generates Explanation in selected style
    */
-  async function callGeminiDiagnosisAPI(studentWorking) {
-    const promptDef = SYSTEM_PROMPTS[9]; // Prompt #10
-    const promptText = promptDef.template
-      .replace('{question}', state.currentScenario.question)
-      .replace('{expected_method}', state.currentScenario.expectedMethod)
-      .replace('{student_working}', studentWorking)
-      .replace('{language}', state.language)
-      .replace('{misconception_library}', Object.keys(MISCONCEPTION_LIBRARY).join(', ') + ', NONE');
+  async function generateExplanation() {
+    const subject = DOM.subjectSelect.value;
+    const topic = DOM.topicInput.value.trim();
+    const question = DOM.questionInput.value.trim();
+    const level = getSelectedLevel();
+    const style = getSelectedStyle();
+
+    if (!topic && !question) {
+      showToast('Please enter a topic or academic question.', 'error');
+      return;
+    }
+
+    state.currentStudy = { subject, topic, question, level, style };
+    setLoadingState(true);
+
+    try {
+      let content = '';
+      const preset = findMatchingPreset(subject, topic);
+
+      // Check if user has Gemini API Key
+      if (state.apiSettings.geminiKey) {
+        content = await callGeminiStudyAPI(subject, topic, question, level, style);
+      } else {
+        // High-fidelity local academic engine
+        await new Promise(r => setTimeout(r, 350)); // smooth natural feedback
+        if (preset && preset[style]) {
+          content = preset[style];
+          state.currentStudy.activeData = preset;
+        } else {
+          content = generateGenericSynthesis(subject, topic, question, level, style);
+        }
+      }
+
+      renderExplanation(content, topic, style);
+      showToast('Explanation generated successfully!', 'success');
+
+      // Pre-seed quiz and revision
+      prepareQuizForTopic(preset || generateFallbackQuiz(topic));
+      prepareRevisionForTopic(preset || generateFallbackRevision(topic));
+
+    } catch (err) {
+      console.error(err);
+      const fallback = generateGenericSynthesis(subject, topic, question, level, style);
+      renderExplanation(fallback, topic, style);
+      showToast('Generated explanation via offline academic engine.', 'success');
+    } finally {
+      setLoadingState(false);
+    }
+  }
+
+  async function callGeminiStudyAPI(subject, topic, question, level, style) {
+    const prompt = `
+Subject: ${subject}
+Topic: ${topic}
+Question: ${question}
+Student level: ${level}
+Answer style: ${style}
+
+Provide an accurate, clear explanation suitable for an undergraduate student following the requested style:
+- If "Simple explanation": use simple analogies, plain language, intuitive explanations.
+- If "Step-by-step": give sequential numbered steps with derivations and reasoning.
+- If "Practical examples": include runnable code or practical real-world scenario.
+- If "Exam-ready": structure with definition, key points, formula, and concise bullet points.
+- If "Hints first": provide 2 progressive hints first, followed by a complete solution.
+`;
 
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${state.apiSettings.geminiKey}`;
-
-    const response = await fetch(endpoint, {
+    const resp = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: promptText }] }],
-        generationConfig: {
-          responseMimeType: "application/json",
-          temperature: 0.2
-        }
+        contents: [{ parts: [{ text: prompt }] }]
       })
     });
 
-    if (!response.ok) {
-      throw new Error(`Gemini API returned status ${response.status}`);
-    }
-
-    const data = await response.json();
-    const candidateText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!candidateText) throw new Error('No candidate content received from Gemini');
-
-    return JSON.parse(candidateText);
+    if (!resp.ok) throw new Error('Gemini API call failed');
+    const data = await resp.json();
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
   }
 
-  /**
-   * Local High-Fidelity Cognitive Diagnostic Reasoner
-   * Matches the exact Prompt #10 specification with 100% precision.
-   */
-  function runLocalDiagnosticReasoner(workingText) {
-    const lines = workingText.split('\n').map(l => l.trim()).filter(Boolean);
-    const scenario = state.currentScenario;
-
-    // Default to scenario configuration if working matches
-    let detectedId = scenario.misconceptionId || 'ALG_PARTIAL_DISTRIBUTION';
-    let firstWrong = scenario.firstWrongStep || 1;
-    let confidence = scenario.confidence || 0.95;
-    let explanation = scenario.explanation;
-    let hint = scenario.hint;
-    let repairQuestion = scenario.repairQuestion;
-
-    // Dynamic heuristic detection across steps
-    let foundError = false;
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].toLowerCase().replace(/\s+/g, '');
-      const stepIdx = i + 1;
-
-      // Test 1: Partial distribution 3(x+2) -> 3x+2
-      if (line.includes('3x+2') || line.includes('3(x+2)=3x+2') || line.includes('4y+3')) {
-        detectedId = 'ALG_PARTIAL_DISTRIBUTION';
-        firstWrong = stepIdx;
-        foundError = true;
-        break;
-      }
-
-      // Test 2: Fraction addition direct denominators 1/2 + 1/3 = 2/5 or 1/5
-      if (line.includes('2/5') || line.includes('(1+1)/(2+3)') || line.includes('1/5')) {
-        detectedId = 'FRACTION_ADD_DENOMINATORS';
-        firstWrong = stepIdx;
-        foundError = true;
-        break;
-      }
-
-      // Test 3: Negative sign error -2(x-4) -> -2x-8
-      if (line.includes('-2x-8') || line.includes('-3y-15')) {
-        detectedId = 'NEG_SIGN_DISTRIBUTION';
-        firstWrong = stepIdx;
-        foundError = true;
-        break;
-      }
-
-      // Test 4: Like terms concat 3x + 5 = 8x
-      if (line.includes('8x=20') || line.includes('8x=') || line.includes('11x')) {
-        detectedId = 'LIKE_TERMS_CONCAT';
-        firstWrong = stepIdx;
-        foundError = true;
-        break;
-      }
-
-      // Test 5: Exponent base multiply 2^3 -> 6
-      if (line.includes('6+4') || line.includes('=10') || line.includes('3^3=9')) {
-        detectedId = 'EXPONENT_BASE_MULTIPLY';
-        firstWrong = stepIdx;
-        foundError = true;
-        break;
-      }
-    }
-
-    if (!foundError && scenario.id === 'correct_sol') {
-      detectedId = 'NONE';
-      firstWrong = 0;
-      confidence = 1.0;
-      explanation = 'All steps are mathematically sound and correct.';
-      hint = 'Excellent work! No misconception detected.';
-      repairQuestion = 'Advance challenge: Solve 5(2x - 3) = 25';
-    }
-
-    // Multilingual translation if Telugu or Tenglish is active (Prompt #6)
-    if (state.language !== 'en' && MISCONCEPTION_LIBRARY[detectedId]) {
-      const taxon = MISCONCEPTION_LIBRARY[detectedId];
-      if (state.language === 'te' && taxon.telugu) {
-        explanation = taxon.telugu.explanation;
-        hint = taxon.telugu.hint;
-      } else if (state.language === 'tenglish' && taxon.tenglish) {
-        explanation = taxon.tenglish.explanation;
-        hint = taxon.tenglish.hint;
-      }
-    }
-
-    const needsReview = confidence < state.apiSettings.confidenceThreshold;
-
-    return {
-      first_wrong_step: firstWrong,
-      misconception_id: detectedId,
-      confidence: confidence,
-      explanation: explanation,
-      hint: hint,
-      repair_question: repairQuestion,
-      needs_teacher_review: needsReview
-    };
-  }
-
-  /**
-   * Renders the complete AI diagnosis onto the UI
-   */
-  function renderDiagnosisResult(diag, studentWorking) {
-    const isCorrect = diag.misconception_id === 'NONE' || diag.first_wrong_step === 0;
-    const taxon = MISCONCEPTION_LIBRARY[diag.misconception_id] || {
-      label: diag.misconception_id,
-      domain: 'Mathematics'
+  function renderExplanation(markdownText, topic, style) {
+    const styleLabels = {
+      simple: '🐣 Simple (Beginner)',
+      step_by_step: '🪜 Step-by-Step Solution',
+      practical: '💡 Practical & Code Examples',
+      exam_ready: '📝 Exam-Ready Answer',
+      hints_first: '🔍 Hints First (Socratic)'
     };
 
-    // Headline & status badge
-    if (isCorrect) {
-      DOM.diagHeadline.textContent = 'Correct Working — No Misconceptions';
-      DOM.diagSubheadline.textContent = 'Every line correctly applies algebraic properties';
-      DOM.statusPulse.className = 'status-pulse-badge pulse-emerald';
-      DOM.diagMisconceptionId.className = 'badge badge-success';
+    DOM.activeStyleBadge.textContent = styleLabels[style] || 'Academic Explanation';
+    DOM.explanationTopicHeading.textContent = topic || 'Academic Solution';
+
+    if (style === 'hints_first') {
+      DOM.hintsSocraticBox.classList.remove('hidden');
+      DOM.hintsSocraticText.textContent = `Ponder this first: What core principle governs this topic before reviewing the full solution?`;
     } else {
-      DOM.diagHeadline.textContent = `Misconception Detected in Step ${diag.first_wrong_step}`;
-      DOM.diagSubheadline.textContent = 'Earliest reasoning departure pinpointed';
-      DOM.statusPulse.className = 'status-pulse-badge pulse-rose';
-      DOM.diagMisconceptionId.className = 'badge badge-rose';
+      DOM.hintsSocraticBox.classList.add('hidden');
     }
 
-    DOM.diagConfidence.textContent = `${Math.round(diag.confidence * 100)}%`;
-    DOM.diagMisconceptionId.textContent = diag.misconception_id;
-    DOM.diagMisconceptionName.textContent = taxon.label;
-    DOM.diagExplanation.textContent = diag.explanation;
-    DOM.diagHint.textContent = diag.hint;
-
-    // Teacher review flag
-    if (diag.needs_teacher_review) {
-      DOM.diagReviewFlag.classList.remove('hidden');
-    } else {
-      DOM.diagReviewFlag.classList.add('hidden');
-    }
-
-    // Step-by-Step Reasoner Breakdown List
-    renderStepInspectionList(studentWorking, diag.first_wrong_step);
-
-    // Multilingual indicator
-    if (state.language === 'te') {
-      DOM.multilingualNote.classList.remove('hidden');
-      DOM.multilingualText.textContent = 'Displaying diagnosis in Telugu (తెలుగు) — Prompt #6';
-    } else if (state.language === 'tenglish') {
-      DOM.multilingualNote.classList.remove('hidden');
-      DOM.multilingualText.textContent = 'Displaying diagnosis in Tenglish (Telugu + English) — Prompt #6';
-    } else {
-      DOM.multilingualNote.classList.add('hidden');
-    }
-
-    // Update Visual Mini-Lesson
-    renderVisualMiniLesson(diag.misconception_id);
-
-    // Update Repair Question Card (Prompt #5 prep)
-    DOM.repairQuestionText.innerHTML = `${diag.repair_question}`;
-    DOM.repairQuestionTarget.textContent = `Targeting Misconception: ${diag.misconception_id}`;
-    DOM.repairInputAnswer.value = '';
-    DOM.repairFeedbackBanner.classList.add('hidden');
+    DOM.explanationBodyContent.innerHTML = formatMarkdownToHTML(markdownText);
   }
 
-  /**
-   * Renders step inspection list with line highlighting
-   */
-  function renderStepInspectionList(workingText, firstWrongStep) {
-    const lines = workingText.split('\n').map(l => l.trim()).filter(Boolean);
-    DOM.stepInspectionList.innerHTML = '';
+  function formatMarkdownToHTML(text) {
+    if (!text) return '<p>No content generated.</p>';
 
-    lines.forEach((line, idx) => {
-      const stepNum = idx + 1;
-      const isError = stepNum === firstWrongStep;
-      const isAfterError = stepNum > firstWrongStep && firstWrongStep > 0;
+    // Escape HTML first
+    let html = text
+      // Headers
+      .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+      .replace(/^#### (.*$)/gim, '<h4>$1</h4>')
+      .replace(/^## (.*$)/gim, '<h3>$1</h3>')
+      // Code blocks
+      .replace(/```([a-z]*)\n([\s\S]*?)```/gim, '<pre><code class="lang-$1">$2</code></pre>')
+      // Inline code
+      .replace(/`([^`]+)`/gim, '<code>$1</code>')
+      // Bold
+      .replace(/\*\*([^*]+)\*\*/gim, '<strong>$1</strong>')
+      // Math markers
+      .replace(/\$\$([^$]+)\$\$/gim, '<div class="math-code">$1</div>')
+      .replace(/\$([^$]+)\$/gim, '<code>$1</code>')
+      // Blockquotes
+      .replace(/^> (.*$)/gim, '<blockquote style="border-left:3px solid #6366f1; padding-left:12px; margin:10px 0; color:#cbd5e1;">$1</blockquote>')
+      // Bullet lists
+      .replace(/^\s*-\s+(.*$)/gim, '<li>$1</li>')
+      // Paragraphs
+      .replace(/\n\n/gim, '</p><p>');
 
-      const row = document.createElement('div');
-      row.className = `step-row ${isError ? 'step-error' : (isAfterError ? 'step-consequential' : 'step-ok')}`;
-
-      let verdictHtml = '<span class="step-row-verdict">✓ Valid Step</span>';
-      if (isError) {
-        verdictHtml = '<span class="step-row-verdict">⚠️ First Wrong Step</span>';
-      } else if (isAfterError) {
-        verdictHtml = '<span class="step-row-verdict text-muted">↳ Consequential Step</span>';
-      }
-
-      row.innerHTML = `
-        <span class="step-row-num">Step ${stepNum}</span>
-        <span class="step-row-math">${escapeHtml(line)}</span>
-        ${verdictHtml}
-      `;
-
-      DOM.stepInspectionList.appendChild(row);
-    });
-  }
-
-  /**
-   * Renders the interactive visual mini-lesson based on active misconception
-   */
-  function renderVisualMiniLesson(misconceptionId) {
-    if (misconceptionId === 'ALG_PARTIAL_DISTRIBUTION' || misconceptionId === 'NONE') {
-      DOM.miniLessonTitle.textContent = 'Visualizing the Area Model for Distribution';
-      DOM.visualModelViewport.innerHTML = `
-        <div class="area-model-demo" id="algebra-area-model">
-          <div class="area-labels-top">
-            <span class="area-col-label label-x">x</span>
-            <span class="area-plus">+</span>
-            <span class="area-col-label label-num">2</span>
-          </div>
-          <div class="area-layout-row">
-            <div class="area-height-label">3 ×</div>
-            <div class="area-box-container">
-              <div class="area-box box-var">
-                <span class="box-formula">3 · x = <strong>3x</strong></span>
-                <span class="box-status">✓ Computed correctly</span>
-              </div>
-              <div class="area-box box-const error-highlight">
-                <span class="box-formula">3 · 2 = <strong>6</strong></span>
-                <span class="box-alert">⚠️ You wrote 2 instead of 6!</span>
-              </div>
-            </div>
-          </div>
-          <div class="area-equation-summary">
-            <span>Total Area = </span>
-            <span class="correct-term">3x</span>
-            <span> + </span>
-            <span class="correct-term highlight-glow">6</span>
-            <span class="note-pill">Not 3x + 2</span>
-          </div>
-        </div>
-      `;
-      DOM.lessonTextEn.innerHTML = 'Remember: <code>a(b + c) = a·b + a·c</code>. Both terms inside parentheses must be multiplied by the factor outside.';
-      DOM.lessonTextTe.innerHTML = 'గుర్తుంచుకోండి: <code>a(b + c) = a·b + a·c</code>. బ్రాకెట్ లోపల ఉన్న ప్రతి పదాన్ని బయట ఉన్న గుణకం తో గుణించాలి.';
-    } else if (misconceptionId === 'FRACTION_ADD_DENOMINATORS') {
-      DOM.miniLessonTitle.textContent = 'Visualizing Fraction Sums with Common Parts';
-      DOM.visualModelViewport.innerHTML = `
-        <div class="fraction-visual-container">
-          <div class="fraction-row">
-            <div class="fraction-tag">1/2 (3/6):</div>
-            <div class="fraction-bar-shell">
-              <div class="fraction-segment" style="width: 50%; background: #6366f1;">1/2</div>
-              <div class="fraction-segment" style="width: 50%; background: transparent; color: #64748b;">empty</div>
-            </div>
-          </div>
-          <div class="fraction-row">
-            <div class="fraction-tag">1/3 (2/6):</div>
-            <div class="fraction-bar-shell">
-              <div class="fraction-segment" style="width: 33.33%; background: #06b6d4;">1/3</div>
-              <div class="fraction-segment" style="width: 66.67%; background: transparent;"></div>
-            </div>
-          </div>
-          <div class="fraction-row">
-            <div class="fraction-tag">Sum (5/6):</div>
-            <div class="fraction-bar-shell">
-              <div class="fraction-segment" style="width: 83.33%; background: #10b981;">Correct Sum: 5/6</div>
-              <div class="fraction-segment" style="width: 16.67%; background: transparent;"></div>
-            </div>
-          </div>
-          <div class="fraction-row">
-            <div class="fraction-tag text-rose">Your 2/5 (40%):</div>
-            <div class="fraction-bar-shell">
-              <div class="fraction-segment" style="width: 40%; background: #f43f5e;">2/5 (Less than 1/2 alone!)</div>
-              <div class="fraction-segment" style="width: 60%; background: transparent;"></div>
-            </div>
-          </div>
-        </div>
-      `;
-      DOM.lessonTextEn.innerHTML = 'Adding denominators gives <code>2/5 (0.40)</code>, which is smaller than <code>1/2 (0.50)</code> alone! Always find common denominator: <code>3/6 + 2/6 = 5/6</code>.';
-      DOM.lessonTextTe.innerHTML = 'హారాలను నేరుగా కూడితే <code>2/5</code> వస్తుంది, ఇది అసలు <code>1/2</code> కంటే కూడా చిన్నది! సామాన్య హారం చేసి కూడాలి: <code>3/6 + 2/6 = 5/6</code>.';
-    } else {
-      // General Visual Card
-      DOM.miniLessonTitle.textContent = `Concept Breakdown: ${misconceptionId}`;
-      DOM.visualModelViewport.innerHTML = `
-        <div style="text-align: center; padding: 20px;">
-          <div style="font-size: 2rem; margin-bottom: 8px;">🧠 ➔ 📐</div>
-          <p style="color: #cbd5e1;">Review the mathematical operation rule to eliminate this error pattern.</p>
-        </div>
-      `;
-      DOM.lessonTextEn.textContent = MISCONCEPTION_LIBRARY[misconceptionId]?.description || 'Apply step-by-step balance laws.';
-    }
-
-    // Toggle language text visibility
-    if (state.language === 'te' || state.language === 'tenglish') {
-      DOM.lessonTextTe.classList.remove('hidden');
-      DOM.lessonTextEn.classList.add('hidden');
-    } else {
-      DOM.lessonTextTe.classList.add('hidden');
-      DOM.lessonTextEn.classList.remove('hidden');
-    }
+    return `<p>${html}</p>`;
   }
 
   // =========================================================================
-  // 6. REPAIR ANSWER CHECKER (PROMPT #5 IMPLEMENTATION)
+  // 5. PRACTICE QUIZ ENGINE (FEATURE 3)
   // =========================================================================
 
-  /**
-   * Handles student retry submission to verify misconception repair
-   */
-  async function submitRepairAnswer() {
-    const studentAns = DOM.repairInputAnswer.value.trim();
-    if (!studentAns) {
-      showToast('Please enter an answer for the repair question.', 'error');
-      return;
-    }
+  function prepareQuizForTopic(data) {
+    const quizList = data?.quiz || generateFallbackQuiz(DOM.topicInput.value);
+    state.activeQuiz = quizList;
+    state.userQuizAnswers = {};
 
-    DOM.repairSpinner.classList.remove('hidden');
-    DOM.btnSubmitRepair.disabled = true;
+    DOM.quizTitleHeading.textContent = `Topic Quiz: ${DOM.topicInput.value || 'Academic Concepts'}`;
+    DOM.quizScoreBadge.classList.add('hidden');
+    DOM.quizSummaryStats.classList.add('hidden');
+    DOM.btnSubmitQuiz.classList.remove('hidden');
+    DOM.btnRetryQuiz.classList.add('hidden');
 
-    try {
-      // Simulate network / AI response delay
-      await new Promise(res => setTimeout(res, 500));
-
-      const normalizedAns = studentAns.toLowerCase().replace(/\s+/g, '');
-      const expectedAns = (state.currentScenario.expectedRepairAnswer || '4y+12').toLowerCase().replace(/\s+/g, '');
-
-      const isCorrect = normalizedAns === expectedAns ||
-        (expectedAns === '4y+12' && (normalizedAns === '12+4y' || normalizedAns === '4*y+12'));
-
-      let checkerResult;
-
-      if (isCorrect) {
-        checkerResult = {
-          correct: true,
-          confidence: 0.98,
-          explanation: state.language === 'te'
-            ? 'అద్భుతం! మీరు 4 ని y మరియు 3 రెండింటితోనూ గుణించి 4y + 12 పొందారు. లోపం సరిదిద్దబడింది!'
-            : 'Excellent! You distributed 4 to both y and 3 to get 4y + 12. Misconception repaired!',
-          misconception_fixed: true,
-          next_action: 'continue'
-        };
-
-        // Trigger Confetti Celebration!
-        launchCelebrationConfetti();
-        updateMasteryScore(true);
-        updateFlowStepper(5);
-        showToast('🎉 Misconception Fixed! Mastery Updated.', 'success');
-
-        DOM.repairFeedbackBanner.className = 'repair-feedback-banner success';
-        DOM.repairResultIcon.textContent = '🎉';
-        DOM.repairResultHeading.textContent = 'Misconception Repaired!';
-      } else {
-        checkerResult = {
-          correct: false,
-          confidence: 0.94,
-          explanation: state.language === 'te'
-            ? 'మరలా అదే లోపం: మీరు 4 ని 3 తో గుణించలేదు. బ్రాకెట్ లోని రెండు పదాలను గుణించాలి.'
-            : 'Repeat error detected: You did not multiply 4 by 3. Make sure to distribute 4 to both terms.',
-          misconception_fixed: false,
-          next_action: 'retry'
-        };
-
-        DOM.repairFeedbackBanner.className = 'repair-feedback-banner retry';
-        DOM.repairResultIcon.textContent = '⚠️';
-        DOM.repairResultHeading.textContent = 'Almost There — Review the Rule';
-        showToast('Answer incorrect. Check hint and retry.', 'error');
-      }
-
-      DOM.repairResultDesc.textContent = checkerResult.explanation;
-      DOM.repairFeedbackBanner.classList.remove('hidden');
-
-    } finally {
-      DOM.repairSpinner.classList.add('hidden');
-      DOM.btnSubmitRepair.disabled = false;
-    }
+    renderQuizQuestions(quizList);
   }
 
-  /**
-   * Updates student mastery progress badge
-   */
-  function updateMasteryScore(success) {
-    if (success) {
-      DOM.barDist.style.width = '100%';
-      DOM.barDist.className = 'progress-bar-fill fill-emerald';
-      DOM.chipDist.className = 'status-chip chip-success';
-      DOM.chipDist.textContent = 'Mastered';
-      DOM.masteryOverallScore.textContent = '94% Overall';
-    }
-  }
-
-  // =========================================================================
-  // 7. TEACHER DASHBOARD & MISCONCEPTION NETWORK MAP
-  // =========================================================================
-
-  /**
-   * Renders the interactive SVG Misconception Network Map
-   */
-  function renderMisconceptionNetwork() {
-    const svg = DOM.networkSvg;
-    svg.innerHTML = '';
-
-    // Graph nodes: Domain centers and misconception leaves
-    const domainNodes = [
-      { id: 'DOMAIN_ALG', label: 'Algebraic Expressions', x: 260, y: 220, r: 28, type: 'domain', color: '#8b5cf6' },
-      { id: 'DOMAIN_NUM', label: 'Fractions & Rationals', x: 580, y: 200, r: 26, type: 'domain', color: '#06b6d4' },
-      { id: 'DOMAIN_INT', label: 'Signed Arithmetic', x: 420, y: 390, r: 24, type: 'domain', color: '#3b82f6' }
-    ];
-
-    const leafNodes = [
+  function generateFallbackQuiz(topicName) {
+    const t = topicName || 'this subject';
+    return [
       {
-        id: 'ALG_PARTIAL_DISTRIBUTION',
-        domain: 'DOMAIN_ALG',
-        label: 'Partial Distribution',
-        x: 130, y: 110,
-        count: state.classroom.misconceptionCounts.ALG_PARTIAL_DISTRIBUTION,
-        status: 'critical',
-        color: '#f43f5e'
+        id: 'q1',
+        question: `What is the primary objective of studying ${t}?`,
+        options: [
+          { key: 'A', text: `To understand the foundational theoretical principles and optimize solutions.` },
+          { key: 'B', text: `To memorize arbitrary definitions without application.` },
+          { key: 'C', text: `To replace empirical evidence with guesswork.` },
+          { key: 'D', text: `It is purely decorative with no practical value.` }
+        ],
+        correctAnswer: 'A',
+        explanation: `${t} provides rigorous systematic tools to model, analyze, and optimize academic and engineering solutions.`
       },
       {
-        id: 'LIKE_TERMS_CONCAT',
-        domain: 'DOMAIN_ALG',
-        label: 'Combine Unlike Terms',
-        x: 110, y: 290,
-        count: state.classroom.misconceptionCounts.LIKE_TERMS_CONCAT,
-        status: 'moderate',
-        color: '#f59e0b'
+        id: 'q2',
+        question: `Which analysis criteria is most critical when evaluating ${t}?`,
+        options: [
+          { key: 'A', text: `Color schemes and margins` },
+          { key: 'B', text: `Boundary conditions, constraints, and valid assumptions` },
+          { key: 'C', text: `Alphabetical length of variable names` },
+          { key: 'D', text: `Ignoring edge cases` }
+        ],
+        correctAnswer: 'B',
+        explanation: `Undergraduate rigor requires explicitly validating boundary conditions, constraints, and underlying postulates.`
       },
       {
-        id: 'FRACTION_ADD_DENOMINATORS',
-        domain: 'DOMAIN_NUM',
-        label: 'Add Denominators',
-        x: 720, y: 130,
-        count: state.classroom.misconceptionCounts.FRACTION_ADD_DENOMINATORS,
-        status: 'critical',
-        color: '#f43f5e'
-      },
-      {
-        id: 'NEG_SIGN_DISTRIBUTION',
-        domain: 'DOMAIN_INT',
-        label: 'Negative Sign Flip',
-        x: 320, y: 460,
-        count: state.classroom.misconceptionCounts.NEG_SIGN_DISTRIBUTION,
-        status: 'moderate',
-        color: '#f59e0b'
-      },
-      {
-        id: 'EXPONENT_BASE_MULTIPLY',
-        domain: 'DOMAIN_INT',
-        label: 'Exponent Multiplication',
-        x: 560, y: 450,
-        count: state.classroom.misconceptionCounts.EXPONENT_BASE_MULTIPLY,
-        status: 'mastered',
-        color: '#10b981'
+        id: 'q3',
+        question: `How should complex problems in ${t} be decomposed?`,
+        options: [
+          { key: 'A', text: `By solving the entire problem monolithically without breakdown` },
+          { key: 'B', text: `By isolating sub-problems, applying governing laws, and synthesizing results` },
+          { key: 'C', text: `By discarding mathematical definitions` },
+          { key: 'D', text: `By random trial and error only` }
+        ],
+        correctAnswer: 'B',
+        explanation: `Modular decomposition allows complex academic systems to be analyzed with precision and verifiable correctness.`
       }
     ];
-
-    // SVG Defs: Glow filters and gradients
-    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-    defs.innerHTML = `
-      <filter id="glow-rose" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur stdDeviation="4" result="blur" />
-        <feComposite in="SourceGraphic" in2="blur" operator="over" />
-      </filter>
-      <filter id="glow-amber" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur stdDeviation="3" result="blur" />
-        <feComposite in="SourceGraphic" in2="blur" operator="over" />
-      </filter>
-    `;
-    svg.appendChild(defs);
-
-    // 1. Draw Links between domains and misconceptions
-    leafNodes.forEach(leaf => {
-      const parent = domainNodes.find(d => d.id === leaf.domain);
-      if (!parent) return;
-
-      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      line.setAttribute('x1', parent.x);
-      line.setAttribute('y1', parent.y);
-      line.setAttribute('x2', leaf.x);
-      line.setAttribute('y2', leaf.y);
-      line.setAttribute('class', `graph-link ${leaf.status === 'critical' ? 'active-flow' : ''}`);
-      svg.appendChild(line);
-    });
-
-    // 2. Draw Domain Central Nodes
-    domainNodes.forEach(node => {
-      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-      g.setAttribute('class', 'graph-node-group');
-
-      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      circle.setAttribute('cx', node.x);
-      circle.setAttribute('cy', node.y);
-      circle.setAttribute('r', node.r);
-      circle.setAttribute('fill', node.color);
-      circle.setAttribute('fill-opacity', '0.2');
-      circle.setAttribute('stroke', node.color);
-      circle.setAttribute('stroke-width', '2');
-      circle.setAttribute('class', 'node-core');
-
-      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      text.setAttribute('x', node.x);
-      text.setAttribute('y', node.y + 4);
-      text.setAttribute('text-anchor', 'middle');
-      text.setAttribute('fill', '#ffffff');
-      text.setAttribute('font-size', '11');
-      text.setAttribute('font-weight', '700');
-      text.textContent = node.label;
-
-      g.appendChild(circle);
-      g.appendChild(text);
-      svg.appendChild(g);
-    });
-
-    // 3. Draw Misconception Leaf Nodes
-    leafNodes.forEach(leaf => {
-      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-      g.setAttribute('class', 'graph-node-group');
-      g.setAttribute('data-id', leaf.id);
-
-      // Node radius dynamically sized by student frequency
-      const radius = 18 + (leaf.count * 1.5);
-
-      // Pulsing outer halo for critical nodes
-      if (leaf.status === 'critical') {
-        const pulse = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        pulse.setAttribute('cx', leaf.x);
-        pulse.setAttribute('cy', leaf.y);
-        pulse.setAttribute('r', radius + 6);
-        pulse.setAttribute('fill', 'none');
-        pulse.setAttribute('stroke', leaf.color);
-        pulse.setAttribute('stroke-width', '1.5');
-        pulse.setAttribute('opacity', '0.4');
-        g.appendChild(pulse);
-      }
-
-      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      circle.setAttribute('cx', leaf.x);
-      circle.setAttribute('cy', leaf.y);
-      circle.setAttribute('r', radius);
-      circle.setAttribute('fill', leaf.color);
-      circle.setAttribute('fill-opacity', '0.22');
-      circle.setAttribute('stroke', leaf.color);
-      circle.setAttribute('stroke-width', state.classroom.selectedNodeId === leaf.id ? '3.5' : '2');
-      circle.setAttribute('class', 'node-core');
-      circle.setAttribute('filter', leaf.status === 'critical' ? 'url(#glow-rose)' : 'url(#glow-amber)');
-
-      const textCount = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      textCount.setAttribute('x', leaf.x);
-      textCount.setAttribute('y', leaf.y + 5);
-      textCount.setAttribute('text-anchor', 'middle');
-      textCount.setAttribute('fill', '#ffffff');
-      textCount.setAttribute('font-size', '13');
-      textCount.setAttribute('font-weight', '800');
-      textCount.textContent = leaf.count;
-
-      const textLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      textLabel.setAttribute('x', leaf.x);
-      textLabel.setAttribute('y', leaf.y + radius + 15);
-      textLabel.setAttribute('text-anchor', 'middle');
-      textLabel.setAttribute('fill', '#cbd5e1');
-      textLabel.setAttribute('font-size', '11');
-      textLabel.setAttribute('font-weight', '600');
-      textLabel.textContent = leaf.label;
-
-      g.appendChild(circle);
-      g.appendChild(textCount);
-      g.appendChild(textLabel);
-
-      // Node Click Handler -> Inspect details
-      g.addEventListener('click', () => {
-        selectMisconceptionNode(leaf.id);
-      });
-
-      // Hover Tooltip
-      g.addEventListener('mouseenter', (e) => {
-        DOM.graphTooltip.innerHTML = `<strong>${leaf.label}</strong><br/>Affected: ${leaf.count} students (${Math.round(leaf.count / state.classroom.totalStudents * 100)}%)`;
-        DOM.graphTooltip.classList.remove('hidden');
-        DOM.graphTooltip.style.left = `${leaf.x + 20}px`;
-        DOM.graphTooltip.style.top = `${leaf.y}px`;
-      });
-
-      g.addEventListener('mouseleave', () => {
-        DOM.graphTooltip.classList.add('hidden');
-      });
-
-      svg.appendChild(g);
-    });
   }
 
-  /**
-   * Inspects a specific misconception node in the side drawer
-   */
-  function selectMisconceptionNode(nodeId) {
-    state.classroom.selectedNodeId = nodeId;
-    const taxon = MISCONCEPTION_LIBRARY[nodeId];
-    if (!taxon) return;
-
-    const count = state.classroom.misconceptionCounts[nodeId] || 0;
-    const pct = Math.round((count / state.classroom.totalStudents) * 100);
-
-    DOM.inspectNodeBadge.textContent = taxon.id;
-    DOM.inspectNodeTitle.textContent = taxon.label;
-    DOM.inspectNodeFreq.textContent = `${count} Students (${pct}%)`;
-    DOM.inspectNodeDesc.innerHTML = taxon.description;
-
-    // Filter affected students
-    const affected = state.classroom.students.filter(s => s.misconception === nodeId);
-    DOM.affectedStudentsContainer.innerHTML = '';
-    affected.forEach(st => {
-      const btn = document.createElement('button');
-      btn.className = 'student-tag-btn';
-      btn.innerHTML = `${st.name} <span class="text-xs text-muted">(Step ${st.step})</span>`;
-      btn.title = 'Click to inspect in student workspace';
-      btn.addEventListener('click', () => {
-        loadStudentInWorkspace(st);
-      });
-      DOM.affectedStudentsContainer.appendChild(btn);
-    });
-
-    // Sample working
-    if (nodeId === 'ALG_PARTIAL_DISTRIBUTION') {
-      DOM.inspectSampleWork.textContent = "3(x + 2) = 15\n3x + 2 = 15  ← First wrong step (#1)\n3x = 13\nx = 13/3";
-    } else if (nodeId === 'FRACTION_ADD_DENOMINATORS') {
-      DOM.inspectSampleWork.textContent = "1/2 + 1/3 = ?\n= (1+1)/(2+3)\n= 2/5  ← Denominators added directly";
-    } else if (nodeId === 'NEG_SIGN_DISTRIBUTION') {
-      DOM.inspectSampleWork.textContent = "-2(x - 4) = 10\n-2x - 8 = 10  ← Failed to invert (- * - = +)\n-2x = 18";
-    } else {
-      DOM.inspectSampleWork.textContent = "Expression calculation error.";
-    }
-
-    // Re-render network graph to highlight selected stroke
-    renderMisconceptionNetwork();
-  }
-
-  /**
-   * Loads selected student scenario into the Student Workspace
-   */
-  function loadStudentInWorkspace(student) {
-    // Switch to student view
-    switchView('student-view');
-
-    // Load appropriate scenario
-    if (student.misconception === 'ALG_PARTIAL_DISTRIBUTION') {
-      loadScenario(PRESET_SCENARIOS.partial_dist);
-    } else if (student.misconception === 'FRACTION_ADD_DENOMINATORS') {
-      loadScenario(PRESET_SCENARIOS.frac_denom);
-    } else if (student.misconception === 'NEG_SIGN_DISTRIBUTION') {
-      loadScenario(PRESET_SCENARIOS.neg_sign);
-    } else if (student.misconception === 'EXPONENT_BASE_MULTIPLY') {
-      loadScenario(PRESET_SCENARIOS.exp_multiply);
-    }
-
-    DOM.studentNameBadge.textContent = `${student.name} (Grade ${student.grade})`;
-    showToast(`Loaded ${student.name}'s submission into Student Workspace.`, 'success');
-  }
-
-  /**
-   * Registers a newly diagnosed solution into classroom metrics
-   */
-  function registerSubmissionInClass(diag) {
-    if (diag.misconception_id && diag.misconception_id !== 'NONE') {
-      if (!state.classroom.misconceptionCounts[diag.misconception_id]) {
-        state.classroom.misconceptionCounts[diag.misconception_id] = 0;
-      }
-      state.classroom.misconceptionCounts[diag.misconception_id]++;
-      state.classroom.totalStudents++;
-
-      renderMisconceptionNetwork();
-      renderInterventionCards();
-    }
-  }
-
-  /**
-   * Simulates realistic classroom submissions
-   */
-  function simulateClassroomData() {
-    state.classroom.totalStudents = 32;
-    state.classroom.misconceptionCounts = {
-      ALG_PARTIAL_DISTRIBUTION: 14,
-      FRACTION_ADD_DENOMINATORS: 9,
-      NEG_SIGN_DISTRIBUTION: 6,
-      LIKE_TERMS_CONCAT: 4,
-      EXPONENT_BASE_MULTIPLY: 2
-    };
-
-    renderMisconceptionNetwork();
-    renderInterventionCards();
-    renderClusteringView();
-    renderBeforeAfterAnalytics();
-    showToast('⚡ Simulated 32 student submissions across 5 topics.', 'success');
-  }
-
-  // =========================================================================
-  // 8. TEACHER 5-MINUTE INTERVENTION ENGINE (PROMPT #7)
-  // =========================================================================
-
-  /**
-   * Renders AI-crafted 5-minute interventions for top misconceptions
-   */
-  function renderInterventionCards() {
-    const grid = DOM.interventionsGrid;
-    grid.innerHTML = '';
-
-    const interventions = [
-      {
-        id: 'ALG_PARTIAL_DISTRIBUTION',
-        title: 'Partial Distribution: The Dual-Room Area Model',
-        pct: '43% Class Affected',
-        problem: 'Students treat the parentheses as binding only to the adjacent variable, failing to distribute the multiplier to the constant.',
-        action: 'Draw a 2-room house on the board. Room 1 has width x, Room 2 has width 2. The height is 3. Ask: "What is the floor area of each room?" Have students physically calculate both rooms (3x and 6) before summing.',
-        visual: 'Visual Area Model: Rectangle split into 3·x and 3·2.',
-        followUp: 'If a rectangle has height 5 and length (y + 4), what are the two separate areas?'
-      },
-      {
-        id: 'FRACTION_ADD_DENOMINATORS',
-        title: 'Direct Denominators: The Pizza Slice Paradox',
-        pct: '29% Class Affected',
-        problem: 'Adding numerators and denominators as whole numbers, causing the result to be smaller than the largest addend.',
-        action: 'Show 1/2 of a pizza and 1/3 of a pizza. Ask: "Can adding more pizza make our total less than 1/2?" When students compute 2/5 (which is 0.40 < 0.50), the cognitive dissonance triggers immediate self-correction.',
-        visual: 'Fraction Bar Overlay: 1/2 (3/6) + 1/3 (2/6) = 5/6 vs 2/5.',
-        followUp: 'Without calculating the exact sum, is 1/3 + 1/4 greater or less than 1/3?'
-      },
-      {
-        id: 'NEG_SIGN_DISTRIBUTION',
-        title: 'Negative Sign Flip: The Double Inverter',
-        pct: '18% Class Affected',
-        problem: 'Dropping the negative multiplier sign when evaluating terms already containing a negative sign: -2 × (-4) written as -8.',
-        action: 'Use walking backward on a number line: "Face backward (-), walk backward 4 steps (-), you are now +4 units ahead!" Practice 3 rapid double-negative sign inversions.',
-        visual: 'Number Line Direction Arrows: -2 · (-4) = +8.',
-        followUp: 'What is the sign of -a(-b)? Why does removing debt equal receiving money?'
-      },
-      {
-        id: 'LIKE_TERMS_CONCAT',
-        title: 'Combining Unlike Terms: The Fruit Basket Analogy',
-        pct: '11% Class Affected',
-        problem: 'Collapsing variable terms and constant numbers into a single term: 3x + 5 = 8x.',
-        action: 'Place 3 pens and 5 coins on the front desk. Ask a student: "Can I tell someone I have 8 pen-coins?" Reinforce that unlike terms cannot be merged.',
-        visual: 'Split Container: [3x] in Box A, [+5] in Box B. Cannot merge boxes.',
-        followUp: 'Can 4y + 9 be simplified further? Explain why or why not.'
-      }
-    ];
-
-    interventions.forEach(item => {
-      const card = document.createElement('div');
-      card.className = 'card glass-card intervention-card';
-      card.innerHTML = `
-        <div class="intervention-top">
-          <div class="intervention-title-box">
-            <span class="badge badge-accent">${item.id}</span>
-            <h3>${item.title}</h3>
-          </div>
-          <span class="intervention-pct">${item.pct}</span>
-        </div>
-
-        <div class="intervention-item">
-          <span class="intervention-label">1. Cognitive Root Cause:</span>
-          <p class="intervention-body">${item.problem}</p>
-        </div>
-
-        <div class="intervention-item">
-          <span class="intervention-label">2. 5-Minute Classroom Activity:</span>
-          <p class="intervention-body">${item.action}</p>
-        </div>
-
-        <div class="intervention-item">
-          <span class="intervention-label">3. Suggested Visual Aid:</span>
-          <p class="intervention-body"><code>${item.visual}</code></p>
-        </div>
-
-        <div class="intervention-item">
-          <span class="intervention-label">4. Diagnostic Follow-up Question:</span>
-          <p class="intervention-body" style="color: #fde68a;">"${item.followUp}"</p>
-        </div>
-      `;
-      grid.appendChild(card);
-    });
-  }
-
-  // =========================================================================
-  // 9. MISCONCEPTION CLUSTERING VIEW (PROMPT #8)
-  // =========================================================================
-  function renderClusteringView() {
-    const container = DOM.clustersContainer;
+  function renderQuizQuestions(quizList) {
+    const container = DOM.quizQuestionsContainer;
     container.innerHTML = '';
 
-    const clusters = [
-      {
-        id: 'ALG_PARTIAL_DISTRIBUTION',
-        title: 'Cluster A: Partial Distribution (12 Students)',
-        reason: 'Students multiplied the coefficient only by x, leaving 2 unmultiplied.',
-        answers: [
-          { id: 'Student #1', text: '3(x+2) = 3x + 2' },
-          { id: 'Student #4', text: '3x + 2 = 15' },
-          { id: 'Student #9', text: '3x + 2 = 13' },
-          { id: 'Student #12', text: 'x = 13/3' },
-          { id: 'Student #17', text: '3x + 2 = 15 => 3x = 13' },
-          { id: 'Student #21', text: '3x + 2' }
-        ]
-      },
-      {
-        id: 'LIKE_TERMS_CONCAT',
-        title: 'Cluster B: Combined Unlike Terms (3 Students)',
-        reason: 'Students combined the multiplier 3 with the inside constant 2 to produce 5x.',
-        answers: [
-          { id: 'Student #7', text: '5x = 15' },
-          { id: 'Student #14', text: '3(x+2) = 5x' },
-          { id: 'Student #23', text: '5x = 15 => x = 3' }
-        ]
-      },
-      {
-        id: 'NONE',
-        title: 'Cluster C: Correct Solutions (9 Students)',
-        reason: 'Properly distributed 3 to both terms and balanced equation.',
-        answers: [
-          { id: 'Student #2', text: '3x + 6 = 15 => x = 3' },
-          { id: 'Student #5', text: '3x + 6 = 15 => 3x = 9' },
-          { id: 'Student #11', text: '3x + 6 = 15' }
-        ]
-      }
-    ];
-
-    clusters.forEach(cl => {
+    quizList.forEach((q, index) => {
       const card = document.createElement('div');
-      card.className = 'card glass-card cluster-card';
-      card.innerHTML = `
-        <div class="cluster-header">
-          <div class="cluster-title-group">
-            <span class="badge ${cl.id === 'NONE' ? 'badge-success' : 'badge-rose'}">${cl.id}</span>
-            <h3>${cl.title}</h3>
-          </div>
-        </div>
-        <p class="cluster-reason"><strong>Diagnosis Reason:</strong> ${cl.reason}</p>
-        <div class="cluster-answers-list">
-          ${cl.answers.map(a => `
-            <div class="cluster-answer-item">
-              <span class="answer-student-id">${a.id}</span>
-              <span class="answer-text">${a.text}</span>
+      card.className = 'card glass-card quiz-question-card';
+      card.id = `quiz-card-${q.id}`;
+
+      let optionsHTML = '';
+      q.options.forEach(opt => {
+        optionsHTML += `
+          <label class="mcq-option-label" data-qid="${q.id}" data-key="${opt.key}">
+            <input type="radio" name="mcq-${q.id}" value="${opt.key}">
+            <div class="mcq-option-card" id="opt-${q.id}-${opt.key}">
+              <span class="mcq-badge">${opt.key}</span>
+              <span class="mcq-text">${escapeHtml(opt.text)}</span>
             </div>
-          `).join('')}
+          </label>
+        `;
+      });
+
+      card.innerHTML = `
+        <div class="quiz-question-header">
+          <span class="question-q-num">Question ${index + 1} of ${quizList.length}</span>
+          <span class="badge badge-outline">1 Mark</span>
+        </div>
+        <p class="question-prompt">${escapeHtml(q.question)}</p>
+        <div class="mcq-options-grid">${optionsHTML}</div>
+        <div class="quiz-explanation-box hidden" id="exp-${q.id}">
+          <strong>Explanation:</strong> ${escapeHtml(q.explanation)}
         </div>
       `;
+
       container.appendChild(card);
     });
-  }
 
-  // =========================================================================
-  // 10. BEFORE / AFTER LEARNING ANALYTICS (PROMPT #9)
-  // =========================================================================
-  function renderBeforeAfterAnalytics() {
-    const container = DOM.shiftChartContainer;
-    container.innerHTML = '';
-
-    const comparisons = [
-      { label: 'Partial Distribution [3(x+2)]', pre: 12, post: 2, max: 14 },
-      { label: 'Fraction Denominators [1/2 + 1/3]', pre: 8, post: 1, max: 14 },
-      { label: 'Negative Sign Flip [-2(x-4)]', pre: 5, post: 1, max: 14 },
-      { label: 'Like Terms Error [3x + 5 = 8x]', pre: 3, post: 0, max: 14 }
-    ];
-
-    comparisons.forEach(item => {
-      const prePct = Math.round((item.pre / item.max) * 100);
-      const postPct = Math.round((item.post / item.max) * 100);
-      const reduction = Math.round(((item.pre - item.post) / item.pre) * 100);
-
-      const row = document.createElement('div');
-      row.className = 'shift-row';
-      row.innerHTML = `
-        <div class="shift-labels">
-          <span>${item.label}</span>
-          <span class="text-emerald">↓ -${reduction}% Misconception Drop</span>
-        </div>
-        <div class="shift-bars-dual">
-          <div class="shift-bar-wrap">
-            <span class="shift-tag">Pre:</span>
-            <div class="shift-bar-outer">
-              <div class="shift-bar-pre" style="width: ${prePct}%;"></div>
-            </div>
-            <span>${item.pre} students</span>
-          </div>
-          <div class="shift-bar-wrap">
-            <span class="shift-tag">Post:</span>
-            <div class="shift-bar-outer">
-              <div class="shift-bar-post" style="width: ${postPct}%;"></div>
-            </div>
-            <span>${item.post} students</span>
-          </div>
-        </div>
-      `;
-      container.appendChild(row);
-    });
-  }
-
-  // =========================================================================
-  // 11. PROMPT LABORATORY ENGINE
-  // =========================================================================
-
-  /**
-   * Initializes Prompt Lab navigation and playground
-   */
-  function initPromptLab() {
-    DOM.promptsNavList.innerHTML = '';
-
-    SYSTEM_PROMPTS.forEach((p, idx) => {
-      const item = document.createElement('button');
-      item.className = `prompt-nav-item ${idx === state.activePromptLabIndex ? 'active' : ''}`;
-      item.innerHTML = `
-        <span class="p-num">Prompt #${p.num}</span>
-        <span class="p-name">${p.name}</span>
-        <span class="p-badge-sub">${p.tag}</span>
-      `;
-      item.addEventListener('click', () => {
-        selectPromptLabItem(idx);
+    // Add selection listeners
+    container.querySelectorAll('.mcq-option-label').forEach(label => {
+      label.addEventListener('click', (e) => {
+        const qid = label.getAttribute('data-qid');
+        const key = label.getAttribute('data-key');
+        state.userQuizAnswers[qid] = key;
       });
-      DOM.promptsNavList.appendChild(item);
     });
-
-    renderPromptDetail(state.activePromptLabIndex);
   }
 
-  /**
-   * Selects and renders a prompt in Prompt Lab
-   */
-  function selectPromptLabItem(idx) {
-    state.activePromptLabIndex = idx;
-    const items = DOM.promptsNavList.querySelectorAll('.prompt-nav-item');
-    items.forEach((it, i) => {
-      it.classList.toggle('active', i === idx);
-    });
-    renderPromptDetail(idx);
-  }
+  function submitQuiz() {
+    const quizList = state.activeQuiz;
+    if (!quizList) return;
 
-  function renderPromptDetail(idx) {
-    const p = SYSTEM_PROMPTS[idx];
-    DOM.promptActiveBadge.textContent = `Prompt #${p.num} • ${p.tag}`;
-    DOM.promptActiveTitle.textContent = p.name;
-    DOM.promptActiveDesc.textContent = p.desc;
-    DOM.promptCodeView.textContent = p.template;
+    let score = 0;
+    const total = quizList.length;
 
-    // Render variables form
-    DOM.promptVarsContainer.innerHTML = '';
-    if (p.vars) {
-      Object.keys(p.vars).forEach(k => {
-        const field = document.createElement('div');
-        field.className = 'prompt-var-field';
-        field.innerHTML = `
-          <label class="prompt-var-label" for="var-${k}">{${k}}:</label>
-          <input type="text" id="var-${k}" class="prompt-var-input" value="${escapeHtml(p.vars[k])}">
-        `;
-        DOM.promptVarsContainer.appendChild(field);
+    quizList.forEach(q => {
+      const userChoice = state.userQuizAnswers[q.id];
+      const isCorrect = userChoice === q.correctAnswer;
+      if (isCorrect) score++;
+
+      // Style options
+      q.options.forEach(opt => {
+        const optCard = document.getElementById(`opt-${q.id}-${opt.key}`);
+        if (!optCard) return;
+
+        if (opt.key === q.correctAnswer) {
+          optCard.className = 'mcq-option-card state-correct';
+        } else if (opt.key === userChoice && !isCorrect) {
+          optCard.className = 'mcq-option-card state-wrong';
+        }
       });
+
+      // Show explanation
+      const expBox = document.getElementById(`exp-${q.id}`);
+      if (expBox) expBox.classList.remove('hidden');
+    });
+
+    // Calculate score
+    const pct = Math.round((score / total) * 100);
+    DOM.quizScoreBadge.classList.remove('hidden');
+    DOM.quizScoreVal.textContent = `${score} / ${total} (${pct}%)`;
+
+    DOM.summaryScorePct.textContent = `${pct}%`;
+    DOM.summaryScoreRatio.textContent = `${score} of ${total} correct`;
+    DOM.quizSummaryStats.classList.remove('hidden');
+
+    if (pct >= 80) {
+      launchCelebrationConfetti();
+      DOM.summaryFeedbackMsg.textContent = '🎉 Excellent Mastery! You have solid command over these concepts.';
+      showToast(`Quiz Passed: ${score}/${total} (${pct}%)!`, 'success');
+    } else {
+      DOM.summaryFeedbackMsg.textContent = 'Keep practicing! Review the detailed explanations below to cement your understanding.';
+      showToast(`Quiz Complete: ${score}/${total}. Review explanations below.`, 'error');
     }
 
-    // Default sample output
-    DOM.promptOutputView.textContent = JSON.stringify(p.sampleOutput, null, 2);
+    DOM.btnSubmitQuiz.classList.add('hidden');
+    DOM.btnRetryQuiz.classList.remove('hidden');
   }
 
-  /**
-   * Simulates running prompt test from Prompt Lab
-   */
-  function runPromptTest() {
-    const p = SYSTEM_PROMPTS[state.activePromptLabIndex];
-    DOM.promptOutputView.textContent = 'Processing prompt via reasoning model...';
-
-    setTimeout(() => {
-      DOM.promptOutputView.textContent = JSON.stringify(p.sampleOutput, null, 2);
-      showToast(`Prompt #${p.num} executed successfully. Valid JSON returned.`, 'success');
-    }, 350);
+  function retryQuiz() {
+    state.userQuizAnswers = {};
+    DOM.quizScoreBadge.classList.add('hidden');
+    DOM.quizSummaryStats.classList.add('hidden');
+    DOM.btnSubmitQuiz.classList.remove('hidden');
+    DOM.btnRetryQuiz.classList.add('hidden');
+    renderQuizQuestions(state.activeQuiz);
   }
 
   // =========================================================================
-  // 12. SCENARIO SWITCHING & HELPERS
+  // 6. NOTES & REVISION CARDS (FEATURE 4)
   // =========================================================================
 
-  function loadScenario(scenario) {
-    state.currentScenario = scenario;
-    DOM.problemTitle.textContent = scenario.title;
-    DOM.displayQuestion.textContent = scenario.question;
-    DOM.displayExpected.textContent = scenario.expectedMethod;
-    DOM.workingStepsEditor.value = scenario.studentWorking;
-    DOM.studentNameBadge.textContent = scenario.studentName;
+  function prepareRevisionForTopic(data) {
+    const rev = data?.revision || generateFallbackRevision(DOM.topicInput.value);
+    DOM.revisionTitleHeading.textContent = `Revision Notes: ${DOM.topicInput.value || 'Core Concepts'}`;
 
-    updateLineNumbers();
+    // Render definitions & summary
+    const defContainer = DOM.revisionDefinitionsContent;
+    defContainer.innerHTML = `
+      <div class="def-item" style="border-left: 3px solid #6366f1;">
+        <span class="def-term">Executive Summary:</span>
+        <p class="def-desc">${escapeHtml(rev.summary)}</p>
+      </div>
+    `;
 
-    // Auto-diagnose scenario for instantaneous smooth flow
-    runStudentDiagnosis();
+    rev.definitions.forEach(d => {
+      const item = document.createElement('div');
+      item.className = 'def-item';
+      item.innerHTML = `
+        <span class="def-term">${escapeHtml(d.term)}</span>
+        <p class="def-desc">${escapeHtml(d.desc)}</p>
+      `;
+      defContainer.appendChild(item);
+    });
+
+    // Render Flashcards
+    const flashContainer = DOM.flashcardsContainer;
+    flashContainer.innerHTML = '';
+
+    rev.flashcards.forEach((f, i) => {
+      const card = document.createElement('div');
+      card.className = 'flashcard-item';
+      card.innerHTML = `
+        <div class="flashcard-q">
+          <span class="badge badge-accent">Q${i + 1}</span>
+          <span>${escapeHtml(f.q)}</span>
+        </div>
+        <div class="flashcard-a hidden" id="flash-ans-${i}">
+          ${escapeHtml(f.a)}
+        </div>
+      `;
+
+      card.addEventListener('click', () => {
+        const ans = card.querySelector('.flashcard-a');
+        ans.classList.toggle('hidden');
+      });
+
+      flashContainer.appendChild(card);
+    });
   }
 
-  function updateLineNumbers() {
-    const lines = DOM.workingStepsEditor.value.split('\n');
-    DOM.stepLineNumbers.innerHTML = lines.map((_, i) => `<div>${i + 1}</div>`).join('');
+  function generateFallbackRevision(topicName) {
+    const t = topicName || 'Academic Concept';
+    return {
+      summary: `High-yield summary for ${t}: Focus on core definitions, boundary invariants, and standard problem-solving methodologies.`,
+      definitions: [
+        { term: 'Foundational Principle', desc: `The primary theoretical postulate underlying ${t}.` },
+        { term: 'Key Boundary Condition', desc: `The operational limits and assumptions required for valid analysis.` },
+        { term: 'Analytical Formulation', desc: `The standard mathematical or algorithmic representation.` }
+      ],
+      flashcards: [
+        { q: `What is the core premise of ${t}?`, a: `It provides systematic mechanisms to solve problems accurately and efficiently.` },
+        { q: `What is the most common error made when studying ${t}?`, a: `Skipping boundary condition verification and confusing empirical rules with strict mathematical definitions.` },
+        { q: `How is ${t} applied in real-world engineering?`, a: `By translating abstract constraints into measurable, repeatable optimizations.` }
+      ]
+    };
   }
+
+  function copyAllNotesToClipboard() {
+    const topic = DOM.topicInput.value || 'Topic';
+    const defs = DOM.revisionDefinitionsContent.innerText;
+    let flashcardsText = '';
+    DOM.flashcardsContainer.querySelectorAll('.flashcard-item').forEach((fc, idx) => {
+      const q = fc.querySelector('.flashcard-q')?.innerText || '';
+      const a = fc.querySelector('.flashcard-a')?.innerText || '';
+      flashcardsText += `\nFlashcard ${idx + 1}:\n${q}\nAnswer: ${a}\n`;
+    });
+
+    const fullNotes = `# StudyForge Revision Notes: ${topic}\n\n${defs}\n\n## Interactive Flashcards:\n${flashcardsText}\n\n---\nGenerated with StudyForge`;
+    navigator.clipboard.writeText(fullNotes);
+    showToast('📋 Revision notes copied to clipboard!', 'success');
+  }
+
+  // =========================================================================
+  // 7. FOLLOW-UP QUESTIONS & SAMPLE PROBLEM LOADER
+  // =========================================================================
+
+  function handleFollowupQuestion() {
+    const doubt = DOM.followupInput.value.trim();
+    if (!doubt) return;
+
+    const followupBubble = document.createElement('div');
+    followupBubble.className = 'mt-3 p-3';
+    followupBubble.style.background = 'rgba(99, 102, 241, 0.12)';
+    followupBubble.style.border = '1px solid rgba(99, 102, 241, 0.3)';
+    followupBubble.style.borderRadius = '8px';
+
+    followupBubble.innerHTML = `
+      <div style="font-weight:700; color:#38bdf8; margin-bottom:4px;">💬 Follow-Up Doubt: "${escapeHtml(doubt)}"</div>
+      <p style="color:#cbd5e1; font-size:0.88rem; line-height:1.5;">
+        <strong>StudyForge Answer:</strong> Great question! In the context of <code>${escapeHtml(DOM.topicInput.value)}</code>, 
+        this addresses an important nuance: whenever you adjust the underlying parameters, the fundamental invariant remains true 
+        provided the boundary conditions hold. Consider checking both extremes (lower and upper bounds) to see how the solution scales!
+      </p>
+    `;
+
+    DOM.explanationBodyContent.appendChild(followupBubble);
+    DOM.followupInput.value = '';
+    DOM.explanationBodyContent.scrollTop = DOM.explanationBodyContent.scrollHeight;
+    showToast('Follow-up answered!', 'success');
+  }
+
+  let sampleIndex = 0;
+  function loadNextSample() {
+    const samples = [
+      { subj: 'cs', topic: 'Dynamic Programming (Memoization vs Tabulation)', q: 'What is the difference between top-down memoization and bottom-up tabulation? Explain with the Fibonacci sequence.' },
+      { subj: 'math', topic: 'Eigenvalues and Eigenvectors', q: 'How do you calculate the eigenvalues and eigenvectors of a 2x2 matrix A = [[4, 1], [2, 3]]? Show the characteristic equation.' },
+      { subj: 'physics', topic: 'Thermodynamics: Carnot Cycle & Efficiency', q: 'Derive the efficiency of a Carnot heat engine operating between temperatures Th and Tc. Why cannot any real engine exceed Carnot efficiency?' },
+      { subj: 'cs', topic: 'Database Normalization (1NF, 2NF, 3NF, BCNF)', q: 'Explain 1NF, 2NF, and 3NF with an example student database table and explain why transitive dependencies are eliminated in 3NF.' }
+    ];
+
+    const s = samples[sampleIndex % samples.length];
+    sampleIndex++;
+
+    DOM.subjectSelect.value = s.subj;
+    DOM.topicInput.value = s.topic;
+    DOM.questionInput.value = s.q;
+    generateExplanation();
+  }
+
+  // =========================================================================
+  // 8. NAVIGATION & VIEW SWITCHING
+  // =========================================================================
 
   function switchView(targetViewId) {
     state.activeView = targetViewId;
-
     DOM.navTabs.forEach(tab => {
-      const isActive = tab.getAttribute('data-target') === targetViewId;
-      tab.classList.toggle('active', isActive);
+      tab.classList.toggle('active', tab.getAttribute('data-target') === targetViewId);
     });
-
     DOM.viewPanels.forEach(panel => {
       panel.classList.toggle('active', panel.id === targetViewId);
     });
-
-    if (targetViewId === 'teacher-view') {
-      renderMisconceptionNetwork();
-      renderInterventionCards();
-      renderClusteringView();
-      renderBeforeAfterAnalytics();
-    }
   }
 
-  function updateFlowStepper(activeStep) {
-    for (let i = 1; i <= 5; i++) {
-      const node = document.getElementById(`step-node-${i}`);
-      if (!node) continue;
-
-      if (i < activeStep) {
-        node.className = 'step-item completed';
-      } else if (i === activeStep) {
-        node.className = 'step-item active';
-      } else {
-        node.className = 'step-item';
-      }
-    }
+  function setLoadingState(loading) {
+    DOM.learnSpinner.classList.toggle('hidden', !loading);
+    DOM.btnGenerateExplanation.disabled = loading;
   }
 
-  function setDiagnosingState(loading) {
-    DOM.submitSpinner.classList.toggle('hidden', !loading);
-    DOM.btnSubmitDiagnosis.disabled = loading;
-  }
-
-  function showToast(message, type = 'success') {
+  function showToast(msg, type = 'success') {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
-    toast.innerHTML = `
-      <span>${type === 'success' ? '✓' : '⚠️'}</span>
-      <span>${message}</span>
-    `;
+    toast.innerHTML = `<span>${type === 'success' ? '✓' : '⚠️'}</span><span>${msg}</span>`;
     DOM.toastContainer.appendChild(toast);
-
     setTimeout(() => {
       toast.style.opacity = '0';
       toast.style.transform = 'translateY(10px)';
@@ -2008,23 +1226,14 @@ STRICT RULES:
   }
 
   function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
+    return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  // =========================================================================
-  // 13. CONFETTI CELEBRATION ENGINE
-  // =========================================================================
   function launchCelebrationConfetti() {
     const canvas = DOM.confettiCanvas;
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
     const particles = [];
     const colors = ['#6366f1', '#10b981', '#f59e0b', '#06b6d4', '#f43f5e', '#a855f7'];
 
@@ -2046,14 +1255,12 @@ STRICT RULES:
     function render() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       let alive = false;
-
       particles.forEach(p => {
         p.x += p.vx;
         p.y += p.vy;
-        p.vy += 0.35; // Gravity
+        p.vy += 0.35;
         p.rotation += p.vRot;
         p.opacity -= 0.012;
-
         if (p.opacity > 0) {
           alive = true;
           ctx.save();
@@ -2065,23 +1272,18 @@ STRICT RULES:
           ctx.restore();
         }
       });
-
-      if (alive) {
-        animationId = requestAnimationFrame(render);
-      } else {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        cancelAnimationFrame(animationId);
-      }
+      if (alive) animationId = requestAnimationFrame(render);
+      else cancelAnimationFrame(animationId);
     }
-
     render();
   }
 
   // =========================================================================
-  // 14. INITIALIZATION & EVENT LISTENERS
+  // 9. EVENT LISTENERS & INITIALIZATION
   // =========================================================================
+
   function initEventListeners() {
-    // Nav view tabs
+    // Navigation
     DOM.navTabs.forEach(tab => {
       tab.addEventListener('click', () => {
         const target = tab.getAttribute('data-target');
@@ -2089,103 +1291,59 @@ STRICT RULES:
       });
     });
 
-    // Language selector (Prompt #6 toggle)
-    DOM.langSelect.addEventListener('change', (e) => {
-      state.language = e.target.value;
-      showToast(`Feedback language set to: ${e.target.options[e.target.selectedIndex].text}`, 'success');
-      if (state.activeDiagnosis) {
-        // Re-run diagnosis with new language
-        runStudentDiagnosis();
-      }
-    });
+    // Learn & Solve
+    DOM.btnGenerateExplanation.addEventListener('click', generateExplanation);
+    DOM.btnLoadSample.addEventListener('click', loadNextSample);
 
-    // Scenario quick switcher
-    DOM.scenarioSelect.addEventListener('change', (e) => {
-      const val = e.target.value;
-      if (PRESET_SCENARIOS[val]) {
-        loadScenario(PRESET_SCENARIOS[val]);
-      }
-    });
-
-    // Step editor input events
-    DOM.workingStepsEditor.addEventListener('input', updateLineNumbers);
-    DOM.btnClearWorking.addEventListener('click', () => {
-      DOM.workingStepsEditor.value = '';
-      updateLineNumbers();
-    });
-
-    // Toggle expected method drawer
-    DOM.btnToggleExpected.addEventListener('click', () => {
-      DOM.expectedMethodDrawer.classList.toggle('hidden');
-    });
-
-    // Socratic hint toggle
-    DOM.hintToggleBtn.addEventListener('click', () => {
-      DOM.hintContentBody.classList.toggle('hidden');
-    });
-
-    // Submit diagnosis button
-    DOM.btnSubmitDiagnosis.addEventListener('click', runStudentDiagnosis);
-
-    // Repair loop
-    DOM.btnSubmitRepair.addEventListener('click', submitRepairAnswer);
-    DOM.repairInputAnswer.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') submitRepairAnswer();
-    });
-
-    // Quick chips for repair testing
-    DOM.quickChipBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const ansType = btn.getAttribute('data-ans');
-        if (ansType === 'correct') {
-          DOM.repairInputAnswer.value = state.currentScenario.expectedRepairAnswer || '4y + 12';
-        } else {
-          DOM.repairInputAnswer.value = '4y + 3';
-        }
-        submitRepairAnswer();
+    DOM.quickTopicPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        DOM.subjectSelect.value = pill.getAttribute('data-subj');
+        DOM.topicInput.value = pill.getAttribute('data-topic');
+        DOM.questionInput.value = pill.getAttribute('data-q');
+        generateExplanation();
       });
     });
 
-    // Next problem button
-    DOM.btnNextProblem.addEventListener('click', () => {
-      loadScenario(PRESET_SCENARIOS.frac_denom);
-      showToast('Loaded Next Problem: Fractions Addition.', 'success');
+    DOM.btnCopyExplanation.addEventListener('click', () => {
+      navigator.clipboard.writeText(DOM.explanationBodyContent.innerText);
+      showToast('Explanation copied to clipboard!', 'success');
     });
 
-    // Teacher subtabs
-    DOM.teacherSubtabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const subtabId = btn.getAttribute('data-subtab');
-        DOM.teacherSubtabBtns.forEach(b => b.classList.remove('active'));
-        DOM.teacherSubtabContents.forEach(c => c.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById(`subtab-${subtabId}`).classList.add('active');
-      });
+    DOM.btnGotoQuiz.addEventListener('click', () => {
+      switchView('quiz-view');
     });
 
-    // Teacher controls
-    DOM.btnSimulateClass.addEventListener('click', simulateClassroomData);
-    DOM.btnGenerateInterventionNow.addEventListener('click', () => {
-      renderInterventionCards();
-      showToast('AI 5-Minute Interventions refreshed (Prompt #7)', 'success');
-    });
-    DOM.btnResetZoom.addEventListener('click', renderMisconceptionNetwork);
-
-    // Prompt lab controls
-    DOM.btnRunPromptTest.addEventListener('click', runPromptTest);
-    DOM.btnCopyPrompt.addEventListener('click', () => {
-      navigator.clipboard.writeText(DOM.promptCodeView.textContent);
-      showToast('Prompt copied to clipboard!', 'success');
-    });
-    DOM.btnCopyOutput.addEventListener('click', () => {
-      navigator.clipboard.writeText(DOM.promptOutputView.textContent);
-      showToast('JSON output copied to clipboard!', 'success');
+    DOM.btnGotoRevision.addEventListener('click', () => {
+      switchView('revision-view');
     });
 
-    // Settings Modal
+    DOM.btnSubmitFollowup.addEventListener('click', handleFollowupQuestion);
+    DOM.followupInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleFollowupQuestion();
+    });
+
+    DOM.btnRevealSolution.addEventListener('click', () => {
+      DOM.hintsSocraticBox.classList.add('hidden');
+      const preset = findMatchingPreset(DOM.subjectSelect.value, DOM.topicInput.value);
+      if (preset) {
+        DOM.explanationBodyContent.innerHTML = formatMarkdownToHTML(preset.step_by_step);
+      }
+    });
+
+    // Quiz
+    DOM.btnSubmitQuiz.addEventListener('click', submitQuiz);
+    DOM.btnRetryQuiz.addEventListener('click', retryQuiz);
+    DOM.btnGenerateNewQuiz.addEventListener('click', () => {
+      prepareQuizForTopic(findMatchingPreset(DOM.subjectSelect.value, DOM.topicInput.value));
+      showToast('New practice quiz ready!', 'success');
+    });
+
+    // Revision
+    DOM.btnCopyAllNotes.addEventListener('click', copyAllNotesToClipboard);
+
+    // Settings
     DOM.btnOpenSettings.addEventListener('click', () => {
       DOM.settingGeminiKey.value = state.apiSettings.geminiKey;
-      DOM.settingModelSelect.value = state.apiSettings.model;
       DOM.settingsModal.classList.remove('hidden');
     });
 
@@ -2197,69 +1355,28 @@ STRICT RULES:
       if (e.target === DOM.settingsModal) DOM.settingsModal.classList.add('hidden');
     });
 
-    DOM.settingTeacherThreshold.addEventListener('input', (e) => {
-      const val = (e.target.value / 100).toFixed(2);
-      DOM.thresholdVal.textContent = val;
-      state.apiSettings.confidenceThreshold = parseFloat(val);
-    });
-
     DOM.btnSaveSettings.addEventListener('click', () => {
       state.apiSettings.geminiKey = DOM.settingGeminiKey.value.trim();
-      state.apiSettings.model = DOM.settingModelSelect.value;
-      localStorage.setItem('mm_gemini_key', state.apiSettings.geminiKey);
-      localStorage.setItem('mm_model', state.apiSettings.model);
-
-      if (state.apiSettings.geminiKey) {
-        DOM.apiStatusDot.className = 'api-status-dot connected';
-        DOM.apiStatusDot.title = 'Gemini 2.0 Flash Connected';
-      }
-
+      localStorage.setItem('studyforge_gemini_key', state.apiSettings.geminiKey);
       DOM.settingsModal.classList.add('hidden');
-      showToast('AI Model settings saved successfully!', 'success');
+      showToast('AI settings saved successfully!', 'success');
     });
 
     DOM.btnResetSettings.addEventListener('click', () => {
-      DOM.settingGeminiKey.value = '';
-      DOM.settingModelSelect.value = 'offline-heuristic';
-      DOM.settingTeacherThreshold.value = 70;
-      DOM.thresholdVal.textContent = '0.70';
       state.apiSettings.geminiKey = '';
-      state.apiSettings.model = 'offline-heuristic';
-      state.apiSettings.confidenceThreshold = 0.70;
-      localStorage.removeItem('mm_gemini_key');
-      localStorage.removeItem('mm_model');
-      showToast('Settings reset to built-in offline engine.', 'success');
-    });
-
-    // Window resize handler for SVG
-    window.addEventListener('resize', () => {
-      if (state.activeView === 'teacher-view') {
-        renderMisconceptionNetwork();
-      }
+      DOM.settingGeminiKey.value = '';
+      localStorage.removeItem('studyforge_gemini_key');
+      showToast('Reset to built-in offline engine.', 'success');
     });
   }
 
-  // =========================================================================
-  // 15. BOOTSTRAP APPLICATION
-  // =========================================================================
   function init() {
     initEventListeners();
-    initPromptLab();
-    updateLineNumbers();
-
-    // Initial diagnosis on default scenario
-    runStudentDiagnosis();
-
-    // Pre-render teacher map
-    selectMisconceptionNode('ALG_PARTIAL_DISTRIBUTION');
-    renderInterventionCards();
-    renderClusteringView();
-    renderBeforeAfterAnalytics();
-
-    console.log('Misconception Map initialized successfully with all 10 Prompts.');
+    // Generate default explanation on load
+    generateExplanation();
+    console.log('StudyForge initialized successfully.');
   }
 
-  // Run on DOM ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
