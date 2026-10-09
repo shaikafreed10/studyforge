@@ -518,9 +518,17 @@
                   <span class="card-badge badge-primary">Math Problem</span>
                   <h2 class="card-title" id="problem-title">Algebra: Distributive Property</h2>
                 </div>
-                <div class="card-actions">
+                <div class="card-actions" style="display:flex; gap:8px; align-items:center;">
+                  <select id="diagnostic-scenario-select" class="form-select" style="padding:4px 8px; font-size:0.75rem;" title="Select preset math problem">
+                    <option value="partial_dist" selected>Scenario 1: 3(x + 2) = 15 (Distribution)</option>
+                    <option value="frac_denom">Scenario 2: 1/2 + 1/3 (Fractions)</option>
+                    <option value="neg_sign">Scenario 3: -2(x - 4) = 10 (Negatives)</option>
+                    <option value="like_terms">Scenario 4: 3x + 5 = 20 (Like Terms)</option>
+                    <option value="exp_multiply">Scenario 5: 2³ + 4 (Exponents)</option>
+                    <option value="correct_sol">Scenario 6: Correct Working</option>
+                  </select>
                   <button class="btn btn-xs btn-outline" id="btn-toggle-expected" title="Inspect teacher expected solution">
-                    <span>👁️ Expected Method</span>
+                    <span>👁️ Expected</span>
                   </button>
                 </div>
               </div>
