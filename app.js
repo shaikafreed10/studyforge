@@ -1050,6 +1050,60 @@ In **${discipline}**, what fundamental law or balance equation (conservation, re
         explanation: '2^3 ante 2 * 3 = 6 kaadhu. 2 ni 3 times repeat ga multiply cheyali: 2 * 2 * 2 = 8.',
         hint: 'Power 3 ante base ni 3 times multiply cheyali kada?'
       }
+    },
+    NONE: {
+      id: 'NONE',
+      label: 'Sound Mathematical Reasoning',
+      domain: 'General Mathematics',
+      description: 'All steps reflect mathematically valid reasoning, symmetry in operations, and proper property application.',
+      severity: 'none',
+      typicalCount: 0,
+      telugu: {
+        label: 'సరైన భావనాత్మక అవగాహన',
+        explanation: 'అన్ని గణిత దశలు సరైనవి మరియు న్యాయాలను సరిగ్గా వర్తింపజేశారు.',
+        hint: 'మీ సాధన పూర్తిగా సరైనది! ఇదే ఉత్సాహాన్ని కొనసాగించండి.'
+      },
+      tenglish: {
+        label: 'Sound Understanding',
+        explanation: 'All mathematical steps correct ga unnayi. Conceptual reasoning sound ga undhi.',
+        hint: 'Mee solution complete ga correct! Great job.'
+      }
+    },
+    INSUFFICIENT_EVIDENCE: {
+      id: 'INSUFFICIENT_EVIDENCE',
+      label: 'Insufficient Working Evidence',
+      domain: 'Diagnostic Assessment',
+      description: 'Answer provides insufficient intermediate steps or explanations to diagnose underlying belief patterns.',
+      severity: 'low',
+      typicalCount: 1,
+      telugu: {
+        label: 'సరిపోని సాక్ష్యం',
+        explanation: 'సమాధానంలో మధ్యంతర దశలు లేవు. దీనివలన కచ్చితమైన భావనను నిర్ధారించలేము.',
+        hint: 'దయచేసి మీ పూర్తి సాధనా దశలను చూపించండి.'
+      },
+      tenglish: {
+        label: 'Insufficient Evidence',
+        explanation: 'Intermediate working steps lekapovadam valla exact misconception confirm cheyalekapotunnam.',
+        hint: 'Please intermediate derivation steps kuda type cheyandi.'
+      }
+    },
+    IRRELEVANT_INPUT: {
+      id: 'IRRELEVANT_INPUT',
+      label: 'Incomplete or Irrelevant Response',
+      domain: 'Diagnostic Assessment',
+      description: 'Response contains non-mathematical content, blank inputs, or off-topic text.',
+      severity: 'low',
+      typicalCount: 1,
+      telugu: {
+        label: 'అసంబద్ధమైన లేదా అసంపూర్ణ సమాధానం',
+        explanation: 'ఇచ్చిన సమాధానంలో గణిత సాధన లేదు లేదా సంబంధం లేని పదాలు ఉన్నాయి.',
+        hint: 'ప్రశ్నకు సంబంధించిన మొదటి గణిత సమీకరణాన్ని రాయండి.'
+      },
+      tenglish: {
+        label: 'Irrelevant Response',
+        explanation: 'Provided input mathematical topic ki relevant ga ledu leda incomplete ga undhi.',
+        hint: 'Problem ki sambandhinchina first step rayadaniki prayatninchandi.'
+      }
     }
   };
 
@@ -1331,7 +1385,8 @@ Return ONLY this JSON:
     activePromptLabIndex: 3, // Prompt #10
     diagnostic: {
       currentScenario: PRESET_SCENARIOS.partial_dist,
-      activeDiagnosis: null
+      activeDiagnosis: null,
+      history: []
     },
     classroom: {
       totalStudents: 28,
@@ -1422,6 +1477,9 @@ Return ONLY this JSON:
     // Math Diagnostic
     diagScenarioSelect: document.getElementById('diagnostic-scenario-select'),
     problemTitle: document.getElementById('problem-title'),
+    diagnosticTopicInput: document.getElementById('diagnostic-topic-input'),
+    diagnosticQuestionInput: document.getElementById('diagnostic-question-input'),
+    diagnosticExpectedInput: document.getElementById('diagnostic-expected-input'),
     displayQuestion: document.getElementById('display-question'),
     displayExpected: document.getElementById('display-expected'),
     expectedMethodDrawer: document.getElementById('expected-method-drawer'),
@@ -1435,6 +1493,7 @@ Return ONLY this JSON:
     masteryOverallScore: document.getElementById('mastery-overall-score'),
     chipDist: document.getElementById('chip-dist'),
     barDist: document.getElementById('bar-dist'),
+    diagClassificationChip: document.getElementById('diag-classification-chip'),
     diagHeadline: document.getElementById('diag-headline'),
     diagSubheadline: document.getElementById('diag-subheadline'),
     statusPulse: document.getElementById('status-pulse'),
@@ -1444,6 +1503,12 @@ Return ONLY this JSON:
     diagMisconceptionId: document.getElementById('diag-misconception-id'),
     diagMisconceptionName: document.getElementById('diag-misconception-name'),
     diagExplanation: document.getElementById('diag-explanation'),
+    diagEvidenceText: document.getElementById('diag-evidence-text'),
+    diagCorrectConceptText: document.getElementById('diag-correct-concept-text'),
+    diagUncertaintyBox: document.getElementById('diag-uncertainty-box'),
+    diagUncertaintyText: document.getElementById('diag-uncertainty-text'),
+    btnCopyDiagnosis: document.getElementById('btn-copy-diagnosis'),
+    btnExportReport: document.getElementById('btn-export-report'),
     hintToggleBtn: document.getElementById('hint-toggle-btn'),
     hintContentBody: document.getElementById('hint-content-body'),
     diagHint: document.getElementById('diag-hint'),
@@ -1462,6 +1527,9 @@ Return ONLY this JSON:
     repairResultIcon: document.getElementById('repair-result-icon'),
     repairResultHeading: document.getElementById('repair-result-heading'),
     repairResultDesc: document.getElementById('repair-result-desc'),
+    diagnosticHistoryCard: document.getElementById('diagnostic-history-card'),
+    recentDiagnosesList: document.getElementById('recent-diagnoses-list'),
+    btnClearDiagHistory: document.getElementById('btn-clear-diag-history'),
 
     // Teacher View
     teacherSubtabBtns: document.querySelectorAll('.subtab-btn'),
@@ -1980,11 +2048,43 @@ Provide an accurate, clear explanation suitable for an undergraduate student fol
   // =========================================================================
 
   function loadDiagnosticScenario(key) {
+    if (key === 'custom') {
+      state.diagnostic.currentScenario = {
+        id: 'custom',
+        title: 'Custom Problem',
+        question: '',
+        expectedMethod: '',
+        studentWorking: '',
+        studentName: 'Custom Student',
+        misconceptionId: 'NONE',
+        firstWrongStep: 0,
+        confidence: 1.0,
+        explanation: 'Custom problem entered by user.',
+        hint: 'Inspect each algebraic step.',
+        repairQuestion: 'Practice targeted problem',
+        expectedRepairAnswer: '4y + 12'
+      };
+      DOM.problemTitle.textContent = 'Custom Diagnostic Problem';
+      if (DOM.diagnosticTopicInput) DOM.diagnosticTopicInput.value = '';
+      if (DOM.diagnosticQuestionInput) DOM.diagnosticQuestionInput.value = '';
+      if (DOM.diagnosticExpectedInput) DOM.diagnosticExpectedInput.value = '';
+      DOM.displayQuestion.textContent = 'Enter your custom question below';
+      DOM.displayExpected.textContent = 'Enter expected method or reference key';
+      DOM.workingStepsEditor.value = '';
+      DOM.studentNameBadge.textContent = 'Interactive Student';
+      updateLineNumbers();
+      showToast('✏️ Custom problem mode active. Enter question, topic & student steps!', 'info');
+      return;
+    }
+
     const sc = PRESET_SCENARIOS[key];
     if (!sc) return;
     state.diagnostic.currentScenario = sc;
 
     DOM.problemTitle.textContent = sc.title;
+    if (DOM.diagnosticTopicInput) DOM.diagnosticTopicInput.value = sc.title;
+    if (DOM.diagnosticQuestionInput) DOM.diagnosticQuestionInput.value = sc.question;
+    if (DOM.diagnosticExpectedInput) DOM.diagnosticExpectedInput.value = sc.expectedMethod;
     DOM.displayQuestion.textContent = sc.question;
     DOM.displayExpected.textContent = sc.expectedMethod;
     DOM.workingStepsEditor.value = sc.studentWorking;
@@ -1999,27 +2099,359 @@ Provide an accurate, clear explanation suitable for an undergraduate student fol
     DOM.stepLineNumbers.innerHTML = lines.map((_, i) => `<div>${i + 1}</div>`).join('');
   }
 
-  function runStudentDiagnosis() {
-    const rawWorking = DOM.workingStepsEditor.value.trim();
+  async function callGeminiDiagnosisAPI(topic, question, expected, working) {
+    const prompt = `You are an expert mathematical misconception diagnosis AI for undergraduate and school education.
+Analyze the student working against the question and expected reference.
+
+Topic: ${topic}
+Question: ${question}
+Expected Solution / Reference: ${expected}
+Student Working Steps:
+${working}
+
+Analyze carefully and return ONLY a valid JSON object matching this schema:
+{
+  "classification": "CORRECT" | "PARTIAL" | "MISCONCEPTION" | "INCOMPLETE_OR_IRRELEVANT" | "UNCERTAIN",
+  "first_wrong_step": <integer, 0 if correct or incomplete, else 1-based step number of first reasoning error>,
+  "misconception_id": "<ID such as ALG_PARTIAL_DISTRIBUTION, FRACTION_ADD_DENOMINATORS, NEG_SIGN_DISTRIBUTION, LIKE_TERMS_CONCAT, EXPONENT_BASE_MULTIPLY, NONE, or custom ID>",
+  "misconception_name": "<Short human-readable title of the misconception or 'Sound Understanding'>",
+  "confidence": <float between 0.0 and 1.0>,
+  "explanation": "<Simple student-friendly explanation of why the reasoning is incorrect or why it is correct>",
+  "evidence": "<Direct quoted expression or line from student working demonstrating the misconception>",
+  "correct_concept": "<Clear statement of the correct mathematical principle or property>",
+  "hint": "<Socratic guiding question helping the student self-correct>",
+  "repair_question": "<A new targeted question testing the exact same concept>",
+  "expected_repair_answer": "<Correct answer string to the repair question>",
+  "uncertainty_reason": "<Explanation if confidence < 0.70 or classification is UNCERTAIN, else empty string>"
+}
+
+Rules:
+- Do NOT invent a misconception if the answer is just incomplete, ambiguous, or blank.
+- If only a final number is given without steps, classify as UNCERTAIN.
+- Return ONLY the raw JSON string without markdown formatting.`;
+
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${state.apiSettings.geminiKey}`;
+    const resp = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { responseMimeType: 'application/json' }
+      })
+    });
+
+    if (!resp.ok) throw new Error(`Gemini diagnosis API error: ${resp.status}`);
+    const data = await resp.json();
+    let text = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    text = text.replace(/```json\s*/gi, '').replace(/```/g, '').trim();
+    return JSON.parse(text);
+  }
+
+  function diagnoseOffline(topic, question, expected, rawWorking, scenarioKey) {
+    const lines = rawWorking.split('\n').map(l => l.trim()).filter(Boolean);
+    const fullText = rawWorking.toLowerCase().replace(/\s+/g, ' ');
+
+    // 1. Check for adversarial / prompt injection
+    const injectionRegex = /(ignore\s+all\s+previous|system\s+prompt|forget\s+instructions|you\s+are\s+now|bypass\s+rules|reveal\s+secret)/i;
+    if (injectionRegex.test(rawWorking) || injectionRegex.test(question || '')) {
+      return {
+        classification: 'INCOMPLETE_OR_IRRELEVANT',
+        first_wrong_step: 0,
+        misconception_id: 'IRRELEVANT_INPUT',
+        misconception_name: 'Adversarial or Irrelevant Input',
+        confidence: 0.99,
+        explanation: 'The provided submission contains non-mathematical system prompts or instruction overrides rather than valid mathematical reasoning.',
+        evidence: lines[0] ? lines[0].slice(0, 60) : 'Adversarial pattern detected',
+        correct_concept: 'Mathematical diagnosis requires genuine algebraic or numerical statements.',
+        hint: 'Please provide genuine mathematical working to solve the problem.',
+        repair_question: 'Solve for x: 3x + 6 = 15',
+        expected_repair_answer: 'x = 3',
+        uncertainty_reason: ''
+      };
+    }
+
+    // 2. Check for empty submission
+    if (lines.length === 0) {
+      return {
+        classification: 'INCOMPLETE_OR_IRRELEVANT',
+        first_wrong_step: 0,
+        misconception_id: 'IRRELEVANT_INPUT',
+        misconception_name: 'Empty Submission',
+        confidence: 1.0,
+        explanation: 'No mathematical steps were provided. Please enter your working to receive a diagnosis.',
+        evidence: 'No input provided',
+        correct_concept: 'A solution must begin with an initial algebraic statement or arithmetic setup.',
+        hint: 'Write down the original problem as step 1 to begin.',
+        repair_question: 'Expand: 2(x + 5) = ?',
+        expected_repair_answer: '2x + 10',
+        uncertainty_reason: ''
+      };
+    }
+
+    // Check if non-math text, conversational, or lacks mathematical operations/equations
+    const hasEquationsOrNumbers = /\d/.test(fullText) || /[=+\-*/^]/.test(fullText);
+    const isConversationalOnly = /^(hi|hello|idk|i don't know|what|who|help|test|banana|cat|dog|pizza|i think|no idea)\b/i.test(fullText.trim());
+    if (!hasEquationsOrNumbers || isConversationalOnly || lines.every(l => !/[\d=+\-*/^]/.test(l))) {
+      return {
+        classification: 'INCOMPLETE_OR_IRRELEVANT',
+        first_wrong_step: 0,
+        misconception_id: 'IRRELEVANT_INPUT',
+        misconception_name: 'Incomplete or Irrelevant Text',
+        confidence: 0.95,
+        explanation: 'The text does not contain mathematical expressions or logical steps addressing the problem.',
+        evidence: lines[0].slice(0, 80),
+        correct_concept: 'Answers must provide mathematical statements or equations addressing the question.',
+        hint: 'Try writing the first equation to start solving the problem.',
+        repair_question: 'Solve for x: 2x = 8',
+        expected_repair_answer: 'x = 4',
+        uncertainty_reason: ''
+      };
+    }
+
+    // 3. Check for ambiguous single token without intermediate working
+    if (lines.length === 1 && /^([a-z]\s*=\s*-?\d+(\.\d+|\/\d+)?|-?\d+(\.\d+|\/\d+)?)$/i.test(lines[0].trim())) {
+      return {
+        classification: 'UNCERTAIN',
+        first_wrong_step: 0,
+        misconception_id: 'INSUFFICIENT_EVIDENCE',
+        misconception_name: 'Insufficient Working Evidence',
+        confidence: 0.50,
+        explanation: 'Only a single final value was submitted without intermediate derivation steps. While the value can be checked, we cannot determine whether mistakes are due to conceptual misconceptions or minor calculation slips.',
+        evidence: lines[0],
+        correct_concept: 'Step-by-step working is needed to diagnose conceptual thinking patterns and verify mathematical properties.',
+        hint: 'Could you write down the intermediate steps you used to arrive at this answer?',
+        repair_question: 'Show all steps to solve: 3(x + 2) = 15',
+        expected_repair_answer: '3x + 6 = 15',
+        uncertainty_reason: 'Only a bare final value was provided without intermediate working steps.'
+      };
+    }
+
+    // 4. Check preset scenario match
+    if (scenarioKey && scenarioKey !== 'custom' && PRESET_SCENARIOS[scenarioKey]) {
+      const sc = PRESET_SCENARIOS[scenarioKey];
+      if (sc.id === 'correct_sol' || (fullText.includes('3x + 6 = 15') && fullText.includes('x = 3'))) {
+        return {
+          classification: 'CORRECT',
+          first_wrong_step: 0,
+          misconception_id: 'NONE',
+          misconception_name: 'Sound Mathematical Reasoning',
+          confidence: 1.0,
+          explanation: sc.explanation,
+          evidence: lines[lines.length - 1] || 'All steps valid',
+          correct_concept: 'Properties of Equality: applying inverse operations symmetrically isolates the variable correctly.',
+          hint: sc.hint,
+          repair_question: sc.repairQuestion,
+          expected_repair_answer: sc.expectedRepairAnswer,
+          uncertainty_reason: ''
+        };
+      }
+    }
+
+    // 5. Pattern-based Misconception Detection
+
+    // A) Partial Distribution: 3(x + 2) -> 3x + 2
+    const partialDistStep = lines.findIndex(l => {
+      const s = l.replace(/\s+/g, '');
+      return /3\(x\+2\)=3x\+2/i.test(s) || /4\(y\+3\)=4y\+3/i.test(s) || /2\(x\+4\)=2x\+4/i.test(s) || /3x\+2=15/i.test(s) || /3x\+2=13/i.test(s);
+    });
+    if (partialDistStep !== -1) {
+      return {
+        classification: 'MISCONCEPTION',
+        first_wrong_step: partialDistStep + 1,
+        misconception_id: 'ALG_PARTIAL_DISTRIBUTION',
+        misconception_name: 'Partial Distributive Property',
+        confidence: 0.95,
+        explanation: 'You multiplied the factor outside the parentheses by the variable term, but did not multiply it by the constant term inside. The distributive property requires a(b + c) = ab + ac.',
+        evidence: lines[partialDistStep],
+        correct_concept: 'Distributive Property: Every term inside the parentheses must be multiplied by the factor outside: 3 · (x + 2) = 3·x + 3·2 = 3x + 6.',
+        hint: 'If you have 3 bags each containing (x + 2) items, how many single items do you have in total across all 3 bags?',
+        repair_question: 'Expand and simplify: 4(y + 3) = ?',
+        expected_repair_answer: '4y + 12',
+        uncertainty_reason: ''
+      };
+    }
+
+    // B) Fraction Denominator Addition: 1/2 + 1/3 = 2/5
+    const fracDenomStep = lines.findIndex(l => {
+      const s = l.replace(/\s+/g, '');
+      return /\(1\+1\)\/\(2\+3\)/.test(s) || s.includes('2/5') || /\(a\+c\)\/\(b\+d\)/.test(s);
+    });
+    if (fracDenomStep !== -1 || (fullText.includes('1/2') && fullText.includes('1/3') && fullText.includes('2/5'))) {
+      const stepIdx = fracDenomStep !== -1 ? fracDenomStep + 1 : 2;
+      return {
+        classification: 'MISCONCEPTION',
+        first_wrong_step: stepIdx,
+        misconception_id: 'FRACTION_ADD_DENOMINATORS',
+        misconception_name: 'Direct Denominator Addition',
+        confidence: 0.96,
+        explanation: 'You added numerators and denominators straight across: (1+1)/(2+3) = 2/5. Fractions must have a common denominator before their numerators can be added.',
+        evidence: lines[fracDenomStep !== -1 ? fracDenomStep : 0],
+        correct_concept: 'Common Denominators: The denominator denotes part size. Convert to equivalent fractions with LCM(2, 3) = 6: 3/6 + 2/6 = 5/6.',
+        hint: '1/2 is half a cake. If you add 1/3 more cake, how can the total (2/5 = 0.4) be smaller than half?',
+        repair_question: 'Calculate: 1/4 + 1/3 = ?',
+        expected_repair_answer: '7/12',
+        uncertainty_reason: ''
+      };
+    }
+
+    // C) Negative Sign Distribution Error: -2(x - 4) -> -2x - 8
+    const negSignStep = lines.findIndex(l => {
+      const s = l.replace(/\s+/g, '');
+      return /-2x-8/.test(s) || /-3y-15/.test(s) || /-2\(x-4\)=-2x-8/.test(s);
+    });
+    if (negSignStep !== -1) {
+      return {
+        classification: 'MISCONCEPTION',
+        first_wrong_step: negSignStep + 1,
+        misconception_id: 'NEG_SIGN_DISTRIBUTION',
+        misconception_name: 'Negative Sign Distribution Error',
+        confidence: 0.93,
+        explanation: 'When distributing the negative coefficient -2 across the subtraction -4, a double negative produces a positive product: (-2) × (-4) = +8, but you wrote -8.',
+        evidence: lines[negSignStep],
+        correct_concept: 'Double Negatives: Multiplying two negative numbers yields a positive product: -a(x - b) = -ax + ab.',
+        hint: 'What is the sign when you multiply two negative numbers together: (-2) × (-4)?',
+        repair_question: 'Expand: -3(y - 5) = ?',
+        expected_repair_answer: '-3y + 15',
+        uncertainty_reason: ''
+      };
+    }
+
+    // D) Combining Unlike Terms: 3x + 5 = 8x
+    const likeTermsStep = lines.findIndex(l => {
+      const s = l.replace(/\s+/g, '');
+      return /8x=20/.test(s) || /3x\+5=8x/.test(s) || /4x\+7=11x/.test(s);
+    });
+    if (likeTermsStep !== -1) {
+      return {
+        classification: 'MISCONCEPTION',
+        first_wrong_step: likeTermsStep + 1,
+        misconception_id: 'LIKE_TERMS_CONCAT',
+        misconception_name: 'Combining Unlike Terms',
+        confidence: 0.94,
+        explanation: 'You added the variable term 3x and the constant 5 together to make 8x. Terms with variables cannot be merged with constant numbers because they are unlike terms.',
+        evidence: lines[likeTermsStep],
+        correct_concept: 'Like Terms Principle: Only terms with identical variable bases and exponents can be combined: 3x and 5 cannot be added together.',
+        hint: 'Can you combine 3 apples and 5 dollars into 8 apple-dollars?',
+        repair_question: 'Simplify: 4x + 7 = ?',
+        expected_repair_answer: '4x + 7',
+        uncertainty_reason: ''
+      };
+    }
+
+    // E) Exponent Base Multiply: 2^3 = 6
+    const expStep = lines.findIndex(l => {
+      const s = l.replace(/\s+/g, '');
+      return s.includes('6+4') || s.includes('2^3=6') || s.includes('2³=6') || s.includes('3^2=6') || (s.includes('6') && (fullText.includes('2³') || fullText.includes('2^3')));
+    });
+    if (expStep !== -1 || ((fullText.includes('2³') || fullText.includes('2^3')) && (fullText.includes('6 + 4') || fullText.includes('6+4') || fullText.includes('= 10') || fullText.includes('=10')))) {
+      const stepIdx = expStep !== -1 ? expStep + 1 : 2;
+      return {
+        classification: 'MISCONCEPTION',
+        first_wrong_step: stepIdx,
+        misconception_id: 'EXPONENT_BASE_MULTIPLY',
+        misconception_name: 'Base Multiplied by Exponent',
+        confidence: 0.93,
+        explanation: 'You multiplied the base 2 by the exponent 3 (2 × 3 = 6). Exponentiation represents repeated multiplication of the base: 2³ = 2 × 2 × 2 = 8.',
+        evidence: lines[expStep !== -1 ? expStep : 1] || '2³ = 6',
+        correct_concept: 'Powers & Exponents: a^n means multiplying a by itself n times: 2³ = 2 × 2 × 2 = 8, not 2 × 3.',
+        hint: 'What does the exponent 3 tell you to do with the number 2?',
+        repair_question: 'Calculate: 3³ = ?',
+        expected_repair_answer: '27',
+        uncertainty_reason: ''
+      };
+    }
+
+    // F) Correct Working Verification
+    const lastLine = lines[lines.length - 1];
+    const isAlgebraCorrect = fullText.includes('x = 3') || fullText.includes('x=3') || fullText.includes('5/6') || fullText.includes('x = -1') || fullText.includes('x = 5') || fullText.includes('12');
+    
+    if (isAlgebraCorrect) {
+      return {
+        classification: 'CORRECT',
+        first_wrong_step: 0,
+        misconception_id: 'NONE',
+        misconception_name: 'Sound Mathematical Reasoning',
+        confidence: 0.98,
+        explanation: 'Every step correctly applies mathematical properties, balances operations on both sides, and leads to the valid solution.',
+        evidence: lastLine,
+        correct_concept: 'Algebraic Consistency: Each step is an equivalent transformation preserving equality.',
+        hint: 'Your working is mathematically sound! Can you verify by plugging your answer back into the equation?',
+        repair_question: 'Mastery Challenge: Solve 5(2x - 3) = 25',
+        expected_repair_answer: 'x = 4',
+        uncertainty_reason: ''
+      };
+    }
+
+    // G) Partial Working
+    if (lines.length >= 2) {
+      return {
+        classification: 'PARTIAL',
+        first_wrong_step: 0,
+        misconception_id: 'NONE',
+        misconception_name: 'Partially Complete Solution',
+        confidence: 0.85,
+        explanation: 'Your initial algebraic manipulations are conceptually sound, but the working does not yet reach the final isolated variable or simplified answer.',
+        evidence: lastLine,
+        correct_concept: 'Complete Equation Solving: Continue applying inverse operations until the target variable is isolated on one side.',
+        hint: 'What final inverse operation is required to isolate the variable from ' + lastLine + '?',
+        repair_question: 'Complete isolation of x from: 3x = 9',
+        expected_repair_answer: 'x = 3',
+        uncertainty_reason: ''
+      };
+    }
+
+    // H) Fallback: Report Uncertain instead of inventing a misconception
+    return {
+      classification: 'UNCERTAIN',
+      first_wrong_step: 0,
+      misconception_id: 'INSUFFICIENT_EVIDENCE',
+      misconception_name: 'Inconclusive Reasoning',
+      confidence: 0.55,
+      explanation: 'The steps provided do not match known systematic misconception patterns or standard solutions. Additional steps or explanations are needed to evaluate understanding.',
+      evidence: lines[0],
+      correct_concept: 'Formulate explicit algebraic steps showing each transformation on both sides.',
+      hint: 'Please provide full step-by-step working from start to finish.',
+      repair_question: 'Solve step-by-step: 2(x + 3) = 14',
+      expected_repair_answer: 'x = 4',
+      uncertainty_reason: 'Steps provided do not provide enough evidence to differentiate between an arithmetic slip, typographical error, or conceptual misunderstanding.'
+    };
+  }
+
+  async function runStudentDiagnosis() {
+    const rawWorking = (DOM.workingStepsEditor?.value || '').trim();
+    const topic = (DOM.diagnosticTopicInput?.value || DOM.problemTitle?.textContent || '').trim();
+    const question = (DOM.diagnosticQuestionInput?.value || DOM.displayQuestion?.textContent || '').trim();
+    const expected = (DOM.diagnosticExpectedInput?.value || DOM.displayExpected?.textContent || '').trim();
+    const scenarioKey = DOM.diagScenarioSelect?.value || 'custom';
+
     if (!rawWorking) {
       showToast('Please enter mathematical working to diagnose.', 'error');
+      return;
+    }
+
+    if (rawWorking.length > 5000) {
+      showToast('Working text is too long (maximum 5000 characters).', 'warning');
       return;
     }
 
     DOM.submitSpinner.classList.remove('hidden');
     DOM.btnSubmitDiagnosis.disabled = true;
 
-    setTimeout(() => {
-      const sc = state.diagnostic.currentScenario;
-      const diag = {
-        first_wrong_step: sc.firstWrongStep,
-        misconception_id: sc.misconceptionId,
-        confidence: sc.confidence,
-        explanation: sc.explanation,
-        hint: sc.hint,
-        repair_question: sc.repairQuestion,
-        needs_teacher_review: sc.confidence < 0.70
-      };
+    try {
+      let diag = null;
+
+      if (state.apiSettings.geminiKey) {
+        try {
+          diag = await callGeminiDiagnosisAPI(topic, question, expected, rawWorking);
+        } catch (apiErr) {
+          console.warn('Gemini diagnosis API error, falling back to offline engine:', apiErr);
+          showToast('Live AI unreachable: running offline heuristic engine.', 'info');
+          diag = diagnoseOffline(topic, question, expected, rawWorking, scenarioKey);
+        }
+      } else {
+        await new Promise(r => setTimeout(r, 260));
+        diag = diagnoseOffline(topic, question, expected, rawWorking, scenarioKey);
+      }
 
       // Multilingual check
       if (state.language === 'te' && MISCONCEPTION_LIBRARY[diag.misconception_id]?.telugu) {
@@ -2033,42 +2465,129 @@ Provide an accurate, clear explanation suitable for an undergraduate student fol
       state.diagnostic.activeDiagnosis = diag;
       renderDiagnosisResult(diag, rawWorking);
 
+      // Save to Session History
+      const historyEntry = {
+        id: Date.now(),
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        topic: topic || 'Algebra',
+        question: question || '',
+        working: rawWorking,
+        classification: diag.classification,
+        confidence: diag.confidence,
+        misconception_id: diag.misconception_id,
+        first_wrong_step: diag.first_wrong_step,
+        diag: diag
+      };
+      state.diagnostic.history.unshift(historyEntry);
+      if (state.diagnostic.history.length > 20) state.diagnostic.history.pop();
+      renderDiagnosticHistory();
+
+      showToast(`Diagnosis complete: ${diag.classification}`, 'success');
+
+    } catch (err) {
+      console.error('Diagnosis error:', err);
+      showToast('An error occurred during diagnosis. Check your input.', 'error');
+    } finally {
       DOM.submitSpinner.classList.add('hidden');
       DOM.btnSubmitDiagnosis.disabled = false;
-      showToast('Step diagnosis complete (Prompt #10)!', 'success');
-    }, 250);
+    }
   }
 
   function renderDiagnosisResult(diag, studentWorking) {
-    const isCorrect = diag.misconception_id === 'NONE' || diag.first_wrong_step === 0;
-    const taxon = MISCONCEPTION_LIBRARY[diag.misconception_id] || { label: diag.misconception_id };
+    const isCorrect = diag.classification === 'CORRECT';
+    const isPartial = diag.classification === 'PARTIAL';
+    const isMisconception = diag.classification === 'MISCONCEPTION';
+    const isIncomplete = diag.classification === 'INCOMPLETE_OR_IRRELEVANT';
+    const isUncertain = diag.classification === 'UNCERTAIN';
 
+    const taxon = MISCONCEPTION_LIBRARY[diag.misconception_id] || { label: diag.misconception_name || diag.misconception_id };
+
+    // Update Classification Chip
+    if (DOM.diagClassificationChip) {
+      if (isCorrect) {
+        DOM.diagClassificationChip.className = 'classification-chip badge-class-correct';
+        DOM.diagClassificationChip.innerHTML = '✓ Correct Understanding';
+      } else if (isPartial) {
+        DOM.diagClassificationChip.className = 'classification-chip badge-class-partial';
+        DOM.diagClassificationChip.innerHTML = '⚡ Partially Correct';
+      } else if (isMisconception) {
+        DOM.diagClassificationChip.className = 'classification-chip badge-class-misconception';
+        DOM.diagClassificationChip.innerHTML = '⚠️ Conceptual Misconception';
+      } else if (isIncomplete) {
+        DOM.diagClassificationChip.className = 'classification-chip badge-class-incomplete';
+        DOM.diagClassificationChip.innerHTML = '🚫 Incomplete / Irrelevant';
+      } else {
+        DOM.diagClassificationChip.className = 'classification-chip badge-class-uncertain';
+        DOM.diagClassificationChip.innerHTML = '❓ Uncertain Evidence';
+      }
+    }
+
+    // Headline & Subheadline
     if (isCorrect) {
       DOM.diagHeadline.textContent = 'Correct Working — No Misconceptions';
       DOM.diagSubheadline.textContent = 'Every line correctly applies algebraic properties';
       DOM.statusPulse.className = 'status-pulse-badge pulse-emerald';
       DOM.diagMisconceptionId.className = 'badge badge-success';
-    } else {
-      DOM.diagHeadline.textContent = `Misconception Detected in Step ${diag.first_wrong_step}`;
+    } else if (isPartial) {
+      DOM.diagHeadline.textContent = 'Partially Correct Working';
+      DOM.diagSubheadline.textContent = 'Reasoning is mathematically sound but incomplete';
+      DOM.statusPulse.className = 'status-pulse-badge pulse-amber';
+      DOM.diagMisconceptionId.className = 'badge badge-warning';
+    } else if (isMisconception) {
+      DOM.diagHeadline.textContent = `Misconception Detected in Step ${diag.first_wrong_step || 1}`;
       DOM.diagSubheadline.textContent = 'Earliest reasoning departure pinpointed';
       DOM.statusPulse.className = 'status-pulse-badge pulse-rose';
       DOM.diagMisconceptionId.className = 'badge badge-rose';
+    } else if (isIncomplete) {
+      DOM.diagHeadline.textContent = 'Incomplete or Irrelevant Response';
+      DOM.diagSubheadline.textContent = 'Please provide valid mathematical working';
+      DOM.statusPulse.className = 'status-pulse-badge pulse-slate';
+      DOM.diagMisconceptionId.className = 'badge badge-outline';
+    } else {
+      DOM.diagHeadline.textContent = 'Inconclusive — Insufficient Evidence';
+      DOM.diagSubheadline.textContent = 'Need more intermediate steps for diagnosis';
+      DOM.statusPulse.className = 'status-pulse-badge pulse-purple';
+      DOM.diagMisconceptionId.className = 'badge badge-purple';
     }
 
-    DOM.diagConfidence.textContent = `${Math.round(diag.confidence * 100)}%`;
-    DOM.diagMisconceptionId.textContent = diag.misconception_id;
-    DOM.diagMisconceptionName.textContent = taxon.label;
+    DOM.diagConfidence.textContent = `${Math.round((diag.confidence || 0.85) * 100)}%`;
+    DOM.diagMisconceptionId.textContent = diag.misconception_id || 'ANALYSIS';
+    DOM.diagMisconceptionName.textContent = diag.misconception_name || taxon.label || diag.misconception_id;
     DOM.diagExplanation.textContent = diag.explanation;
-    DOM.diagHint.textContent = diag.hint;
+    DOM.diagHint.textContent = diag.hint || 'Review your first principles.';
 
-    if (diag.needs_teacher_review) DOM.diagReviewFlag.classList.remove('hidden');
-    else DOM.diagReviewFlag.classList.add('hidden');
+    // Evidence & Correct Concept
+    if (DOM.diagEvidenceText) {
+      DOM.diagEvidenceText.textContent = diag.evidence || 'N/A';
+    }
+    if (DOM.diagCorrectConceptText) {
+      DOM.diagCorrectConceptText.textContent = diag.correct_concept || 'Standard mathematical properties and balance methods applied.';
+    }
 
-    renderStepInspectionList(studentWorking, diag.first_wrong_step);
+    // Uncertainty Alert Box
+    if (DOM.diagUncertaintyBox) {
+      if (isUncertain || (diag.confidence && diag.confidence < 0.70)) {
+        DOM.diagUncertaintyBox.classList.remove('hidden');
+        if (DOM.diagUncertaintyText) {
+          DOM.diagUncertaintyText.textContent = diag.uncertainty_reason || 'Confidence is below 70%. Please enter intermediate working steps to allow accurate diagnosis.';
+        }
+      } else {
+        DOM.diagUncertaintyBox.classList.add('hidden');
+      }
+    }
+
+    // Teacher Review Flag
+    const needsReview = (diag.confidence && diag.confidence < 0.70) || isUncertain;
+    if (DOM.diagReviewFlag) {
+      if (needsReview) DOM.diagReviewFlag.classList.remove('hidden');
+      else DOM.diagReviewFlag.classList.add('hidden');
+    }
+
+    renderStepInspectionList(studentWorking, diag.first_wrong_step || 0);
     renderVisualMiniLesson(diag.misconception_id);
 
-    DOM.repairQuestionText.innerHTML = `${diag.repair_question}`;
-    DOM.repairQuestionTarget.textContent = `Targeting Misconception: ${diag.misconception_id}`;
+    DOM.repairQuestionText.innerHTML = `${diag.repair_question || 'Solve: 3(x + 2) = 15'}`;
+    DOM.repairQuestionTarget.textContent = `Targeting: ${diag.misconception_id}`;
     DOM.repairInputAnswer.value = '';
     DOM.repairFeedbackBanner.classList.add('hidden');
   }
@@ -2076,6 +2595,11 @@ Provide an accurate, clear explanation suitable for an undergraduate student fol
   function renderStepInspectionList(workingText, firstWrongStep) {
     const lines = workingText.split('\n').map(l => l.trim()).filter(Boolean);
     DOM.stepInspectionList.innerHTML = '';
+
+    if (lines.length === 0) {
+      DOM.stepInspectionList.innerHTML = '<div class="text-muted" style="padding:8px; font-size:0.85rem;">No steps available to inspect.</div>';
+      return;
+    }
 
     lines.forEach((line, idx) => {
       const stepNum = idx + 1;
@@ -2216,6 +2740,13 @@ Provide an accurate, clear explanation suitable for an undergraduate student fol
           </div>
         </div>
       `;
+    } else {
+      DOM.miniLessonTitle.textContent = 'Conceptual Review: Mathematical First Principles';
+      DOM.visualModelViewport.innerHTML = `
+        <div style="padding:16px; background:rgba(15,23,42,0.6); border-radius:8px; border:1px solid rgba(255,255,255,0.08); text-align:center;">
+          <p style="color:var(--text-muted); font-size:0.9rem;">Review each line by checking equality balance: verify operations applied symmetrically to both left and right sides.</p>
+        </div>
+      `;
     }
   }
 
@@ -2227,12 +2758,13 @@ Provide an accurate, clear explanation suitable for an undergraduate student fol
     }
 
     const studentAns = raw.toLowerCase().replace(/\s+/g, '');
-    const sc = state.diagnostic.currentScenario;
-    const expected = (sc.expectedRepairAnswer || '4y+12').toLowerCase().replace(/\s+/g, '');
+    const sc = state.diagnostic.currentScenario || {};
+    const activeDiag = state.diagnostic.activeDiagnosis || {};
+    const expected = (activeDiag.expected_repair_answer || sc.expectedRepairAnswer || '4y+12').toLowerCase().replace(/\s+/g, '');
 
     let isCorrect = (studentAns === expected);
     if (!isCorrect) {
-      if (expected === '4y+12') {
+      if (expected.includes('4y+12') || expected === '4y+12') {
         isCorrect = ['4y+12', '12+4y', '4*y+12', '12+4*y', '4(y+3)'].includes(studentAns);
       } else if (expected === '7/12') {
         isCorrect = ['7/12', '0.583', '0.58'].includes(studentAns);
@@ -2244,6 +2776,10 @@ Provide an accurate, clear explanation suitable for an undergraduate student fol
         isCorrect = ['27', '3^3', '3*3*3'].includes(studentAns);
       } else if (expected === 'x=4' || expected === '4') {
         isCorrect = ['x=4', '4', 'x=4.0'].includes(studentAns);
+      } else if (expected === 'x=3' || expected === '3') {
+        isCorrect = ['x=3', '3'].includes(studentAns);
+      } else if (expected === '2x+10') {
+        isCorrect = ['2x+10', '10+2x'].includes(studentAns);
       }
     }
 
@@ -2276,6 +2812,160 @@ Provide an accurate, clear explanation suitable for an undergraduate student fol
 
       DOM.repairFeedbackBanner.classList.remove('hidden');
     }, 280);
+  }
+
+  function renderDiagnosticHistory() {
+    if (!DOM.recentDiagnosesList) return;
+    const history = state.diagnostic.history;
+
+    if (!history || history.length === 0) {
+      DOM.recentDiagnosesList.innerHTML = `
+        <div class="history-empty-state" style="text-align:center; padding:1.5rem; color:var(--text-muted); font-size:0.875rem;">
+          No diagnoses recorded yet in this session. Run your first analysis above!
+        </div>
+      `;
+      return;
+    }
+
+    let html = '';
+    history.forEach((item, idx) => {
+      let badgeClass = 'badge-class-uncertain';
+      let badgeLabel = item.classification;
+      if (item.classification === 'CORRECT') {
+        badgeClass = 'badge-class-correct';
+        badgeLabel = 'CORRECT';
+      } else if (item.classification === 'PARTIAL') {
+        badgeClass = 'badge-class-partial';
+        badgeLabel = 'PARTIAL';
+      } else if (item.classification === 'MISCONCEPTION') {
+        badgeClass = 'badge-class-misconception';
+        badgeLabel = 'MISCONCEPTION';
+      } else if (item.classification === 'INCOMPLETE_OR_IRRELEVANT') {
+        badgeClass = 'badge-class-incomplete';
+        badgeLabel = 'INCOMPLETE';
+      }
+
+      const confPct = Math.round((item.confidence || 0.8) * 100);
+      const previewText = (item.working || '').split('\n')[0] || 'No steps';
+
+      html += `
+        <div class="history-item" data-history-idx="${idx}">
+          <div class="history-item-left">
+            <div class="history-item-header">
+              <span class="history-item-topic">${escapeHtml(item.topic || 'Diagnostic')}</span>
+              <span class="history-item-badge ${badgeClass}">${escapeHtml(badgeLabel)}</span>
+              <span class="badge badge-outline" style="font-size:0.7rem;">${confPct}% Conf</span>
+            </div>
+            <div class="history-item-preview">Working: ${escapeHtml(previewText)}</div>
+          </div>
+          <div class="history-item-right">
+            <span class="history-item-time">${escapeHtml(item.time)}</span>
+            <button type="button" class="history-item-restore-btn" data-history-idx="${idx}">Restore ↺</button>
+          </div>
+        </div>
+      `;
+    });
+
+    DOM.recentDiagnosesList.innerHTML = html;
+
+    DOM.recentDiagnosesList.querySelectorAll('.history-item').forEach(el => {
+      el.addEventListener('click', (e) => {
+        const idx = parseInt(el.getAttribute('data-history-idx'), 10);
+        restoreDiagnosisFromHistory(idx);
+      });
+    });
+  }
+
+  function restoreDiagnosisFromHistory(idx) {
+    const item = state.diagnostic.history[idx];
+    if (!item) return;
+
+    if (DOM.diagnosticTopicInput) DOM.diagnosticTopicInput.value = item.topic;
+    if (DOM.diagnosticQuestionInput) DOM.diagnosticQuestionInput.value = item.question;
+    DOM.workingStepsEditor.value = item.working;
+    updateLineNumbers();
+
+    state.diagnostic.activeDiagnosis = item.diag;
+    renderDiagnosisResult(item.diag, item.working);
+    showToast(`Restored diagnosis from ${item.time}`, 'success');
+
+    DOM.workingStepsEditor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function clearDiagnosisHistory() {
+    state.diagnostic.history = [];
+    renderDiagnosticHistory();
+    showToast('Diagnosis history cleared.', 'success');
+  }
+
+  function copyDiagnosisReport() {
+    const diag = state.diagnostic.activeDiagnosis;
+    if (!diag) {
+      showToast('Run a diagnosis first before copying report.', 'error');
+      return;
+    }
+
+    const topic = DOM.diagnosticTopicInput?.value || DOM.problemTitle?.textContent || 'Algebra';
+    const question = DOM.diagnosticQuestionInput?.value || DOM.displayQuestion?.textContent || 'Problem';
+    const working = DOM.workingStepsEditor?.value || '';
+
+    const md = `# StudyForge Misconception Diagnostic Report
+- **Date & Time**: ${new Date().toLocaleString()}
+- **Topic**: ${topic}
+- **Question**: ${question}
+- **Classification**: ${diag.classification}
+- **Confidence**: ${Math.round((diag.confidence || 0.85) * 100)}%
+- **Identified Misconception / Status**: ${diag.misconception_name || diag.misconception_id}
+- **First Wrong Step**: ${diag.first_wrong_step ? `Step ${diag.first_wrong_step}` : 'N/A'}
+- **Evidence**: ${diag.evidence || 'N/A'}
+
+## Student Working Steps:
+\`\`\`
+${working}
+\`\`\`
+
+## Explanation:
+${diag.explanation}
+
+## Correct Concept:
+${diag.correct_concept || 'Standard mathematical properties applied.'}
+
+## Socratic Hint:
+${diag.hint || 'N/A'}
+
+## Targeted Follow-Up Repair Challenge:
+${diag.repair_question || 'N/A'}
+
+---
+*Generated by StudyForge AI Misconception Detection System*`;
+
+    navigator.clipboard.writeText(md).then(() => {
+      showToast('📋 Full diagnostic report copied to clipboard!', 'success');
+    }).catch(() => {
+      showToast('Could not access clipboard.', 'error');
+    });
+  }
+
+  function exportDiagnosisReport() {
+    const diag = state.diagnostic.activeDiagnosis;
+    if (!diag) {
+      showToast('Run a diagnosis first before exporting report.', 'error');
+      return;
+    }
+
+    const topic = (DOM.diagnosticTopicInput?.value || DOM.problemTitle?.textContent || 'diagnostic').replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    const md = `# StudyForge Misconception Diagnostic Report\n\n- Generated: ${new Date().toISOString()}\n- Topic: ${DOM.diagnosticTopicInput?.value || ''}\n- Question: ${DOM.diagnosticQuestionInput?.value || ''}\n- Classification: ${diag.classification}\n- Confidence: ${diag.confidence}\n- Misconception ID: ${diag.misconception_id}\n- First Wrong Step: ${diag.first_wrong_step}\n- Evidence: ${diag.evidence}\n- Correct Concept: ${diag.correct_concept}\n\n## Working:\n${DOM.workingStepsEditor.value}\n\n## Explanation:\n${diag.explanation}\n\n## Repair Challenge:\n${diag.repair_question}\n`;
+
+    const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `studyforge_diagnosis_${topic}_${Date.now()}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('💾 Diagnostic report downloaded!', 'success');
   }
 
   // =========================================================================
@@ -2873,6 +3563,9 @@ Provide an accurate, clear explanation suitable for an undergraduate student fol
         if (e.key === 'Enter') submitRepairAnswer();
       });
     }
+    if (DOM.btnCopyDiagnosis) DOM.btnCopyDiagnosis.addEventListener('click', copyDiagnosisReport);
+    if (DOM.btnExportReport) DOM.btnExportReport.addEventListener('click', exportDiagnosisReport);
+    if (DOM.btnClearDiagHistory) DOM.btnClearDiagHistory.addEventListener('click', clearDiagnosisHistory);
 
     // Teacher View
     if (DOM.btnSimulateClass) DOM.btnSimulateClass.addEventListener('click', simulateClassroomData);

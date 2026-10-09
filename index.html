@@ -519,28 +519,41 @@
                   <h2 class="card-title" id="problem-title">Algebra: Distributive Property</h2>
                 </div>
                 <div class="card-actions" style="display:flex; gap:8px; align-items:center;">
-                  <select id="diagnostic-scenario-select" class="form-select" style="padding:4px 8px; font-size:0.75rem;" title="Select preset math problem">
-                    <option value="partial_dist" selected>Scenario 1: 3(x + 2) = 15 (Distribution)</option>
-                    <option value="frac_denom">Scenario 2: 1/2 + 1/3 (Fractions)</option>
-                    <option value="neg_sign">Scenario 3: -2(x - 4) = 10 (Negatives)</option>
-                    <option value="like_terms">Scenario 4: 3x + 5 = 20 (Like Terms)</option>
-                    <option value="exp_multiply">Scenario 5: 2³ + 4 (Exponents)</option>
-                    <option value="correct_sol">Scenario 6: Correct Working</option>
+                  <select id="diagnostic-scenario-select" class="form-select" style="padding:4px 8px; font-size:0.75rem;" title="Select preset problem or switch to custom">
+                    <option value="partial_dist" selected>Preset 1: 3(x + 2) = 15 (Distribution)</option>
+                    <option value="frac_denom">Preset 2: 1/2 + 1/3 (Fractions)</option>
+                    <option value="neg_sign">Preset 3: -2(x - 4) = 10 (Negatives)</option>
+                    <option value="like_terms">Preset 4: 3x + 5 = 20 (Like Terms)</option>
+                    <option value="exp_multiply">Preset 5: 2³ + 4 (Exponents)</option>
+                    <option value="correct_sol">Preset 6: Correct Working</option>
+                    <option value="custom">✏️ Custom Problem (Type Your Own)</option>
                   </select>
-                  <button class="btn btn-xs btn-outline" id="btn-toggle-expected" title="Inspect teacher expected solution">
+                  <button class="btn btn-xs btn-outline" id="btn-toggle-expected" title="Inspect teacher expected solution or reference key">
                     <span>👁️ Expected</span>
                   </button>
                 </div>
               </div>
 
               <div class="problem-statement-box">
-                <div class="problem-question-label">QUESTION</div>
-                <div class="problem-math-display" id="display-question">3(x + 2) = 15</div>
+                <div class="form-group" style="margin-bottom:8px;">
+                  <label class="form-label" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-dim);" for="diagnostic-topic-input">TOPIC / DOMAIN:</label>
+                  <input type="text" id="diagnostic-topic-input" class="form-input" style="padding:6px 10px; font-size:0.86rem;" value="Algebra: Distributive Property" placeholder="e.g. Distributive Property, Fractions, Photosynthesis...">
+                </div>
+
+                <div class="form-group" style="margin-bottom:8px;">
+                  <div class="problem-question-label">QUESTION / PROBLEM STATEMENT:</div>
+                  <textarea id="diagnostic-question-input" class="form-textarea" rows="2" style="font-family:var(--font-mono); font-size:0.92rem; padding:8px 10px;" placeholder="Type question or academic problem statement...">3(x + 2) = 15</textarea>
+                  <div class="problem-math-display hidden" id="display-question">3(x + 2) = 15</div>
+                </div>
                 
                 <div class="expected-method-drawer hidden" id="expected-method-drawer">
                   <div class="drawer-inner">
-                    <span class="drawer-tag">Expected Solution Method:</span>
-                    <pre class="math-code" id="display-expected">3(x + 2) = 15
+                    <span class="drawer-tag">Expected Solution / Answer Key / Reference Material:</span>
+                    <textarea id="diagnostic-expected-input" class="form-textarea" rows="4" style="font-family:var(--font-mono); font-size:0.86rem; padding:8px 10px; margin-top:6px;" placeholder="Enter expected solution or reference concept...">3(x + 2) = 15
+3x + 6 = 15
+3x = 9
+x = 3</textarea>
+                    <pre class="math-code hidden" id="display-expected">3(x + 2) = 15
 3x + 6 = 15
 3x = 9
 x = 3</pre>
@@ -626,11 +639,21 @@ x = 13/3</textarea>
               <!-- Diagnosis Result Card -->
               <div class="card glass-card diagnosis-card" id="diagnosis-main-card">
                 
+                <div class="card-header border-bottom" style="padding-bottom:12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+                  <div class="card-title-group" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                    <span class="badge badge-rose" id="diag-classification-chip">🔍 CONCEPTUAL MISCONCEPTION</span>
+                    <h3 class="card-title text-base" id="diag-headline">Misconception Detected in Step 1</h3>
+                  </div>
+                  <div class="output-actions" style="display:flex; gap:6px;">
+                    <button class="btn btn-xs btn-outline" id="btn-copy-diagnosis" title="Copy diagnosis summary to clipboard">📋 Copy Summary</button>
+                    <button class="btn btn-xs btn-outline" id="btn-export-report" title="Download diagnosis report">📥 Export Report</button>
+                  </div>
+                </div>
+
                 <div class="diagnosis-header" id="diagnosis-status-banner">
                   <div class="status-left">
                     <div class="status-pulse-badge pulse-rose" id="status-pulse"></div>
                     <div>
-                      <h3 class="diagnosis-status-title" id="diag-headline">Misconception Detected in Step 1</h3>
                       <p class="diagnosis-status-desc" id="diag-subheadline">Earliest reasoning departure identified</p>
                     </div>
                   </div>
@@ -645,24 +668,38 @@ x = 13/3</textarea>
                   </div>
                 </div>
 
+                <!-- Uncertainty explanation alert (for confidence < 75% or ambiguous inputs) -->
+                <div class="uncertainty-box hidden" id="diag-uncertainty-box" style="margin-bottom:14px; padding:10px 14px; background:rgba(168,85,247,0.12); border-left:3px solid #a855f7; border-radius:6px; font-size:0.84rem; color:#e9d5ff;">
+                  <strong style="color:#c084fc;">⚠️ Diagnostic Uncertainty:</strong>
+                  <span id="diag-uncertainty-text">The answer provides partial evidence. Teacher review recommended.</span>
+                </div>
+
                 <!-- Step-by-Step Visual Highlighting -->
                 <div class="diagnostic-steps-inspection">
                   <div class="inspection-title">Step-by-Step Reasoner Breakdown:</div>
                   <div class="step-inspection-list" id="step-inspection-list"></div>
                 </div>
 
-                <!-- Misconception Meta Details -->
-                <div class="misconception-meta-grid">
+                <!-- Misconception Meta Details (2x2 Grid) -->
+                <div class="misconception-meta-grid" style="grid-template-columns: 1fr 1fr; gap:14px;">
                   <div class="meta-box">
-                    <span class="meta-label">IDENTIFIED MISCONCEPTION ID</span>
-                    <div class="meta-val-row">
+                    <span class="meta-label">IDENTIFIED REASONING PATTERN / MISCONCEPTION</span>
+                    <div class="meta-val-row" style="margin-top:4px;">
                       <span class="badge badge-rose" id="diag-misconception-id">ALG_PARTIAL_DISTRIBUTION</span>
                       <span class="meta-subname" id="diag-misconception-name">Partial Distributive Property</span>
                     </div>
                   </div>
                   <div class="meta-box">
-                    <span class="meta-label">EXPLANATION (&lt; 40 words)</span>
+                    <span class="meta-label">STUDENT-FRIENDLY EXPLANATION</span>
                     <p class="meta-text" id="diag-explanation">You multiplied 3 by x to get 3x, but forgot to also multiply 3 by 2. The coefficient outside the bracket must distribute to every term inside.</p>
+                  </div>
+                  <div class="meta-box">
+                    <span class="meta-label">EVIDENCE FROM STUDENT ANSWER</span>
+                    <p class="meta-text" id="diag-evidence-text" style="color:#fbcfe8; font-family:var(--font-mono); font-size:0.84rem;">Line 1: "3(x + 2) = 3x + 2"</p>
+                  </div>
+                  <div class="meta-box">
+                    <span class="meta-label">CORRECT UNDERSTANDING & CONCEPT</span>
+                    <p class="meta-text" id="diag-correct-concept-text" style="color:#a7f3d0;">Apply a(b + c) = ab + ac: distribute 3 to both x and 2, yielding 3x + 6 = 15.</p>
                   </div>
                 </div>
 
@@ -748,6 +785,30 @@ x = 13/3</textarea>
 
             </div>
 
+          </div>
+
+          <!-- Full-Width Session Diagnosis History Card -->
+          <div class="card glass-card diagnostic-history-card" id="diagnostic-history-card" style="margin-top: 1.5rem;">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-badge badge-secondary">Audit Trail</span>
+                <h3 class="card-title">Session Diagnosis History</h3>
+              </div>
+              <div class="card-actions">
+                <button class="btn btn-xs btn-outline" id="btn-clear-diag-history" title="Clear diagnosis history">
+                  <span>🗑️ Clear History</span>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <p class="text-muted" style="font-size:0.85rem; margin-bottom:1rem;">Every diagnosis run in this session is recorded below with classification, confidence, and timestamp. Click any record to restore its steps and findings.</p>
+              <div class="history-list" id="recent-diagnoses-list">
+                <!-- Dynamically populated or empty state -->
+                <div class="history-empty-state" style="text-align:center; padding:1.5rem; color:var(--text-muted); font-size:0.875rem;">
+                  No diagnoses recorded yet in this session. Run your first analysis above!
+                </div>
+              </div>
+            </div>
           </div>
 
         </div>
